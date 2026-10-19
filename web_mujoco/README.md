@@ -49,11 +49,15 @@ npm run test:explode
 - 腕部模型：加入经 B601-RS 实机验证的 D405 30° 向下支架、9 mm 光心对齐偏移和相机外壳代理，并提供独立的模型显示开关。
 - 爆炸视图和零件选择只改变 Three.js 显示，不修改 MuJoCo 物理状态。
 
-仓库已配置 GitHub Actions workflow，推送 `main` 分支后自动构建并部署到 GitHub Pages：
+仓库已配置 GitHub Actions workflow。将组织仓库重命名为 `Seeed-Projects/robot-rs-sim`，
+并在仓库的 Settings → Pages 中选择 GitHub Actions 作为发布来源后，
+推送 `main` 分支或手动运行部署 workflow，即可发布到目标网址：
 
-**https://yang-ci.github.io/Rebot_Arm_AGV/**
+[https://seeed-projects.github.io/robot-rs-sim/](https://seeed-projects.github.io/robot-rs-sim/)
 
-Vite 通过 `GITHUB_PAGES_BASE=/Rebot_Arm_AGV/` 环境变量生成子路径部署包。
+workflow 自动使用当前仓库名设置 `GITHUB_PAGES_BASE`，Vite 据此生成子路径部署包；
+仓库名为 `robot-rs-sim` 时，路径为 `/robot-rs-sim/`，改名前和其他 fork 也会使用各自的仓库名。
+仓库重命名和 Pages 发布来源设置需要仓库管理员操作；无需购买域名或设置 Custom domain。
 
 
 首次打开会下载全部网格，请用 Chrome 或 Edge。
@@ -64,7 +68,7 @@ Vite 通过 `GITHUB_PAGES_BASE=/Rebot_Arm_AGV/` 环境变量生成子路径部�
 
 ```bash
 cd web_mujoco
-GITHUB_PAGES_BASE=/Rebot_Arm_AGV/ npm run build
+GITHUB_PAGES_BASE=/robot-rs-sim/ npm run build
 npx vite preview
 ```
 
