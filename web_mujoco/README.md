@@ -31,6 +31,7 @@ npm run dev
 
 ```bash
 npm run smoke
+npm run test:loading
 npm run test:variants
 npm run test:explode
 ```
@@ -63,8 +64,12 @@ workflow 自动使用当前仓库名设置 `GITHUB_PAGES_BASE`，Vite 据此生�
 Sync fork 只同步代码，不会同步仓库名称或 Pages 设置；无需购买域名或设置 Custom domain。
 
 
-首次打开会下载全部网格，请用 Chrome 或 Edge。
-生产环境的 `mujoco.wasm` 默认从 jsDelivr CDN 加载，加快全球访问；
+首次打开会下载所选场景的全部网格，请用 Chrome 或 Edge。
+网格通过 gzip 和 6 路并发下载；WASM 初始化期间允许最多 16 MiB
+加在途请求的网格缓冲，避免首批下载等待 WASM。生产缓存按文件内容 hash 更新，
+只修改 XML 时不重新下载未变化的网格。
+生产环境的 `mujoco.wasm` 默认从 jsDelivr CDN 预加载并流式编译，
+CDN 请求失败或下载超过 8 秒时回退站内文件；
 如需强制使用本地文件，可在构建时设置 `VITE_MUJOCO_WASM_CDN=local`。
 
 本地预览生产包：
