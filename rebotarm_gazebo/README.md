@@ -9,7 +9,7 @@ The world includes the local RS arm on the four-wheel AGV chassis. Its Gazebo in
 ## Build
 
 ```bash
-cd /home/robot/Rebot_Arm_AGV
+cd /home/robot/reBot_RS_Sim
 source /opt/ros/jazzy/setup.bash
 colcon build --symlink-install --packages-select rebotarm_gazebo
 source install/setup.bash

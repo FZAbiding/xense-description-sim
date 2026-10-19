@@ -47,7 +47,7 @@ GitHub Pages 发布流程见 [`.github/workflows/pages.yml`](.github/workflows/p
 ## 目录与依赖
 
 ```text
-Rebot_Arm_AGV/
+reBot_RS_Sim/
 ├── web_mujoco/              # 浏览器界面、MuJoCo WASM、网页导航与抓取
 ├── rebotarm_mujoco_rs/      # ROS 2 MuJoCo 节点及运行模型（XML / STL）
 ├── rebotarm_gazebo/         # Gazebo 场景、两种后端的 SLAM / Nav2 启动配置
@@ -55,7 +55,7 @@ Rebot_Arm_AGV/
 ├── RS/                     # RS 独立 URDF / STL；Gazebo 模型再生成的输入
 ├── mobile_base/
 │   ├── cad/agv_v1/          # 底盘参数化脚本、STEP / STL 和校验资料
-│   └── docs/               # 底盘概念图、轮子方案
+│   └── docs/               # 轮子方案调研
 ├── tools/                  # RS + AGV MuJoCo 场景生成脚本
 └── docs/                   # 机械描述说明与资源使用分析
 ```
@@ -72,8 +72,6 @@ mobile_base/cad/agv_v1/stl/ ───────> MuJoCo AGV 场景生成脚本
 ```
 
 **RS 与 DM 共用的 10 个夹爪精细碰撞 STL，统一保留在 `rebotarm_mujoco_rs/models/meshes/`。** 根目录 DM 描述包及 RS 描述目录中的精细碰撞副本已清理。RS URDF 仍保留自身外观与整件碰撞网格；MuJoCo 使用运行目录中的精细碰撞件。
-
-清理范围、资源保留原因和验证结果见 [资源清理记录](docs/resource_usage_audit.md)。
 
 ## ROS 2 仿真
 
@@ -186,4 +184,4 @@ colcon test-result --verbose
 
 ## 模型来源
 
-RS MuJoCo 模型来源及使用边界见 [MuJoCo 包说明](rebotarm_mujoco_rs/README.md)；D405 腕部支架的来源、版本和许可证见 [第三方模型说明](rebotarm_mujoco_rs/models/THIRD_PARTY_MODELS.md)。机械描述的分类与维护约定见 [机械描述说明](docs/arm_description.md)，资源整理情况见 [资源清理记录](docs/resource_usage_audit.md)。
+RS MuJoCo 模型来源及使用边界见 [MuJoCo 包说明](rebotarm_mujoco_rs/README.md)；D405 腕部支架的来源、版本和许可证见 [第三方模型说明](rebotarm_mujoco_rs/models/THIRD_PARTY_MODELS.md)。机械描述的分类与维护约定见 [机械描述说明](docs/arm_description.md)。

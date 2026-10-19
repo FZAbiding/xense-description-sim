@@ -1,6 +1,6 @@
 # B601-RS 机械描述与运行模型
 
-当前仓库保留 RS 独立 URDF，以及 MuJoCo / Gazebo 运行模型。未使用的 DM 描述包和 RS 夹爪精细碰撞副本已清理，具体范围见 [资源清理记录](resource_usage_audit.md)。
+当前仓库保留 RS 独立 URDF，以及 MuJoCo / Gazebo 运行模型。夹爪精细碰撞网格统一保存在运行模型目录。
 
 ## 资源位置
 
