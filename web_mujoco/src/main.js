@@ -726,6 +726,7 @@ async function main() {
   }
 
   function cancelAgvNavigation(showMessage = true, clearInactiveRoute = false) {
+    if (!agvNavigation) return false;
     if (!agvNavigationState.active && !clearInactiveRoute) return false;
     const wasActive = agvNavigation.cancel();
     if (showMessage) setAgvNavigationMessage('agv.navCancelled');
