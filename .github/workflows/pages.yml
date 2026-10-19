@@ -32,7 +32,7 @@ jobs:
       - name: Build for GitHub Pages
         working-directory: web_mujoco
         env:
-          GITHUB_PAGES_BASE: /Rebot_Arm_AGV/
+          GITHUB_PAGES_BASE: /${{ github.event.repository.name }}/
         run: npm run build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
