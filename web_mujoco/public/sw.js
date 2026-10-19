@@ -1,6 +1,4 @@
 const CACHE_NAME = 'rebot-mujoco-runtime-v3';
-let currentModelVersion = null;
-let prunePromise = null;
 
 self.addEventListener('install', () => {
   self.skipWaiting();
@@ -42,36 +40,31 @@ function isCacheable(requestUrl) {
   return requestUrl.pathname.includes('/assets/') || requestUrl.pathname.includes('/models/');
 }
 
-function pruneOldModels(cache, version) {
-  if (!version || version === currentModelVersion) return prunePromise || Promise.resolve();
-  currentModelVersion = version;
-  prunePromise = cache.keys().then((requests) =>
-    Promise.all(
-      requests.map((request) => {
-        const url = new URL(request.url);
-        if (!url.pathname.includes('/models/')) return false;
-        const cachedVersion = url.searchParams.get('v');
-        return cachedVersion && cachedVersion !== version ? cache.delete(request) : false;
-      })
-    )
-  );
-  return prunePromise;
+async function pruneOldModelFile(cache, url) {
+  // Each file has its own content hash. Updating XML must not evict meshes.
+  if (!url.pathname.includes('/models/') || !url.searchParams.has('v')) return;
+  const rawPath = url.pathname.endsWith('.gzbin') ? url.pathname.slice(0, -6) : null;
+  const requests = await cache.keys();
+  await Promise.all(requests.map((request) => {
+    const cached = new URL(request.url);
+    if (cached.origin !== url.origin) return false;
+    const outdated = cached.pathname === url.pathname && cached.href !== url.href;
+    return outdated || cached.pathname === rawPath ? cache.delete(request) : false;
+  }));
 }
 
 async function cacheFirst(request, event) {
   const cache = await caches.open(CACHE_NAME);
   const url = new URL(request.url);
-  await pruneOldModels(cache, url.pathname.includes('/models/') ? url.searchParams.get('v') : null);
-  if (url.pathname.includes('/models/') && url.pathname.toLowerCase().endsWith('.gzbin')) {
-    const rawUrl = new URL(url.href);
-    rawUrl.pathname = rawUrl.pathname.slice(0, -6);
-    await cache.delete(rawUrl.href);
-  }
   const cached = await cache.match(request);
   if (cached) return cached;
   const response = await fetch(request);
   if (response.ok) {
-    event.waitUntil(cache.put(request, response.clone()).catch(() => false));
+    event.waitUntil(
+      cache.put(request, response.clone())
+        .then(() => pruneOldModelFile(cache, url))
+        .catch(() => false)
+    );
   }
   return response;
 }

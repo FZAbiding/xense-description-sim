@@ -3,7 +3,7 @@ import { createHash } from 'node:crypto';
 import { gzipSync } from 'node:zlib';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const modelsSrc = path.resolve(root, '../rebotarm_mujoco_rs/models');
@@ -22,18 +22,14 @@ function collectFiles(dir) {
 }
 
 function hashModelFiles() {
-  if (!existsSync(modelsSrcAbs)) return 'missing';
-  const hash = createHash('sha256');
-  collectFiles(modelsSrcAbs)
-    .sort()
-    .forEach((filePath) => {
-      hash.update(path.relative(modelsSrcAbs, filePath).replaceAll(path.sep, '/'));
-      hash.update(readFileSync(filePath));
-    });
-  return hash.digest('hex').slice(0, 12);
+  if (!existsSync(modelsSrcAbs)) return {};
+  return Object.fromEntries(collectFiles(modelsSrcAbs).sort().map((filePath) => [
+    path.relative(modelsSrcAbs, filePath).replaceAll(path.sep, '/'),
+    createHash('sha256').update(readFileSync(filePath)).digest('hex').slice(0, 12)
+  ]));
 }
 
-const modelVersion = hashModelFiles();
+const modelVersions = hashModelFiles();
 const devGzipCache = new Map();
 
 function isMeshFile(filePath) {
@@ -57,10 +53,10 @@ function pagesBase() {
   return value.endsWith('/') ? value : `${value}/`;
 }
 
-export default defineConfig({
+export default defineConfig(({ command, mode }) => ({
   base: pagesBase(),
   define: {
-    __MODEL_VERSION__: JSON.stringify(modelVersion),
+    __MODEL_VERSIONS__: JSON.stringify(modelVersions),
     __MUJOCO_VERSION__: JSON.stringify(mujocoVersion)
   },
   optimizeDeps: {
@@ -74,6 +70,17 @@ export default defineConfig({
   plugins: [
     {
       name: 'copy-rs-models',
+      transformIndexHtml() {
+        const env = loadEnv(mode, root, 'VITE_');
+        if (command !== 'build' || env.VITE_MUJOCO_WASM_CDN === 'local') return [];
+        return [
+          { tag: 'link', attrs: { rel: 'preconnect', href: 'https://cdn.jsdelivr.net', crossorigin: 'anonymous' }, injectTo: 'head' },
+          { tag: 'link', attrs: {
+            rel: 'preload', as: 'fetch', type: 'application/wasm', crossorigin: 'anonymous',
+            href: `https://cdn.jsdelivr.net/npm/@mujoco/mujoco@${mujocoVersion}/mujoco.wasm`
+          }, injectTo: 'head' }
+        ];
+      },
       closeBundle() {
        if (!existsSync(modelsSrc)) {
           throw new Error(`RS models not found: ${modelsSrc}`);
@@ -149,4 +156,4 @@ export default defineConfig({
       'Cache-Control': 'no-cache, no-store, must-revalidate'
     }
   }
-});
+}));
