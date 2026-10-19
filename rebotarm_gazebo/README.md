@@ -97,7 +97,7 @@ For a server-only smoke test:
 ros2 launch rebotarm_gazebo lab_slam_nav.launch.py gui:=false use_rviz:=false
 ```
 
-The static map is published on `/map`, Gazebo simulation time and robot topics are bridged to ROS 2, and `config/semantic_zones.yaml` records the task polygons and approach poses.
+The static map is published on `/map`, and Gazebo simulation time and robot topics are bridged to ROS 2.
 
 ## MuJoCo SLAM and navigation
 
@@ -145,7 +145,6 @@ ros2 run nav2_map_server map_saver_cli -f rebotarm_lab_mujoco
 - `config/slam_toolbox.yaml` -- Standalone SLAM Toolbox parameters for `lab_slam`.
 - `config/nav2.rviz` -- RViz config with Grid, TF, LaserScan, Map, Global/Local Costmap, Path, AMCL Particles, and the Nav2 control panel.
 - `config/ros_gz_bridge.yaml` -- Gazebo-to-ROS topic bridge definitions (`/scan`, `/imu`, `/odom`, `/tf`, `/joint_states`, `/cmd_vel`, `/clock`).
-- `config/semantic_zones.yaml` -- Task zone polygons and approach poses.
 
 Regenerate generated assets after changing static geometry or the RS URDF with:
 
