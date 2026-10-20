@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
 import { createLabProp, disposeLabProp } from './lab-props-view.js';
+import { createCampusGroundGeometry } from './campus-ground.js';
 import { resolveExplosionLayout } from './explosion-layout.js';
 import {
   EXPLOSION_TIMELINE_DURATION_MS,
@@ -790,7 +791,9 @@ export function createSceneView(host, options = {}) {
         }
         geometry = meshGeometries.get(meshId);
       } else {
-        geometry = primitiveGeometry(type, size, types);
+        geometry = campus && type === types.plane
+          ? createCampusGroundGeometry()
+          : primitiveGeometry(type, size, types);
       }
       if (!geometry) continue;
       let material;
@@ -798,7 +801,8 @@ export function createSceneView(host, options = {}) {
         if (!campus && !gridTexture) gridTexture = createGridTexture();
         material = new THREE.MeshStandardMaterial({
           map: campus ? null : gridTexture,
-          color: campus ? 0xadb5a3 : 0x41658f,
+          color: campus ? 0xffffff : 0x41658f,
+          vertexColors: campus,
           metalness: 0.1,
           roughness: 0.82,
           envMapIntensity: 0.4

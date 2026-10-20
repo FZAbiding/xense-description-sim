@@ -6,7 +6,6 @@ export async function loadCampusEnvironment(scene) {
   const root = new THREE.Group();
   root.name = 'campus-environment';
   const mat = (color, roughness = 0.9) => new THREE.MeshStandardMaterial({ color, roughness, envMapIntensity: 0.35 });
-  const asphalt = mat(0x485254);
   const pavement = mat(0xb4b9ad);
   const white = mat(0xe8e9d9);
   const yellow = mat(0xe4bc5d);
@@ -45,16 +44,8 @@ export async function loadCampusEnvironment(scene) {
     root.add(mesh);
   }
 
-  // All drivable surfaces stay at z=0 in MuJoCo. These thin overlays sit below
-  // the floor or up to 3.5 cm above it and never introduce a physical step.
-  box('east-west-road', 0, 0, -0.012, 30, 3, 0.025, asphalt);
-  box('north-south-road', 0, 0, -0.010, 4.4, 24, 0.025, asphalt);
-  box('service-yard', 8.15, -6.55, -0.008, 12.4, 9.8, 0.025, asphalt);
-  for (const building of CAMPUS_BUILDINGS) {
-    // Keep the paving surface above the z=0 base floor, never coplanar with it.
-    box(`paving-${building.id}`, building.x, building.y, -0.023,
-      building.halfX * 2, building.halfY * 2, 0.07, pavement);
-  }
+  // Roads, paving and grass are regions of the one MuJoCo floor render mesh
+  // (campus-ground.js). Only markings and labels are overlaid here.
   for (let x = -13.5; x < 14; x += 1.6) {
     if (Math.abs(x) > 3) marking(x, 0, 0.75, 0.055, yellow);
   }
