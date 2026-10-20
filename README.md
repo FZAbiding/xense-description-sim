@@ -8,6 +8,8 @@
 
 - 左右七轴关节滑块与角度输入，遵循源 URDF 限位。
 - 两组夹爪开合及 −1 mimic 联动。
+- 左右 TCP 坐标输入、末端点动和三维拖动，支持保持朝向的七轴数值逆运动学。
+- 双臂与夹爪关键帧记录、姿态/轨迹导入导出、平滑回放、暂停、停止和进度定位。
 - 从源配置恢复启动姿态，导出弧度制关节状态和相机位姿 JSON。
 - 主视角旋转、缩放、平移，以及正视、侧视、俯视和模型居中。
 - 左右腕部 640×480 相机预览、暂停、视锥查看，以及 PNG 截图。
@@ -19,6 +21,7 @@
 
 - [使用指南](docs/usage.md)：首次启动、界面操作、相机与姿态导出、部署及排障。
 - [技术路线与验收](docs/flexiv-visualization.md)：资产依赖、生成流程、坐标和验证范围。
+- [TCP 与关键帧阶段记录](docs/phase-3-control.md)：控制实现、速度约束与验证。
 - [Web 开发说明](web_mujoco/README.md)：脚本、环境变量与维护入口。
 - [贡献与 Agent 约定](AGENTS.md)：目录、风格、检查和提交要求。
 - [原 reBot 参考](README_REBOT.md) / [中文参考](README_REBOT_ZH.md)：初始工程的 ROS、Gazebo 和 AGV 文档。
@@ -93,13 +96,14 @@ python3 -m venv .venv
 
 ```bash
 npm run test:flexiv
+npm run test:flexiv:motion
 npx playwright install chromium
 npm run test:flexiv:browser
 npm run build
 ```
 
-第一项直接加载真实 MuJoCo WASM 模型，验证双臂独立性、关节限位、夹爪耦合、
-复位和相机坐标转换。浏览器检查覆盖实时图像、PNG/JSON 下载及移动端布局。
+WASM 检查覆盖双臂独立性、关节限位、夹爪耦合、复位、相机坐标、TCP 求解和关键帧回放。
+浏览器检查覆盖实时图像、PNG/JSON 下载、TCP 三维拖动、轨迹导入回放及移动端布局。
 支持通过 `CHROMIUM_PATH` 指定已有 Chromium，通过 `FLEXIV_BASE_URL` 检查已运行的开发或生产预览。
 
 日常 Git 同步使用 `origin`，目标为公开仓库

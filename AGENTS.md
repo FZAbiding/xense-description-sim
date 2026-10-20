@@ -21,6 +21,7 @@ Use Node.js 22 to match CI. In `web_mujoco/`:
 - `npm run build` / `npm run preview`: build production assets / preview the build.
 - `npm run smoke`: check model loading and physics without a browser.
 - `npm run test:flexiv`: validate the real Forward-01 WASM model and controls; `npm run test:flexiv:browser` checks Chromium interaction and downloads after `npx playwright install chromium`.
+- `npm run test:flexiv:motion`: verify TCP IK, atomic failure handling, motion imports, source velocity limits, and playback state changes.
 
 For ROS 2 Jazzy, source `/opt/ros/jazzy/setup.bash`, then run from the repository root:
 

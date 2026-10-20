@@ -2,53 +2,87 @@
   "id": "forward-01-flexiv-rizon4s-taccap",
   "sceneXml": "flexiv_forward_01_scene.xml",
   "mode": "kinematic",
+  "arms": {
+    "left": {
+      "joints": [
+        "left_joint1",
+        "left_joint2",
+        "left_joint3",
+        "left_joint4",
+        "left_joint5",
+        "left_joint6",
+        "left_joint7"
+      ],
+      "tcpBody": "left_tool_taccap_eef_link"
+    },
+    "right": {
+      "joints": [
+        "right_joint1",
+        "right_joint2",
+        "right_joint3",
+        "right_joint4",
+        "right_joint5",
+        "right_joint6",
+        "right_joint7"
+      ],
+      "tcpBody": "right_tool_taccap_eef_link"
+    }
+  },
   "joints": [
     {
       "name": "left_joint1",
       "min": -2.8798,
       "max": 2.8798,
+      "maxVelocity": 2.0944,
       "home": 1.546710783117375
     },
     {
       "name": "left_joint2",
       "min": -2.3562,
       "max": 2.3562,
+      "maxVelocity": 2.0944,
       "home": 1.3060298792673568
     },
     {
       "name": "left_joint3",
       "min": -3.0543,
       "max": 3.0543,
+      "maxVelocity": 2.4435,
       "home": 0.3991567999311032
     },
     {
       "name": "left_joint4",
       "min": -1.9548,
       "max": 2.7751,
+      "maxVelocity": 2.4435,
       "home": 1.9685568633244044
     },
     {
       "name": "left_joint5",
       "min": -3.0543,
       "max": 3.0543,
+      "maxVelocity": 4.8869,
       "home": -0.009599310885968814
     },
     {
       "name": "left_joint6",
       "min": -1.4835,
       "max": 4.6251,
+      "maxVelocity": 4.8869,
       "home": 1.5187855150854654
     },
     {
       "name": "left_joint7",
       "min": -3.0543,
       "max": 3.0543,
+      "maxVelocity": 4.8869,
       "home": 0.012566370614359171
     },
     {
       "name": "left_tool_taccap_left_finger_joint",
       "min": -0.5047492196767601,
       "max": 0.0,
+      "maxVelocity": 1.0,
       "mimic": {
         "joint": "left_tool_taccap_right_finger_joint",
         "multiplier": -1.0,
@@ -60,54 +94,63 @@
       "name": "left_tool_taccap_right_finger_joint",
       "min": 0.0,
       "max": 0.5047492196767601,
+      "maxVelocity": 1.0,
       "home": 0.5047492196767601
     },
     {
       "name": "right_joint1",
       "min": -2.8798,
       "max": 2.8798,
+      "maxVelocity": 2.0944,
       "home": -0.4246386070102203
     },
     {
       "name": "right_joint2",
       "min": -2.3562,
       "max": 2.3562,
+      "maxVelocity": 2.0944,
       "home": 1.2426744274199626
     },
     {
       "name": "right_joint3",
       "min": -3.0543,
       "max": 3.0543,
+      "maxVelocity": 2.4435,
       "home": -0.08447393579652555
     },
     {
       "name": "right_joint4",
       "min": -1.9548,
       "max": 2.7751,
+      "maxVelocity": 2.4435,
       "home": 2.072054887967668
     },
     {
       "name": "right_joint5",
       "min": -3.0543,
       "max": 3.0543,
+      "maxVelocity": 4.8869,
       "home": 0.06771877497737998
     },
     {
       "name": "right_joint6",
       "min": -1.4835,
       "max": 4.6251,
+      "maxVelocity": 4.8869,
       "home": 1.6706291600089722
     },
     {
       "name": "right_joint7",
       "min": -3.0543,
       "max": 3.0543,
+      "maxVelocity": 4.8869,
       "home": 0.0635299847725936
     },
     {
       "name": "right_tool_taccap_left_finger_joint",
       "min": -0.5047492196767601,
       "max": 0.0,
+      "maxVelocity": 1.0,
       "mimic": {
         "joint": "right_tool_taccap_right_finger_joint",
         "multiplier": -1.0,
@@ -119,6 +162,7 @@
       "name": "right_tool_taccap_right_finger_joint",
       "min": 0.0,
       "max": 0.5047492196767601,
+      "maxVelocity": 1.0,
       "home": 0.5047492196767601
     }
   ],

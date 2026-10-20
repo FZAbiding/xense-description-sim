@@ -56,6 +56,9 @@ def urdf_frames(urdf, pose):
 def main():
     urdf = ET.parse(ROOT / "assets/xense/assets/assemblies/forward-01-flexiv-rizon4s/urdf/forward-01-flexiv-rizon4s-taccap.urdf").getroot()
     config = json.loads((ROOT / "web_mujoco/src/flexiv-model.json").read_text())
+    source_joints = {joint.get("name"): joint for joint in urdf.findall("joint")}
+    for joint in config["joints"]:
+        assert joint["maxVelocity"] == float(source_joints[joint["name"]].find("limit").get("velocity"))
     model = mujoco.MjModel.from_xml_path(str(ROOT / "rebotarm_mujoco_rs/models" / config["sceneXml"]))
     data = mujoco.MjData(model)
     rng = np.random.default_rng(42)

@@ -192,7 +192,8 @@ def build():
             axis = joint.find("axis").get("xyz")
             ET.SubElement(body, "joint", name=joint.get("name"), type="hinge", axis=axis,
                           range=f"{limits.get('lower')} {limits.get('upper')}")
-            config = {"name": joint.get("name"), "min": float(limits.get("lower")), "max": float(limits.get("upper"))}
+            config = {"name": joint.get("name"), "min": float(limits.get("lower")), "max": float(limits.get("upper")),
+                      "maxVelocity": float(limits.get("velocity"))}
             mimic = joint.find("mimic")
             if mimic is not None:
                 config["mimic"] = {"joint": mimic.get("joint"), "multiplier": float(mimic.get("multiplier", "1")), "offset": float(mimic.get("offset", "0"))}
@@ -242,7 +243,9 @@ def build():
     for joint in joint_config:
         mimic = joint.get("mimic")
         joint["home"] = homes[mimic["joint"]] * mimic["multiplier"] + mimic["offset"] if mimic else homes[joint["name"]]
-    config = {"id": "forward-01-flexiv-rizon4s-taccap", "sceneXml": SCENE, "mode": "kinematic",
+    arms = {side: {"joints": [f"{side}_joint{i}" for i in range(1, 8)],
+                   "tcpBody": f"{side}_tool_taccap_eef_link"} for side in ("left", "right")}
+    config = {"id": "forward-01-flexiv-rizon4s-taccap", "sceneXml": SCENE, "mode": "kinematic", "arms": arms,
               "joints": joint_config, "cameras": cameras, "sourceUrdfSha256": hashlib.sha256(URDF.read_bytes()).hexdigest()}
     ET.indent(document)
     outputs[SCENE] = ET.tostring(document, encoding="utf-8", xml_declaration=True) + b"\n"

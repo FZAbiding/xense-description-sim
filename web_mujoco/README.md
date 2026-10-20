@@ -38,6 +38,7 @@ npm run dev
 | `npm run build` | 将 Forward-01 和 reBot 两个入口构建到 `dist/` |
 | `npm run preview -- --port 4173` | 预览已有生产构建 |
 | `npm run test:flexiv` | 用真实 WASM 验证双臂独立性、源姿态、限位、夹爪 mimic 和光学坐标 |
+| `npm run test:flexiv:motion` | 验证 TCP 求解、失败回退、JSON 校验、回放速度与时间控制 |
 | `npm run test:flexiv:browser` | Chromium 验证控制、图像、下载、移动端和原 reBot 入口 |
 | `npm run test:loading` | 原模型加载、WASM 与缓存回归 |
 | `npm run test:reset` | 原 reBot 复位按钮回归 |
@@ -74,6 +75,8 @@ GitHub Pages 的启用和发布确认见[使用指南](../docs/usage.md#构建�
 | `index.html` / `src/flexiv.css` | 页面结构与布局 |
 | `src/flexiv-main.js` | 启动、界面事件和导出 |
 | `src/flexiv-control.js` | `qpos`、源限位、mimic 和复位 |
+| `src/flexiv-ik.js` | 独立状态中的七轴位置 / 朝向逆运动学 |
+| `src/flexiv-motion.js` / `src/flexiv-motion-ui.js` | 关键帧文件校验、五次插值和控制界面 |
 | `src/flexiv-view.js` | 主视角、两路 RenderTarget、图像读回和显示过滤 |
 | `src/flexiv-model.json` | 生成的关节、启动角与相机配置 |
 | `src/load-model.js` / `src/scene-view.js` | 与原 reBot 共用的加载和几何工具 |

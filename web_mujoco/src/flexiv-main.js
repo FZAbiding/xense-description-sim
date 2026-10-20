@@ -2,6 +2,8 @@ import description from './flexiv-model.json';
 import { loadMujocoModule, loadRsScene } from './load-model.js';
 import { createFlexivController } from './flexiv-control.js';
 import { createFlexivView } from './flexiv-view.js';
+import { createFlexivIk } from './flexiv-ik.js';
+import { createFlexivMotionUi } from './flexiv-motion-ui.js';
 
 const workspace = document.getElementById('workspace');
 const loading = document.getElementById('loading');
@@ -25,7 +27,7 @@ function filename(suffix) {
   return `forward-01-${new Date().toISOString().replaceAll(':', '-')}-${suffix}`;
 }
 
-function buildControls(controller) {
+function buildControls(controller, { onManual, onSelectSide }) {
   const host = document.getElementById('joint-controls');
   for (const side of ['left', 'right']) {
     const section = document.createElement('section');
@@ -45,10 +47,12 @@ function buildControls(controller) {
       const number = row.querySelector('input[type="number"]');
       const update = (value) => {
         if (!Number.isFinite(value)) return;
+        onManual();
         controller.setJoint(name, radians(value));
         syncControls(controller);
       };
       slider.addEventListener('input', () => update(Number(slider.value)));
+      number.addEventListener('focus', onManual);
       number.addEventListener('change', () => update(number.valueAsNumber));
       inputs.set(name, { slider, number });
       section.append(row);
@@ -61,10 +65,12 @@ function buildControls(controller) {
     gripper.className = 'gripper-box';
     gripper.innerHTML = `<div class="gripper-label"><label for="${side}-gripper">TacCap 夹爪开度</label><output id="${side}-gripper-value">100%</output></div><input id="${side}-gripper" type="range" min="0" max="100" step="1" value="100" aria-label="${side === 'left' ? '左' : '右'}夹爪开度"><div class="gripper-actions"><button data-gripper="${side}" data-opening="0">闭合</button><button data-gripper="${side}" data-opening="100">张开</button></div><p>主动指驱动 · 从动指 −1 联动</p>`;
     gripper.querySelector('input').addEventListener('input', (event) => {
+      onManual();
       controller.setGripper(side, Number(event.target.value));
       syncControls(controller);
     });
     gripper.querySelectorAll('button').forEach((button) => button.addEventListener('click', () => {
+      onManual();
       controller.setGripper(side, Number(button.dataset.opening));
       syncControls(controller);
     }));
@@ -79,6 +85,7 @@ function buildControls(controller) {
       tab.tabIndex = active ? 0 : -1;
       document.getElementById(`${tab.dataset.side}-controls`).hidden = !active;
     }
+    onSelectSide(selected.dataset.side);
   }
   for (const tab of tabs) {
     tab.addEventListener('click', () => selectTab(tab));
@@ -117,16 +124,22 @@ async function main() {
   }, { sceneXml: description.sceneXml });
   const { mujoco, model, data, materialProps } = loaded;
   const controller = createFlexivController(mujoco, model, data, description);
+  const ik = createFlexivIk(mujoco, model, data, controller, description);
   const view = createFlexivView({ host: document.getElementById('viewport'), mujoco, model, data, materialProps, description });
-  buildControls(controller);
+  let motionUi;
+  buildControls(controller, { onManual: () => motionUi?.interrupt(), onSelectSide: (side) => motionUi?.setSide(side) });
+  motionUi = createFlexivMotionUi({ controller, description, ik, view, onPoseChange: () => syncControls(controller), saveFile, filename });
   document.getElementById('reset-pose').addEventListener('click', () => {
+    motionUi.interrupt('已恢复启动姿态');
     controller.reset();
     syncControls(controller);
+    motionUi.refresh();
   });
   document.getElementById('export-pose').addEventListener('click', () => {
-    const payload = { schemaVersion: 1, model: description.id, unit: 'rad', mode: 'kinematic',
+    const payload = { schemaVersion: 1, kind: 'xense-pose', model: description.id, unit: 'rad', mode: 'kinematic',
       timestamp: new Date().toISOString(), sourceUrdfSha256: description.sourceUrdfSha256,
       display: { referenceTarget: document.getElementById('show-reference').checked, hideOwnCameraHousing: true },
+      endEffectors: Object.fromEntries(['left', 'right'].map((side) => [side, ik.readPose(side)])),
       joints: controller.pose(), cameras: view.cameraState().map((camera) => ({ ...camera, calibrated: false, fovyDegrees: 60, resolution: [640, 480], coordinateConvention: 'render camera: -Z forward, +Y up' })) };
     saveFile(new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' }), filename('pose.json'));
   });
@@ -160,6 +173,7 @@ async function main() {
   }
   document.getElementById('capture-main').addEventListener('click', () => capture('main'));
   workspace.querySelectorAll('button:disabled, input:disabled').forEach((input) => { input.disabled = false; });
+  motionUi.refresh();
   view.render(performance.now(), controller.revision, true);
   for (const side of ['left', 'right']) document.getElementById(`${side}-camera-state`).textContent = '已同步';
   loading.hidden = true;
@@ -167,6 +181,7 @@ async function main() {
   document.getElementById('status').textContent = '18 关节 · 双相机已就绪';
   let frame;
   function animate(now) {
+    motionUi.tick(now / 1000);
     view.render(now, controller.revision);
     frame = requestAnimationFrame(animate);
   }
@@ -174,12 +189,15 @@ async function main() {
 
   // Read-only diagnostics support integration tests and external screenshot tools.
   window.xensePreview = {
-    state: () => ({ model: description.id, joints: controller.pose(), cameras: view.cameraState(), revision: controller.revision }),
+    state: () => ({ model: description.id, joints: controller.pose(), cameras: view.cameraState(), revision: controller.revision,
+      tcps: Object.fromEntries(['left', 'right'].map((side) => [side, ik.readPose(side)])), motion: motionUi.state(), tcpDrag: view.tcpDragState() }),
     ready: true
   };
   window.addEventListener('pagehide', (event) => {
     if (event.persisted) return;
     cancelAnimationFrame(frame);
+    motionUi.dispose();
+    ik.dispose();
     view.dispose();
     data.delete();
     model.delete();

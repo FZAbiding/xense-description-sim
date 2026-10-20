@@ -17,6 +17,7 @@
     "test:loading": "node scripts/test-loading.mjs",
     "test:reset": "node scripts/test-reset.mjs",
     "test:flexiv": "node scripts/test-flexiv.mjs",
+    "test:flexiv:motion": "node scripts/test-flexiv-motion.mjs",
     "test:flexiv:browser": "playwright test",
     "test:variants": "node scripts/test-agv-path-planner.mjs && node scripts/smoke-variants.mjs",
     "test:campus": "node scripts/build-campus-scene.mjs && node scripts/test-campus.mjs",

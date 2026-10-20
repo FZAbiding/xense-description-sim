@@ -19,12 +19,32 @@ export function createFlexivController(mujoco, model, data, description) {
     revision += 1;
   }
 
-  function setJoint(name, value) {
-    const joint = byName[name];
-    if (!joint || joint.mimic || !Number.isFinite(value)) return false;
-    data.qpos[joint.address] = Math.max(joint.min, Math.min(joint.max, value));
+  function setPose(values) {
+    if (!values || typeof values !== 'object' || Array.isArray(values)) return false;
+    const entries = Object.entries(values);
+    if (entries.some(([name, value]) => !Object.hasOwn(byName, name) || !Number.isFinite(value))) return false;
+    const next = {};
+    for (const [name, value] of entries) {
+      const joint = byName[name];
+      if (!joint.mimic) next[name] = Math.max(joint.min, Math.min(joint.max, value));
+    }
+    for (const [name, value] of entries) {
+      const joint = byName[name];
+      if (!joint.mimic) continue;
+      const driver = byName[joint.mimic.joint];
+      const expected = (next[driver.name] ?? data.qpos[driver.address]) * joint.mimic.multiplier + joint.mimic.offset;
+      if (Math.abs(value - expected) > 1e-8) return false;
+    }
+    if (Object.entries(next).every(([name, value]) => data.qpos[byName[name].address] === value)) return true;
+    for (const [name, value] of Object.entries(next)) data.qpos[byName[name].address] = value;
     forward();
     return true;
+  }
+
+  function setJoint(name, value) {
+    const joint = Object.hasOwn(byName, name) ? byName[name] : null;
+    if (!joint || joint.mimic) return false;
+    return setPose({ [name]: value });
   }
 
   function reset() {
@@ -44,5 +64,5 @@ export function createFlexivController(mujoco, model, data, description) {
   }
 
   reset();
-  return { joints, byName, setJoint, setGripper, reset, pose, get revision() { return revision; } };
+  return { joints, byName, setJoint, setPose, setGripper, reset, pose, get revision() { return revision; } };
 }

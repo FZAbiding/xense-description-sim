@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "kind": "xense-waypoints",
+  "model": "forward-01-flexiv-rizon4s-taccap",
+  "sourceUrdfSha256": "d5a85eb49d2696dd66b829a52b0303b48715705b3f7ba83dea42377471f7948d",
+  "mode": "kinematic",
+  "unit": "rad",
+  "interpolation": "quintic-joint",
+  "waypoints": [
+    {
+      "name": "姿态 1",
+      "durationSeconds": 2,
+      "joints": {
+        "left_joint1": 1.546710783117375,
+        "left_joint2": 1.3060298792673568,
+        "left_joint3": 0.3991567999311032,
+        "left_joint4": 1.9685568633244044,
+        "left_joint5": -0.009599310885968814,
+        "left_joint6": 1.5187855150854654,
+        "left_joint7": 0.012566370614359171,
+        "left_tool_taccap_left_finger_joint": -0.5047492196767601,
+        "left_tool_taccap_right_finger_joint": 0.5047492196767601,
+        "right_joint1": -0.4246386070102203,
+        "right_joint2": 1.2426744274199626,
+        "right_joint3": -0.08447393579652555,
+        "right_joint4": 2.072054887967668,
+        "right_joint5": 0.06771877497737998,
+        "right_joint6": 1.6706291600089722,
+        "right_joint7": 0.0635299847725936,
+        "right_tool_taccap_left_finger_joint": -0.5047492196767601,
+        "right_tool_taccap_right_finger_joint": 0.5047492196767601
+      }
+    },
+    {
+      "name": "姿态 2",
+      "durationSeconds": 2,
+      "joints": {
+        "left_joint1": 1.567078929604338,
+        "left_joint2": 1.309736625276091,
+        "left_joint3": 0.385925023258968,
+        "left_joint4": 1.9761853073107158,
+        "left_joint5": -0.013415858869605253,
+        "left_joint6": 1.5153738576408373,
+        "left_joint7": -0.002041287390119934,
+        "left_tool_taccap_left_finger_joint": 0,
+        "left_tool_taccap_right_finger_joint": 0,
+        "right_joint1": -0.4246386070102203,
+        "right_joint2": 1.2426744274199626,
+        "right_joint3": -0.08447393579652555,
+        "right_joint4": 2.072054887967668,
+        "right_joint5": 0.06771877497737998,
+        "right_joint6": 1.6706291600089722,
+        "right_joint7": 0.0635299847725936,
+        "right_tool_taccap_left_finger_joint": -0.5047492196767601,
+        "right_tool_taccap_right_finger_joint": 0.5047492196767601
+      }
+    }
+  ]
+}

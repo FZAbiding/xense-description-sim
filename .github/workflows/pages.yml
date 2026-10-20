@@ -31,7 +31,9 @@ jobs:
         run: npm ci
       - name: Check Forward-01 model and controls
         working-directory: web_mujoco
-        run: npm run test:flexiv
+        run: |
+          npm run test:flexiv
+          npm run test:flexiv:motion
       - name: Build for GitHub Pages
         working-directory: web_mujoco
         env:

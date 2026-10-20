@@ -1,12 +1,14 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { TransformControls } from 'three/addons/controls/TransformControls.js';
 import { createMeshGeometry, primitiveGeometry, geomTypes, geomMaterial, setPose } from './scene-view.js';
 
 const HELPER_LAYER = 1;
 const CAMERA_INTERVAL_MS = 100;
 
 export function createFlexivView({ host, mujoco, model, data, materialProps, description }) {
+  let dirty = true;
   const scene = new THREE.Scene();
   scene.background = new THREE.Color('#101b2b');
   const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
@@ -132,12 +134,51 @@ export function createFlexivView({ host, mujoco, model, data, materialProps, des
       pixels: new Uint8Array(entry.width * entry.height * 4), image: context.createImageData(entry.width, entry.height), frames: 0 };
   });
 
+  const tcpMarkers = Object.fromEntries(Object.entries(description.arms).map(([side, entry]) => {
+    const body = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY.value, entry.tcpBody);
+    const group = new THREE.Group();
+    const point = new THREE.Mesh(new THREE.SphereGeometry(0.012, 16, 12), new THREE.MeshBasicMaterial({ color: side === 'left' ? 0x6bdfc9 : 0xefb46c, depthTest: false }));
+    point.renderOrder = 100;
+    group.add(point, new THREE.AxesHelper(0.065));
+    group.traverse((node) => node.layers.set(HELPER_LAYER));
+    scene.add(group);
+    return [side, { body, group }];
+  }));
+  const tcpTarget = new THREE.Object3D();
+  scene.add(tcpTarget);
+  const transform = new TransformControls(mainCamera, renderer.domElement);
+  transform.setMode('translate');
+  transform.setSpace('world');
+  transform.setSize(0.7);
+  transform.enabled = false;
+  transform.getHelper().traverse((node) => node.layers.set(HELPER_LAYER));
+  transform.getRaycaster().layers.set(HELPER_LAYER);
+  scene.add(transform.getHelper());
+  let tcpSide = 'left';
+  let tcpHandlers = {};
+  transform.addEventListener('dragging-changed', ({ value }) => {
+    controls.enabled = !value;
+    dirty = true;
+    if (value) tcpHandlers.start?.(tcpSide);
+    else tcpHandlers.end?.(tcpSide);
+  });
+  transform.addEventListener('objectChange', () => {
+    if (transform.dragging) tcpHandlers.move?.(tcpSide, tcpTarget.position.toArray());
+    dirty = true;
+  });
+  transform.addEventListener('change', () => { dirty = true; });
+
   function sync() {
     for (const mesh of meshes) setPose(mesh, data.geom_xpos, data.geom_xmat, mesh.userData.geomIndex);
     for (const entry of cameras) {
       setPose(entry.camera, data.cam_xpos, data.cam_xmat, entry.modelId);
       entry.camera.updateMatrixWorld(true);
       entry.helper.update();
+    }
+    for (const { body, group } of Object.values(tcpMarkers)) setPose(group, data.xpos, data.xmat, body);
+    if (!transform.dragging) {
+      const body = tcpMarkers[tcpSide].body;
+      tcpTarget.position.fromArray(data.xpos, body * 3);
     }
     scene.updateMatrixWorld(true);
   }
@@ -165,7 +206,6 @@ export function createFlexivView({ host, mujoco, model, data, materialProps, des
     controls.update();
   }
 
-  let dirty = true;
   function resize() {
     const width = Math.max(1, host.clientWidth);
     const height = Math.max(1, host.clientHeight);
@@ -237,6 +277,31 @@ export function createFlexivView({ host, mujoco, model, data, materialProps, des
       feedRevision = -1;
       dirty = true;
     },
+    setTcpHandlers(handlers) { tcpHandlers = handlers; },
+    setTcpDrag(side, enabled) {
+      if (!Object.hasOwn(tcpMarkers, side)) return;
+      if (transform.dragging) transform.dragging = false;
+      tcpSide = side;
+      tcpTarget.position.fromArray(data.xpos, tcpMarkers[side].body * 3);
+      transform.enabled = enabled;
+      if (enabled) transform.attach(tcpTarget);
+      else transform.detach();
+      controls.enabled = true;
+      dirty = true;
+    },
+    tcpDragState() {
+      if (transform.enabled) scene.updateMatrixWorld(true);
+      const rect = renderer.domElement.getBoundingClientRect();
+      const handles = [];
+      transform.getHelper().traverse((node) => {
+        if (!node.isMesh || node.geometry?.type !== 'CylinderGeometry' || !['X', 'Y', 'Z'].includes(node.name)) return;
+        for (let parent = node; parent; parent = parent.parent) if (!parent.visible) return;
+        if (!node.geometry.boundingSphere) node.geometry.computeBoundingSphere();
+        const position = node.localToWorld(node.geometry.boundingSphere.center.clone()).project(mainCamera);
+        handles.push({ axis: node.name, x: rect.left + (position.x + 1) * rect.width / 2, y: rect.top + (1 - position.y) * rect.height / 2 });
+      });
+      return { enabled: transform.enabled, dragging: transform.dragging, side: tcpSide, handles };
+    },
     cameraState() {
       return cameras.map((entry) => ({ name: entry.name, enabled: entry.enabled, frames: entry.frames,
         position: Array.from(data.cam_xpos.subarray(entry.modelId * 3, entry.modelId * 3 + 3)),
@@ -246,6 +311,12 @@ export function createFlexivView({ host, mujoco, model, data, materialProps, des
       disposed = true;
       observer.disconnect();
       controls.dispose();
+      transform.dispose();
+      for (const { group } of Object.values(tcpMarkers)) group.traverse((node) => {
+        node.geometry?.dispose();
+        if (Array.isArray(node.material)) node.material.forEach((item) => item.dispose());
+        else node.material?.dispose();
+      });
       for (const entry of cameras) { entry.helper.dispose(); entry.target.dispose(); }
       for (const mesh of meshes) mesh.material.dispose();
       for (const geometry of new Set(meshes.map((mesh) => mesh.geometry))) geometry.dispose();
