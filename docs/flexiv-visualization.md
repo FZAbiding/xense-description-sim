@@ -4,8 +4,32 @@
 
 唯一开发目录为 `/home/xense/src/xense-description-sim`；`origin` 为
 `https://github.com/FZAbiding/xense-description-sim.git`，`upstream` 保留初始工程来源。
-旧 `reBot_RS_Sim` 目录只作初始版本参考。本轮将本地初始提交历史和 `AGENTS.md`
-快进迁入新克隆，之后只修改新工程；不修改 `xense-description` 的源资产。
+旧 `reBot_RS_Sim` 目录只作初始版本参考。完整 Git 历史、`AGENTS.md`、资产和实现记录
+均在新工程中维护。`xense-description` 作为只读资产来源；日常运行使用仓库内快照。
+
+用户操作、导出字段和部署命令见[使用指南](usage.md)。
+
+## 技术路线
+
+```mermaid
+flowchart LR
+    Source[URDF、网格、材质、启动姿态] --> Import[依赖闭包导入与哈希校验]
+    Import --> Snapshot[assets/xense 源快照]
+    Snapshot --> Build[离线模型生成器]
+    Build --> Model[MJCF 与材质分组网格]
+    Build --> Config[网页关节与相机配置]
+    Model --> WASM[MuJoCo WASM]
+    Config --> Control[双臂关节与夹爪控制]
+    Control --> WASM
+    WASM --> State[同一份运动学状态]
+    State --> Render[Three.js 主视角与两路相机]
+    Render --> Images[Canvas 与 PNG]
+    State --> Pose[姿态 JSON]
+```
+
+生成阶段从 URDF 获取模型结构与参数，运行阶段使用已提交的派生文件。
+浏览器本地完成运动学、渲染和文件导出；当前 Forward-01 不依赖 ROS 或后端服务。
+原 reBot 的 ROS 2、Gazebo 和导航能力作为独立路径保留，不能视为已接入 Forward-01。
 
 ## 资产边界
 
@@ -32,6 +56,8 @@
 默认页面提供双臂分组、七轴滑块和角度输入、关节限位、双夹爪联动及启动姿态复位。
 主视角支持轨道旋转、缩放、平移、四种视角和居中。导出的 JSON 使用弧度制，包含关节状态、
 源 URDF 哈希和两个渲染相机的位姿及投影信息。
+字段单位、旋转矩阵方向，以及相机暂停后图像与当前位姿的区别，见
+[导出姿态与坐标解释](usage.md#导出姿态与坐标解释)。
 
 旧 reBot 页面位于 `rebot.html`，沿用原有入口和模型；Vite 同时构建两个页面。
 
@@ -70,6 +96,15 @@ npm run build
 位置和旋转容差为 1e-10。WASM 检查直接使用浏览器同版本引擎；浏览器检查覆盖
 双臂独立控制、夹爪耦合、复位、图像变化、截图和 JSON 下载及窄屏布局。
 这些检查不等同于动力学、抓取接触、全行程干涉或实机相机标定验收。
+
+## 阶段边界
+
+| 阶段 | 当前交付或后续要求 |
+| --- | --- |
+| 资产接入 | 已交付依赖快照、来源与许可记录、内容哈希、可搬移路径和模型生成工具 |
+| 可视化版本 | 已交付双七轴控制、双夹爪联动、源启动姿态、双腕部画面和文件导出 |
+| 动力学与抓取 | 后续需验收惯量、碰撞、接触、执行器参数、控制器、工作台与任务物体 |
+| 实机或数据采集 | 后续需相机型号与驱动、真实内外参、统一采样时间和帧编号；当前网页截图用于人工检查 |
 
 ## 本次验收记录（2026-10-20）
 

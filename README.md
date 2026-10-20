@@ -15,12 +15,20 @@
 
 ![Forward-01 双臂可视化预览](docs/previews/forward-01.png)
 
+## 文档导航
+
+- [使用指南](docs/usage.md)：首次启动、界面操作、相机与姿态导出、部署及排障。
+- [技术路线与验收](docs/flexiv-visualization.md)：资产依赖、生成流程、坐标和验证范围。
+- [Web 开发说明](web_mujoco/README.md)：脚本、环境变量与维护入口。
+- [贡献与 Agent 约定](AGENTS.md)：目录、风格、检查和提交要求。
+- [原 reBot 参考](README_REBOT.md) / [中文参考](README_REBOT_ZH.md)：初始工程的 ROS、Gazebo 和 AGV 文档。
+
 ## 本地运行
 
 后续开发与 Git 操作统一在 `/home/xense/src/xense-description-sim` 中进行。
 `/home/xense/src/reBot_RS_Sim` 仅作为初始版本参考。
 
-使用 **Node.js 22 或更新版本**：
+使用 **Node.js 22.20+**，推荐 Node 22 的最新补丁版本：
 
 ```bash
 cd /home/xense/src/xense-description-sim/web_mujoco
@@ -31,6 +39,8 @@ npm run dev
 打开终端打印的地址，通常为 `http://127.0.0.1:5173/`。模型和运行所需资产均在仓库内，
 日常启动无需 Python、ROS、原始资产仓库或实体机器人。
 
+首次克隆、系统仍使用 Node 18 时的启动方式，以及指定端口的方法见[使用指南](docs/usage.md#获取与启动)。
+
 ```bash
 npm run build
 npm run preview
@@ -38,7 +48,8 @@ npm run preview
 
 构建同时生成默认双臂页面及 `rebot.html`。子目录部署可设置
 `GITHUB_PAGES_BASE=/xense-description-sim/`；如需只使用站内 WASM，构建时设置
-`VITE_MUJOCO_WASM_CDN=local`。
+`VITE_MUJOCO_WASM_CDN=local`。子目录构建和预览必须使用相同的 base，完整命令见
+[构建与部署预览](docs/usage.md#构建与部署预览)。
 
 ## 目录
 
@@ -51,6 +62,7 @@ npm run preview
 | `web_mujoco/src/flexiv-*` | 双臂控制、渲染、模型配置和页面入口 |
 | `web_mujoco/tests/` | Chromium 页面集成检查 |
 | `docs/flexiv-visualization.md` | 资产、坐标、成像处理及验收说明 |
+| `docs/usage.md` | 操作步骤、导出字段、部署和排障 |
 | `README_REBOT.md` | 初始 reBot 工程的 ROS、Gazebo 和模型维护文档 |
 
 ## 资产导入与再生成
@@ -89,6 +101,10 @@ npm run build
 第一项直接加载真实 MuJoCo WASM 模型，验证双臂独立性、关节限位、夹爪耦合、
 复位和相机坐标转换。浏览器检查覆盖实时图像、PNG/JSON 下载及移动端布局。
 支持通过 `CHROMIUM_PATH` 指定已有 Chromium，通过 `FLEXIV_BASE_URL` 检查已运行的开发或生产预览。
+
+日常 Git 同步使用 `origin`，目标为公开仓库
+[`FZAbiding/xense-description-sim`](https://github.com/FZAbiding/xense-description-sim)。
+`upstream` 保留初始工程来源；工作流程见[Git 同步](docs/usage.md#git-同步)。
 
 ## 验证范围与来源
 

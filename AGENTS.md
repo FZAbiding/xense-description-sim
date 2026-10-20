@@ -6,6 +6,7 @@ Use `/home/xense/src/xense-description-sim` as the working directory and Git rep
 
 - `web_mujoco/src/`: browser UI, Three.js rendering, MuJoCo WASM integration, and navigation; `scripts/` contains generators and checks, and `public/` holds web assets.
 - `assets/xense/`: immutable Forward-01 source snapshot and provenance manifests; `web_mujoco/src/flexiv-*` implements its default preview. The initial reBot UI remains in `web_mujoco/rebot.html`.
+- `docs/usage.md` documents operation, exports, deployment and troubleshooting; `docs/flexiv-visualization.md` records architecture and validation. Keep both consistent with the current UI and generated configuration.
 - `rebotarm_mujoco_rs/`: ROS 2 Python nodes, launch files, shared runtime models in `models/`, and pytest checks in `test/`.
 - `rebotarm_gazebo/`: Gazebo scenes, maps, and SLAM/Nav2 configuration for both simulation backends.
 - `rebotarm_msgs/`: ROS messages, services, and actions.

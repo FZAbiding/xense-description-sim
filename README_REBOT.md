@@ -1,6 +1,8 @@
 # reBot RS Sim
 
-**English** | [简体中文](README_ZH.md)
+This is the original reBot reference. The default page in this repository is now the Forward-01 preview; see the [project README](README.md). Open `rebot.html` for reBot locally. Upstream online-demo links below belong to the original project.
+
+**English** | [简体中文](README_REBOT_ZH.md)
 
 A simulation project for the reBot Arm B601-RS and an optional four-wheel AGV base. It includes a browser-based MuJoCo demo, ROS 2 MuJoCo simulation, a Gazebo laboratory, and SLAM / Nav2 navigation, together with standalone RS robot descriptions and AGV v1 chassis CAD resources.
 
@@ -32,13 +34,13 @@ npm ci
 npm run dev
 ```
 
-Open the URL printed in the terminal, usually [http://127.0.0.1:5173](http://127.0.0.1:5173).
+Open the URL printed in the terminal, usually [http://127.0.0.1:5173/rebot.html](http://127.0.0.1:5173/rebot.html).
 
 | Configuration | Entry point | Scene |
 | --- | --- | --- |
-| Standard arm (default) | `/?variant=arm` | `rs_grasp_scene.xml`, including the workbench and graspable objects |
-| AGV base | `/?variant=agv` | `rs_agv_scene.xml`, including the mobile base and laboratory |
-| AGV campus streets | `/?variant=agv-campus` | `rs_agv_campus_scene.xml`, with three apartment buildings, a junction and service bays |
+| Standard arm (default) | `/rebot.html?variant=arm` | `rs_grasp_scene.xml`, including the workbench and graspable objects |
+| AGV base | `/rebot.html?variant=agv` | `rs_agv_scene.xml`, including the mobile base and laboratory |
+| AGV campus streets | `/rebot.html?variant=agv-campus` | `rs_agv_campus_scene.xml`, with three apartment buildings, a junction and service bays |
 
 Switch configurations at the top of the page. In AGV mode, drive with WASD / arrow keys, stop with Space, select a floor navigation target, or use “Go to grasp area.” Run grasping tasks after docking. The first load downloads the scene meshes.
 
