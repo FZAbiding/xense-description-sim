@@ -4,6 +4,7 @@ import { createFlexivController } from './flexiv-control.js';
 import { createFlexivView } from './flexiv-view.js';
 import { createFlexivIk } from './flexiv-ik.js';
 import { createFlexivMotionUi } from './flexiv-motion-ui.js';
+import { createFlexivLayout } from './flexiv-layout.js';
 
 const workspace = document.getElementById('workspace');
 const loading = document.getElementById('loading');
@@ -117,6 +118,7 @@ function syncControls(controller) {
 }
 
 async function main() {
+  const layout = createFlexivLayout(workspace);
   const runtime = loadMujocoModule();
   const loaded = await loadRsScene(runtime, ({ key, vars }) => {
     loadingText.textContent = key === 'status.compiling' ? '构建双臂模型…'
@@ -199,6 +201,7 @@ async function main() {
     if (event.persisted) return;
     cancelAnimationFrame(frame);
     motionUi.dispose();
+    layout.dispose();
     ik.dispose();
     view.dispose();
     data.delete();

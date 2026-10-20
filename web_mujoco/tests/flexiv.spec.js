@@ -38,25 +38,89 @@ async function expectTcpReadouts(page, state) {
   }
 }
 
-test('camera strip stays above the scene and both TCP positions stay visible below it', async ({ page }) => {
+test('floating cameras and collapsible panels preserve scene height across screen sizes', async ({ page }) => {
   await ready(page);
-  const stage = await page.locator('.stage').boundingBox();
-  for (const side of ['left', 'right']) {
-    const feed = await page.locator(`.camera-feed[data-side="${side}"]`).boundingBox();
-    expect(feed.y + feed.height).toBeLessThanOrEqual(stage.y);
-    expect(feed.width).toBeGreaterThan(250);
-    await expect(page.locator(`#${side}-camera-canvas`)).toBeInViewport();
-    const card = await page.locator(`[data-tcp-side="${side}"]`).boundingBox();
-    expect(card.y).toBeGreaterThanOrEqual(stage.y + stage.height);
-    await expect(page.locator(`#${side}-tcp-drag`)).toBeInViewport();
+  for (const size of [{ width: 1366, height: 768 }, { width: 1440, height: 900 }, { width: 1024, height: 768 }, { width: 800, height: 600 }, { width: 390, height: 844 }]) {
+    await page.setViewportSize(size);
+    const stage = await page.locator('.stage').boundingBox();
+    expect(stage.height).toBeGreaterThanOrEqual(size.height - 90);
+    for (const side of ['left', 'right']) {
+      const feed = await page.locator(`.camera-feed[data-side="${side}"]`).boundingBox();
+      expect(feed.y).toBeGreaterThan(stage.y);
+      expect(feed.y + feed.height).toBeLessThan(stage.y + stage.height * 0.62);
+      expect(feed.x).toBeGreaterThanOrEqual(stage.x);
+      expect(feed.x + feed.width).toBeLessThanOrEqual(stage.x + stage.width);
+      await expect(page.locator(`#${side}-camera-canvas`)).toBeInViewport();
+    }
+    await expect(page.locator('.tcp-label.left')).toBeInViewport();
+    await expect(page.locator('.tcp-label.right')).toBeInViewport();
+    await expectTcpReadouts(page, await page.evaluate(() => window.xensePreview.state()));
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    expect(await page.evaluate(() => scrollY)).toBe(0);
   }
-  await expectTcpReadouts(page, await page.evaluate(() => window.xensePreview.state()));
   await expect(page.locator('[data-camera="head"]')).toContainText('待接入');
   await expect(page.locator('[data-camera="head"] canvas')).toHaveCount(0);
   await expect(page.locator('.controls-panel .camera-feed')).toHaveCount(0);
+  await expect(page.locator('#playback-overlay')).not.toHaveAttribute('open');
+  await page.locator('#playback-overlay > summary').click();
   await expect(page.locator('#motion-play')).toBeInViewport();
   await page.locator('#open-waypoints').click();
   await expect(page.locator('#motion-panel')).toHaveAttribute('open', '');
+});
+
+test('folding cameras, TCP and playback plus focus mode preserve model state and restore the layout', async ({ page }) => {
+  const errors = [];
+  page.on('pageerror', (error) => errors.push(error.message));
+  await page.setViewportSize({ width: 1366, height: 768 });
+  await ready(page);
+  const initial = await page.evaluate(() => window.xensePreview.state());
+  const stage = await page.locator('#viewport').boundingBox();
+  await page.locator('#left-camera-view > summary').click();
+  await expect(page.locator('#left-camera-canvas')).toBeHidden();
+  await expect(page.locator('#right-camera-canvas')).toBeInViewport();
+  const collapsed = await page.locator('#viewport').boundingBox();
+  expect(collapsed.height).toBe(stage.height);
+  await page.locator('#tcp-overlay > summary').click();
+  await expect(page.locator('#left-tcp-drag')).toBeHidden();
+  await expect(page.locator('#right-tcp-drag')).toBeHidden();
+  await page.locator('#toggle-camera-views').click();
+  await expect(page.locator('#camera-overlays')).toBeHidden();
+  await page.locator('#playback-overlay > summary').click();
+  await expect(page.locator('#playback-overlay')).toHaveAttribute('open', '');
+  // Visibility controls never pause a camera or alter the robot's configuration.
+  await moveJoint(page, 'left_joint1', 65);
+  await page.waitForFunction((frames) => window.xensePreview.state().cameras[0].frames > frames, initial.cameras[0].frames);
+  const beforeFocus = await page.evaluate(() => window.xensePreview.state());
+  await page.locator('#focus-view').click();
+  await expect(page.locator('#controls-panel')).toBeHidden();
+  await expect(page.locator('#bottom-overlays')).toBeHidden();
+  await expect.poll(async () => (await page.locator('#viewport').boundingBox()).width).toBeGreaterThan(stage.width + 300);
+  // The resized WebGL canvas must repaint the workcell, rather than just expose a background.
+  await expect.poll(async () => (await page.locator('#viewport canvas').screenshot()).length).toBeGreaterThan(40000);
+  expect((await page.evaluate(() => window.xensePreview.state())).joints).toEqual(beforeFocus.joints);
+  await page.keyboard.press('Escape');
+  await expect(page.locator('#focus-view')).toHaveAttribute('aria-pressed', 'false');
+  await expect(page.locator('#controls-panel')).toBeVisible();
+  await expect(page.locator('#camera-overlays')).toBeHidden();
+  await expect(page.locator('#tcp-overlay')).not.toHaveAttribute('open');
+  await expect(page.locator('#playback-overlay')).toHaveAttribute('open', '');
+  await page.locator('#playback-overlay > summary').click();
+  await expect(page.locator('#playback-overlay')).not.toHaveAttribute('open');
+  await page.locator('#toggle-camera-views').click();
+  await expect(page.locator('#left-camera-canvas')).toBeHidden();
+  await expect(page.locator('#right-camera-canvas')).toBeInViewport();
+  await page.locator('#left-camera-view > summary').click();
+  await page.locator('#tcp-overlay > summary').click();
+  await expectTcpReadouts(page, await page.evaluate(() => window.xensePreview.state()));
+  await page.locator('#toggle-controls').click();
+  await expect(page.locator('#controls-panel')).toBeHidden();
+  await page.locator('#focus-view').click();
+  await page.locator('#focus-view').click();
+  await expect(page.locator('#controls-panel')).toBeHidden();
+  await page.locator('#toggle-controls').click();
+  await expect(page.locator('#controls-panel')).toBeVisible();
+  await expect.poll(async () => (await page.locator('#viewport').boundingBox()).width).toBe(stage.width);
+  expect(errors).toEqual([]);
 });
 
 test('dual-arm controls, independent camera poses, live images and PNG/JSON downloads', async ({ page }, testInfo) => {

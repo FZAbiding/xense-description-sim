@@ -161,6 +161,7 @@ export function createFlexivMotionUi({ controller, description, ik, view, onPose
       stop('已记录当前双臂与夹爪姿态');
       waypoints = next;
       recordNumber += 1;
+      element('playback-overlay').open = true;
       renderWaypoints();
     } catch (error) {
       notice = error.message; noticeError = true; updatePlayback();
@@ -205,6 +206,7 @@ export function createFlexivMotionUi({ controller, description, ik, view, onPose
       const next = validateWaypoints([...waypoints, ...imported], description);
       stop(`已导入 ${imported.length} 个关键帧，播放后应用`);
       waypoints = next;
+      element('playback-overlay').open = true;
       renderWaypoints();
     } catch (error) {
       notice = `导入失败：${error.message}`; noticeError = true; updatePlayback();

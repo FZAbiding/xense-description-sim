@@ -214,6 +214,8 @@ export function createFlexivView({ host, mujoco, model, data, materialProps, des
     const width = Math.max(1, host.clientWidth);
     const height = Math.max(1, host.clientHeight);
     mainCamera.aspect = width / height;
+    // Preserve the 42-degree horizontal field of view on portrait canvases.
+    mainCamera.fov = THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(42) / 2) / Math.min(1, mainCamera.aspect)));
     mainCamera.updateProjectionMatrix();
     renderer.setSize(width, height, false);
     dirty = true;
