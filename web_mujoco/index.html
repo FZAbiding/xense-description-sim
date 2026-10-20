@@ -23,6 +23,10 @@
         </div>
       </div>
       <div class="callouts" id="callouts"></div>
+      <div id="campus-camera-controls" class="campus-camera-controls" role="group" data-i18n-aria-label="campus.cameraLabel" aria-label="Campus camera" hidden>
+        <button type="button" id="campus-overview" data-i18n="campus.overview" aria-pressed="true">Street view</button>
+        <button type="button" id="campus-follow" data-i18n="campus.follow" aria-pressed="false">Follow AGV</button>
+      </div>
       <div id="drag-cluster" class="drag-cluster">
         <div id="drag-marker" class="drag-marker" data-i18n-title="marker.tcp" title="Drag TCP"></div>
         <div class="gripper-fab">
@@ -49,9 +53,12 @@
           <button type="button" id="set-nav-goal" data-i18n="agv.setGoal">Set navigation point</button>
           <button type="button" id="go-nav-goal" data-i18n="agv.goGoal" disabled>Go to point</button>
           <button type="button" id="go-grasp-zone" data-i18n="agv.goGrasp">Go to grasp zone</button>
+          <button type="button" id="go-charging-zone" data-i18n="agv.goCharge" hidden>Go to charging bay</button>
+          <button type="button" id="go-delivery-zone" data-i18n="agv.goDelivery" hidden>Go to delivery bay</button>
           <button type="button" id="cancel-navigation" data-i18n="agv.cancelNav" disabled>Stop navigation</button>
         </div>
         <p class="agv-navigation-state" id="agv-navigation-state" data-i18n="agv.noGoal">No navigation point selected</p>
+        <p id="agv-simulation-timing" aria-live="off" data-i18n="agv.timingPending">Measuring simulation speed…</p>
         <p data-i18n="agv.keyboardHint">Drive with the keyboard; release to stop. Press Space for an immediate stop.</p>
       </div>
       <div class="object-edit-hud" id="object-edit-hud" hidden>
@@ -75,6 +82,7 @@
           <select id="model-variant" class="variant-select" data-i18n-aria-label="variant.aria">
             <option value="arm" data-i18n="variant.arm">Arm only</option>
             <option value="agv" data-i18n="variant.agv">AGV chassis</option>
+            <option value="agv-campus" data-i18n="variant.agvCampus">AGV · Campus streets</option>
           </select>
         </label>
         <button type="button" id="toggle-drag" data-i18n="btn.dragOn">Enable TCP drag</button>

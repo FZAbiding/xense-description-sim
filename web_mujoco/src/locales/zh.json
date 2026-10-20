@@ -1,4 +1,13 @@
 {
+  "agv.simulationTiming": "仿真 {rate}× · {fps} FPS",
+  "agv.timingPending": "正在测量仿真速度…",
+  "campus.cameraLabel": "园区相机视角",
+  "campus.overview": "街区视角",
+  "campus.follow": "跟随小车",
+  "variant.agvCampus": "AGV · 园区街区",
+  "agv.goCharge": "前往充电区",
+  "agv.goDelivery": "前往配送区",
+  "status.loadingEnvironment": "正在加载园区建筑与街道…",
   "variant.label": "产品配置",
   "variant.aria": "选择产品配置",
   "variant.arm": "标准机械臂",

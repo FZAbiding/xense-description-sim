@@ -38,8 +38,11 @@ Open the URL printed in the terminal, usually [http://127.0.0.1:5173](http://127
 | --- | --- | --- |
 | Standard arm (default) | `/?variant=arm` | `rs_grasp_scene.xml`, including the workbench and graspable objects |
 | AGV base | `/?variant=agv` | `rs_agv_scene.xml`, including the mobile base and laboratory |
+| AGV campus streets | `/?variant=agv-campus` | `rs_agv_campus_scene.xml`, with three apartment buildings, a junction and service bays |
 
 Switch configurations at the top of the page. In AGV mode, drive with WASD / arrow keys, stop with Space, select a floor navigation target, or use “Go to grasp area.” Run grasping tasks after docking. The first load downloads the scene meshes.
+
+Campus mode adds charging / delivery navigation shortcuts and a follow camera. These bays demonstrate navigation and docking; charging state and delivery jobs are not simulated. The detailed campus is rendered in the browser; native MuJoCo uses simplified building proxies, and ROS / Nav2 campus maps are not configured.
 
 Build and preview locally:
 
@@ -180,6 +183,7 @@ npm run smoke
 npm run test:loading
 npm run test:reset
 npm run test:variants
+npm run test:campus
 npm run test:explode
 ```
 

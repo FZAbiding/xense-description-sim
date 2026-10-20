@@ -26,6 +26,7 @@ for (const mode of ['arm', 'agv-idle', 'agv-navigating', 'agv-docked']) {
         click = callback;
       }
     },
+    simulationClock: { reset: record('reset-clock') },
     agvKeys: new Set(['forward']),
     agvController: hasAgv ? {
       stop: record('drive-stop'),
@@ -74,7 +75,7 @@ for (const mode of ['arm', 'agv-idle', 'agv-navigating', 'agv-docked']) {
     assert.doesNotThrow(() => click(), `${mode}: Reset must complete`);
     for (const event of [
       'stop-drag', 'reset-grasp', 'reset-telemetry', 'reset-explosion',
-      'clear-selection', 'reset-physics', 'reset-object-edit', 'ready'
+      'clear-selection', 'reset-physics', 'reset-object-edit', 'ready', 'reset-clock'
     ]) assert(events.includes(event), `${mode}: missing ${event}`);
     assert(events.indexOf('reset-grasp') < events.indexOf('reset-physics'));
     assert(events.indexOf('reset-physics') < events.indexOf('reset-object-edit'));

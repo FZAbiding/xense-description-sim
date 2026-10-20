@@ -38,8 +38,11 @@ npm run dev
 | --- | --- | --- |
 | 标准机械臂（默认） | `/?variant=arm` | `rs_grasp_scene.xml`，包含工作台和抓取物体 |
 | AGV 底盘款 | `/?variant=agv` | `rs_agv_scene.xml`，包含移动底盘和实验室 |
+| AGV 园区街区 | `/?variant=agv-campus` | `rs_agv_campus_scene.xml`，包含三栋居民楼、十字路口和服务区域 |
 
 页面顶部可以切换配置。AGV 款支持 WASD / 方向键驾驶、空格停车、地面选点导航和“前往抓取区”；停靠后可执行抓取任务。首次加载需要下载场景网格。
+
+园区模式新增充电 / 配送区导航快捷入口和跟随相机，目前用于导航停靠演示，不模拟电池充电或物流任务。详细街景在网页中显示，原生 MuJoCo 使用简化建筑轮廓，尚未配置 ROS / Nav2 园区地图。
 
 构建与本地预览：
 
@@ -180,6 +183,7 @@ npm run smoke
 npm run test:loading
 npm run test:reset
 npm run test:variants
+npm run test:campus
 npm run test:explode
 ```
 

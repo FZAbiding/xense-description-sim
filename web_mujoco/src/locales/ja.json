@@ -1,4 +1,13 @@
 {
+  "agv.simulationTiming": "シミュレーション {rate}× · {fps} FPS",
+  "agv.timingPending": "シミュレーション速度を測定中…",
+  "campus.cameraLabel": "街区カメラ",
+  "campus.overview": "街区ビュー",
+  "campus.follow": "AGV を追従",
+  "variant.agvCampus": "AGV · キャンパス街区",
+  "agv.goCharge": "充電エリアへ",
+  "agv.goDelivery": "配送エリアへ",
+  "status.loadingEnvironment": "街区の建物と道路を読み込み中…",
   "variant.label": "製品構成",
   "variant.aria": "製品構成を選択",
  "variant.arm": "ロボットアーム標準仕様",

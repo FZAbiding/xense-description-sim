@@ -37,12 +37,12 @@ self.addEventListener('message', (event) => {
 function isCacheable(requestUrl) {
   const scope = new URL(self.registration.scope);
   if (requestUrl.origin !== scope.origin || !requestUrl.pathname.startsWith(scope.pathname)) return false;
-  return requestUrl.pathname.includes('/assets/') || requestUrl.pathname.includes('/models/');
+  return requestUrl.pathname.includes('/assets/') || requestUrl.pathname.includes('/models/') || requestUrl.pathname.includes('/environments/');
 }
 
 async function pruneOldModelFile(cache, url) {
   // Each file has its own content hash. Updating XML must not evict meshes.
-  if (!url.pathname.includes('/models/') || !url.searchParams.has('v')) return;
+  if ((!url.pathname.includes('/models/') && !url.pathname.includes('/environments/')) || !url.searchParams.has('v')) return;
   const rawPath = url.pathname.endsWith('.gzbin') ? url.pathname.slice(0, -6) : null;
   const requests = await cache.keys();
   await Promise.all(requests.map((request) => {

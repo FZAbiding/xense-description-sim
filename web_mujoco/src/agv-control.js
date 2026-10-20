@@ -22,7 +22,6 @@ export const AGV_MAX_LINEAR_SPEED = 0.8;
 export const AGV_MAX_ANGULAR_SPEED = 1.8;
 export const AGV_FORWARD_SPEED = 0.65;
 export const AGV_TURN_SPEED = 1.4;
-export const AGV_STEPS_PER_FRAME = 8;
 
 function clip(value, limit) {
   return Math.min(limit, Math.max(-limit, value));
@@ -35,7 +34,9 @@ function namedId(mujoco, model, type, name) {
 }
 
 /** Collision-aware velocity controller for the browser simulation. */
-export function createAgvController(mujoco, model, data) {
+export function createAgvController(mujoco, model, data, navigation = {}) {
+  const bounds = navigation.bounds || AGV_NAV_BOUNDS;
+  const obstacles = navigation.obstacles || LAB_NAV_OBSTACLES;
   const jointType = mujoco.mjtObj.mjOBJ_JOINT.value;
   const actuatorType = mujoco.mjtObj.mjOBJ_ACTUATOR.value;
   const bodyType = mujoco.mjtObj.mjOBJ_BODY.value;
@@ -117,22 +118,22 @@ export function createAgvController(mujoco, model, data) {
     const nextX = x + velocityX * lookahead;
     const nextY = y + velocityY * lookahead;
 
-    if (nextX < AGV_NAV_BOUNDS.minX && velocityX < 0) {
+    if (nextX < bounds.minX && velocityX < 0) {
       velocityX = 0;
       blocked = true;
-    } else if (nextX > AGV_NAV_BOUNDS.maxX && velocityX > 0) {
+    } else if (nextX > bounds.maxX && velocityX > 0) {
       velocityX = 0;
       blocked = true;
     }
-    if (nextY < AGV_NAV_BOUNDS.minY && velocityY < 0) {
+    if (nextY < bounds.minY && velocityY < 0) {
       velocityY = 0;
       blocked = true;
-    } else if (nextY > AGV_NAV_BOUNDS.maxY && velocityY > 0) {
+    } else if (nextY > bounds.maxY && velocityY > 0) {
       velocityY = 0;
       blocked = true;
     }
 
-    for (const configuredObstacle of LAB_NAV_OBSTACLES) {
+    for (const configuredObstacle of obstacles) {
       let obstacleX = configuredObstacle.x;
       let obstacleY = configuredObstacle.y;
       if (configuredObstacle.id === 'dynamic-pallet' && dynamicPalletBodyId >= 0) {

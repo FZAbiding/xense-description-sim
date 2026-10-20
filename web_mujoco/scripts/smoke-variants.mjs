@@ -13,6 +13,7 @@ import { createGraspDemo, STORAGE_ZONES } from '../src/grasp-demo.js';
 import { bindJoints } from '../src/kinematics.js';
 import { MODEL_VARIANTS } from '../src/model-variants.js';
 import { createPhysicsController } from '../src/pd-control.js';
+import { advanceSimulation, createSimulationClock } from '../src/simulation-clock.js';
 import { createTcpIk } from '../src/tcp-ik.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -203,9 +204,10 @@ async function main() {
     workspaceOffset: GRASP_WORKSPACE_OFFSET
   });
   grasp.start('red');
+  const graspClock = createSimulationClock(agv.model.opt.timestep);
+  graspClock.reset(0);
   for (let frame = 0; frame < 3600 && grasp.isRunning(); frame += 1) {
-    grasp.update();
-    physics.step(12);
+    advanceSimulation(physics, graspClock.steps((frame + 1) * 1000 / 30), () => grasp.update());
   }
   const graspState = grasp.state();
   assert(
@@ -257,18 +259,22 @@ async function main() {
     'gripper_right'
   ].map((name) => mujoco.mj_name2id(agv.model, bodyType, name)));
   const armYellowContacts = [];
+  const stackClock = createSimulationClock(agv.model.opt.timestep);
+  stackClock.reset(0);
+  let stackWallMs = 0;
+  const stackPhysics = {
+    step(count) {
+      physics.step(count);
+      const contacts = armYellowContactNames(mujoco, agv.model, agv.data, armBodyIds);
+      if (contacts.length && stack.state().selectedId === 'red') {
+        armYellowContacts.push({ stage: stack.state().stage, selectedId: stack.state().selectedId, contacts });
+      }
+    }
+  };
   stack.startStack();
   for (let frame = 0; frame < 12000 && stack.isRunning(); frame += 1) {
-    stack.update();
-    physics.step(12);
-    const contacts = armYellowContactNames(mujoco, agv.model, agv.data, armBodyIds);
-    if (contacts.length && stack.state().selectedId === 'red') {
-      armYellowContacts.push({
-        stage: stack.state().stage,
-        selectedId: stack.state().selectedId,
-        contacts
-      });
-    }
+    stackWallMs += 1000 / [15, 60, 30, 120][frame % 4];
+    advanceSimulation(stackPhysics, stackClock.steps(stackWallMs), () => stack.update());
   }
   assert(
     stack.state().stage === 'complete',
