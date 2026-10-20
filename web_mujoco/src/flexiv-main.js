@@ -98,6 +98,7 @@ function buildControls(controller, { onManual, onSelectSide }) {
     });
   }
   syncControls(controller);
+  return { selectSide: (side) => selectTab(tabs.find((tab) => tab.dataset.side === side)) };
 }
 
 function syncControls(controller) {
@@ -127,8 +128,9 @@ async function main() {
   const ik = createFlexivIk(mujoco, model, data, controller, description);
   const view = createFlexivView({ host: document.getElementById('viewport'), mujoco, model, data, materialProps, description });
   let motionUi;
-  buildControls(controller, { onManual: () => motionUi?.interrupt(), onSelectSide: (side) => motionUi?.setSide(side) });
-  motionUi = createFlexivMotionUi({ controller, description, ik, view, onPoseChange: () => syncControls(controller), saveFile, filename });
+  const jointUi = buildControls(controller, { onManual: () => motionUi?.interrupt(), onSelectSide: (side) => motionUi?.setSide(side) });
+  motionUi = createFlexivMotionUi({ controller, description, ik, view, onPoseChange: () => syncControls(controller),
+    onSelectSide: (side) => jointUi.selectSide(side), saveFile, filename });
   document.getElementById('reset-pose').addEventListener('click', () => {
     motionUi.interrupt('已恢复启动姿态');
     controller.reset();

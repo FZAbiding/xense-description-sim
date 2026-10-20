@@ -1,6 +1,6 @@
 import { createMotionPlayer, decodeMotionFile, encodeMotionFile, validateWaypoints } from './flexiv-motion.js';
 
-export function createFlexivMotionUi({ controller, description, ik, view, onPoseChange, saveFile, filename }) {
+export function createFlexivMotionUi({ controller, description, ik, view, onPoseChange, onSelectSide, saveFile, filename }) {
   const player = createMotionPlayer(controller, description);
   const element = (id) => document.getElementById(id);
   const coordinateInputs = ['x', 'y', 'z'].map((axis) => element(`tcp-${axis}`));
@@ -15,12 +15,23 @@ export function createFlexivMotionUi({ controller, description, ik, view, onPose
   let lastIk = null;
 
   function syncTcp(force = false) {
+    for (const arm of ['left', 'right']) {
+      const current = ik.readPose(arm);
+      ['x', 'y', 'z'].forEach((axis, index) => {
+        element(`${arm}-tcp-${axis}`).textContent = current.position[index].toFixed(4);
+      });
+      const active = dragEnabled && side === arm;
+      const button = element(`${arm}-tcp-drag`);
+      button.setAttribute('aria-pressed', String(active));
+      button.textContent = `${active ? '结束' : '拖动'}${arm === 'left' ? '左臂' : '右臂'}${active ? '拖动' : ' TCP'}`;
+      document.querySelector(`[data-tcp-side="${arm}"]`).classList.toggle('drag-active', active);
+    }
     const pose = ik.readPose(side);
     coordinateInputs.forEach((input, i) => {
       if (force || document.activeElement !== input) input.value = pose.position[i].toFixed(4);
     });
     element('tcp-side-label').textContent = side === 'left' ? '左臂' : '右臂';
-    element('tcp-stage-hint').textContent = dragEnabled ? `${side === 'left' ? '左臂' : '右臂'} TCP · 拖动彩色轴或平面` : '选择左右臂后启用末端拖动';
+    element('tcp-stage-hint').textContent = dragEnabled ? `${side === 'left' ? '左臂' : '右臂'}拖动中 · 拖彩色轴 / 平面 · Esc 退出` : '点击对应按钮，直接进入左臂或右臂拖动';
   }
 
   function updatePlayback() {
@@ -52,10 +63,8 @@ export function createFlexivMotionUi({ controller, description, ik, view, onPose
   function setDrag(enabled) {
     dragEnabled = enabled;
     view.setTcpDrag(side, enabled);
-    element('toggle-tcp-drag').setAttribute('aria-pressed', String(enabled));
     if (enabled) {
       stop('末端控制已启用');
-      element('tcp-panel').open = true;
     }
     syncTcp(true);
   }
@@ -67,13 +76,13 @@ export function createFlexivMotionUi({ controller, description, ik, view, onPose
     status.classList.toggle('error', !lastIk.success);
     if (lastIk.success && controller.setPose(lastIk.angles)) {
       const orientation = element('tcp-hold-orientation').checked ? `朝向误差 ${(lastIk.orientationError * 180 / Math.PI).toFixed(2)}°` : '朝向自由';
-      status.textContent = `已到达 · 位置误差 ${(lastIk.positionError * 1000).toFixed(2)} mm · ${orientation}`;
+      status.textContent = `${side === 'left' ? '左臂' : '右臂'}已到达 · 误差 ${(lastIk.positionError * 1000).toFixed(2)} mm · ${orientation}`;
       onPoseChange();
       syncTcp();
       return true;
     }
     status.textContent = lastIk.reason === 'invalid-target' ? '请输入有效的 X、Y、Z 坐标'
-      : `目标不可达，已保留当前姿态 · 位置误差 ${(lastIk.positionError * 1000).toFixed(1)} mm`;
+      : `本次求解未收敛，已保留当前姿态 · 误差 ${(lastIk.positionError * 1000).toFixed(1)} mm`;
     return false;
   }
 
@@ -101,7 +110,20 @@ export function createFlexivMotionUi({ controller, description, ik, view, onPose
     updatePlayback();
   }
 
-  element('toggle-tcp-drag').addEventListener('click', () => setDrag(!dragEnabled));
+  document.querySelectorAll('[data-tcp-drag]').forEach((button) => button.addEventListener('click', () => {
+    const enabled = side !== button.dataset.tcpDrag || !dragEnabled;
+    onSelectSide(button.dataset.tcpDrag);
+    setDrag(enabled);
+  }));
+  function keydown(event) {
+    if (event.key === 'Escape' && dragEnabled) setDrag(false);
+  }
+  document.addEventListener('keydown', keydown);
+  element('open-waypoints').addEventListener('click', () => {
+    element('motion-panel').open = true;
+    element('motion-panel').scrollIntoView({ block: 'nearest' });
+    element('motion-panel').querySelector('summary').focus({ preventScroll: true });
+  });
   coordinateInputs.forEach((input) => input.addEventListener('focus', () => stop('正在编辑末端目标')));
   element('tcp-apply').addEventListener('click', () => applyTarget(coordinateInputs.map((input) => input.valueAsNumber)));
   element('tcp-read').addEventListener('click', () => {
@@ -201,7 +223,10 @@ export function createFlexivMotionUi({ controller, description, ik, view, onPose
     refresh() { syncTcp(true); updatePlayback(); },
     interrupt(message = '当前为手动控制') { stop(message); },
     setSide(next) {
+      if (side === next) return;
       side = next;
+      element('tcp-result').classList.remove('error');
+      element('tcp-result').textContent = `当前控制：${side === 'left' ? '左臂' : '右臂'}`;
       view.setTcpDrag(side, dragEnabled);
       syncTcp(true);
     },
@@ -212,6 +237,10 @@ export function createFlexivMotionUi({ controller, description, ik, view, onPose
     },
     state: () => ({ side, dragEnabled, waypointCount: waypoints.length, playback: player.state(),
       lastIk: lastIk ? { success: lastIk.success, reason: lastIk.reason, positionError: lastIk.positionError, orientationError: lastIk.orientationError } : null }),
-    dispose() { player.stop(); document.removeEventListener('visibilitychange', visibilityChanged); }
+    dispose() {
+      player.stop();
+      document.removeEventListener('visibilitychange', visibilityChanged);
+      document.removeEventListener('keydown', keydown);
+    }
   };
 }

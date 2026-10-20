@@ -28,6 +28,37 @@ async function feedPixels(page, side) {
   });
 }
 
+async function expectTcpReadouts(page, state) {
+  for (const side of ['left', 'right']) {
+    for (const [index, axis] of ['x', 'y', 'z'].entries()) {
+      const readout = page.locator(`#${side}-tcp-${axis}`);
+      await expect(readout).toBeInViewport();
+      await expect(readout).toHaveText(state.tcps[side].position[index].toFixed(4));
+    }
+  }
+}
+
+test('camera strip stays above the scene and both TCP positions stay visible below it', async ({ page }) => {
+  await ready(page);
+  const stage = await page.locator('.stage').boundingBox();
+  for (const side of ['left', 'right']) {
+    const feed = await page.locator(`.camera-feed[data-side="${side}"]`).boundingBox();
+    expect(feed.y + feed.height).toBeLessThanOrEqual(stage.y);
+    expect(feed.width).toBeGreaterThan(250);
+    await expect(page.locator(`#${side}-camera-canvas`)).toBeInViewport();
+    const card = await page.locator(`[data-tcp-side="${side}"]`).boundingBox();
+    expect(card.y).toBeGreaterThanOrEqual(stage.y + stage.height);
+    await expect(page.locator(`#${side}-tcp-drag`)).toBeInViewport();
+  }
+  await expectTcpReadouts(page, await page.evaluate(() => window.xensePreview.state()));
+  await expect(page.locator('[data-camera="head"]')).toContainText('待接入');
+  await expect(page.locator('[data-camera="head"] canvas')).toHaveCount(0);
+  await expect(page.locator('.controls-panel .camera-feed')).toHaveCount(0);
+  await expect(page.locator('#motion-play')).toBeInViewport();
+  await page.locator('#open-waypoints').click();
+  await expect(page.locator('#motion-panel')).toHaveAttribute('open', '');
+});
+
 test('dual-arm controls, independent camera poses, live images and PNG/JSON downloads', async ({ page }, testInfo) => {
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
@@ -116,6 +147,13 @@ test('mobile layout exposes controls and both wrist feeds without horizontal ove
   await page.locator('#right-camera-canvas').scrollIntoViewIfNeeded();
   await expect(page.locator('#left-camera-canvas')).toBeVisible();
   await expect(page.locator('#right-camera-canvas')).toBeVisible();
+  await page.locator('#left-tcp-drag').scrollIntoViewIfNeeded();
+  await expectTcpReadouts(page, await page.evaluate(() => window.xensePreview.state()));
+  await page.locator('#right-tcp-drag').click();
+  expect((await page.evaluate(() => window.xensePreview.state())).tcpDrag.side).toBe('right');
+  await expect(page.locator('#right-tab')).toHaveAttribute('aria-selected', 'true');
+  await page.keyboard.press('Escape');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   await testInfo.attach('mobile', { body: await page.screenshot({ fullPage: true }), contentType: 'image/png' });
 });
 
@@ -128,7 +166,7 @@ test('original reBot page loads through the preserved entry point', async ({ pag
   expect(errors).toEqual([]);
 });
 
-test('TCP inputs, orientation hold, unreachable rollback and real gizmo dragging', async ({ page }) => {
+test('TCP targets, rollback and real mouse dragging of each arm through its own button', async ({ page }) => {
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await ready(page);
@@ -142,28 +180,48 @@ test('TCP inputs, orientation hold, unreachable rollback and real gizmo dragging
   const beforeInvalid = state.joints;
   for (const axis of ['x', 'y', 'z']) await page.locator(`#tcp-${axis}`).fill('10');
   await page.locator('#tcp-apply').click();
-  await expect(page.locator('#tcp-result')).toContainText('目标不可达');
+  await expect(page.locator('#tcp-result')).toContainText('本次求解未收敛');
   expect((await page.evaluate(() => window.xensePreview.state())).joints).toEqual(beforeInvalid);
   await page.locator('#tcp-read').click();
   await page.locator('#reset-pose').click();
-  await page.locator('#toggle-tcp-drag').click();
-  await expect.poll(() => page.evaluate(() => window.xensePreview.state().tcpDrag.enabled)).toBe(true);
-  const handles = (await page.evaluate(() => window.xensePreview.state())).tcpDrag.handles.filter((handle) => handle.axis === 'Z');
-  expect(handles.length).toBeGreaterThan(0);
-  const handle = handles[0];
-  await page.mouse.move(handle.x, handle.y);
-  await page.mouse.down();
-  expect(await page.evaluate(() => window.xensePreview.state().tcpDrag.dragging)).toBe(true);
-  await page.mouse.move(handle.x, handle.y - 5, { steps: 3 });
-  await page.mouse.up();
-  state = await page.evaluate(() => window.xensePreview.state());
-  expect(state.tcps.left.position[2]).toBeGreaterThan(initial.tcps.left.position[2] + 0.002);
-  expect(state.tcps.right).toEqual(initial.tcps.right);
-  expect(state.motion.lastIk.success).toBe(true);
-  await page.getByRole('tab', { name: /右臂/ }).click();
+  // Start with the right button while the left sidebar tab is selected. Then switch
+  // both ways without ending drag mode, using actual mouse input on each gizmo.
+  for (const side of ['right', 'left', 'right']) {
+    const other = side === 'left' ? 'right' : 'left';
+    const before = await page.evaluate(() => window.xensePreview.state());
+    await page.locator(`#${side}-tcp-drag`).click();
+    await expect(page.locator(`#${side}-tcp-drag`)).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.locator(`#${other}-tcp-drag`)).toHaveAttribute('aria-pressed', 'false');
+    await expect(page.locator(`#${side}-tab`)).toHaveAttribute('aria-selected', 'true');
+    const drag = (await page.evaluate(() => window.xensePreview.state())).tcpDrag;
+    expect(drag.enabled).toBe(true);
+    expect(drag.side).toBe(side);
+    const handle = drag.handles.find((item) => item.axis === 'Z');
+    expect(handle).toBeTruthy();
+    await page.mouse.move(handle.x, handle.y);
+    await page.mouse.down();
+    expect(await page.evaluate(() => window.xensePreview.state().tcpDrag.dragging)).toBe(true);
+    await page.mouse.move(handle.x, handle.y - 5, { steps: 3 });
+    await page.mouse.up();
+    state = await page.evaluate(() => window.xensePreview.state());
+    expect(state.tcps[side].position[2]).toBeGreaterThan(before.tcps[side].position[2] + 0.002);
+    expect(state.tcps[other]).toEqual(before.tcps[other]);
+    for (const [name, value] of Object.entries(before.joints)) {
+      if (!name.startsWith(`${side}_joint`)) expect(state.joints[name]).toBe(value);
+    }
+    expect(state.motion.lastIk.success).toBe(true);
+    expect(state.tcpDrag.dragging).toBe(false);
+    await expectTcpReadouts(page, state);
+  }
+  await page.getByRole('tab', { name: /左臂/ }).click();
+  expect((await page.evaluate(() => window.xensePreview.state())).tcpDrag.side).toBe('left');
+  await page.locator('#right-tcp-drag').click();
   expect((await page.evaluate(() => window.xensePreview.state())).tcpDrag.side).toBe('right');
   await expect(page.locator('#tcp-side-label')).toHaveText('右臂');
-  await page.locator('#toggle-tcp-drag').click();
+  await page.keyboard.press('Escape');
+  expect((await page.evaluate(() => window.xensePreview.state())).tcpDrag.enabled).toBe(false);
+  await expect(page.locator('#left-tcp-drag')).toHaveAttribute('aria-pressed', 'false');
+  await expect(page.locator('#right-tcp-drag')).toHaveAttribute('aria-pressed', 'false');
   await page.locator('#tcp-hold-orientation').uncheck();
   await page.locator('[data-jog-axis="2"][data-jog-sign="1"]').click();
   await expect(page.locator('#tcp-result')).toContainText('朝向自由');

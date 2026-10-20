@@ -142,7 +142,11 @@ export function createFlexivView({ host, mujoco, model, data, materialProps, des
     group.add(point, new THREE.AxesHelper(0.065));
     group.traverse((node) => node.layers.set(HELPER_LAYER));
     scene.add(group);
-    return [side, { body, group }];
+    const label = document.createElement('span');
+    label.className = `tcp-label ${side}`;
+    label.textContent = `${side === 'left' ? '左臂' : '右臂'} TCP`;
+    host.append(label);
+    return [side, { body, group, label }];
   }));
   const tcpTarget = new THREE.Object3D();
   scene.add(tcpTarget);
@@ -250,7 +254,15 @@ export function createFlexivView({ host, mujoco, model, data, materialProps, des
       feedRevision = revision;
     }
     renderer.setRenderTarget(null);
-    if (dirty || force) renderer.render(scene, mainCamera);
+    if (dirty || force) {
+      renderer.render(scene, mainCamera);
+      for (const { group, label } of Object.values(tcpMarkers)) {
+        const point = group.getWorldPosition(new THREE.Vector3()).project(mainCamera);
+        label.hidden = point.z < -1 || point.z > 1 || Math.abs(point.x) > 1 || Math.abs(point.y) > 1;
+        label.style.left = `${(point.x + 1) * 50}%`;
+        label.style.top = `${(1 - point.y) * 50}%`;
+      }
+    }
     dirty = false;
   }
 
@@ -312,6 +324,7 @@ export function createFlexivView({ host, mujoco, model, data, materialProps, des
       observer.disconnect();
       controls.dispose();
       transform.dispose();
+      for (const { label } of Object.values(tcpMarkers)) label.remove();
       for (const { group } of Object.values(tcpMarkers)) group.traverse((node) => {
         node.geometry?.dispose();
         if (Array.isArray(node.material)) node.material.forEach((item) => item.dispose());

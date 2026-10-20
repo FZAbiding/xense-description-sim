@@ -15,6 +15,19 @@
       <a class="legacy-link" href="./rebot.html">reBot 原始演示 ↗</a>
     </header>
     <main class="workspace" aria-busy="true" id="workspace">
+      <div class="monitor">
+        <section class="camera-ribbon" aria-label="相机监看">
+          <div class="camera-toolbar"><h2>相机监看 <span>640 × 480 · FOV 60° · 未标定</span></h2><div><label><input type="checkbox" id="show-frusta" disabled>视锥</label><label><input type="checkbox" id="show-reference" checked disabled>参考标靶</label></div></div>
+        <div class="camera-feeds">
+          <article class="camera-feed" data-side="left"><div class="feed-heading"><label><input type="checkbox" id="left-camera-enabled" checked disabled><span class="side-dot left-dot"></span>左腕相机</label><button data-capture="left" disabled aria-label="保存左腕相机 PNG">PNG ↓</button></div><canvas id="left-camera-canvas" aria-label="左腕相机画面"></canvas><p>LEFT WRIST <span id="left-camera-state">等待模型</span></p></article>
+          <article class="camera-feed" data-side="right"><div class="feed-heading"><label><input type="checkbox" id="right-camera-enabled" checked disabled><span class="side-dot right-dot"></span>右腕相机</label><button data-capture="right" disabled aria-label="保存右腕相机 PNG">PNG ↓</button></div><canvas id="right-camera-canvas" aria-label="右腕相机画面"></canvas><p>RIGHT WRIST <span id="right-camera-state">等待模型</span></p></article>
+          <article class="camera-feed head-camera" data-camera="head" aria-label="头部相机预留位置">
+            <div class="feed-heading"><span>头部相机</span><span class="pending-badge">待接入</span></div>
+            <div class="camera-placeholder"><span class="camera-symbol" aria-hidden="true">◎</span><strong>头部视角</strong><span>接入模型与相机参数后启用</span></div>
+            <p>HEAD CAMERA <span>暂无图像源</span></p>
+          </article>
+        </div>
+        </section>
       <section class="stage" aria-label="三维模型">
         <div id="viewport" class="viewport"></div>
         <div class="stage-heading"><p class="eyebrow">DUAL-ARM WORKCELL</p><h1>Forward-01 <span>TacCap</span></h1><p>双七轴机械臂 · 双夹爪 · 双腕部视角</p></div>
@@ -22,18 +35,34 @@
           <button data-view="perspective" aria-pressed="true">透视</button><button data-view="front" aria-pressed="false">正视</button><button data-view="side" aria-pressed="false">侧视</button><button data-view="top" aria-pressed="false">俯视</button>
           <button id="frame-model" title="重新居中并完整显示模型">居中</button>
         </div>
-        <div class="tcp-stage-tools"><button id="toggle-tcp-drag" aria-pressed="false" disabled>拖动当前臂 TCP</button><span id="tcp-stage-hint">选择左右臂后启用末端拖动</span></div>
         <div id="loading" class="loading" role="status"><span class="spinner"></span><strong>正在准备双臂工位</strong><p id="loading-text">加载 MuJoCo 与模型资产…</p><button id="reload" hidden>重新加载</button></div>
-        <div class="stage-footer"><span><span class="live-dot"></span><span id="status" role="status">正在加载</span></span><span>拖动旋转 · 滚轮缩放 · 右键平移</span></div>
+        <button id="capture-main" class="stage-capture" disabled>主视角 PNG ↓</button>
       </section>
-      <aside class="controls-panel" aria-label="关节和相机控制">
+        <section class="tcp-dock" aria-label="双臂 TCP 实时位置">
+          <article class="tcp-card" data-tcp-side="left">
+            <div class="tcp-card-heading"><h2><span class="side-dot left-dot"></span>左臂 TCP <span>世界坐标 · m</span></h2><button id="left-tcp-drag" data-tcp-drag="left" aria-pressed="false" disabled>拖动左臂 TCP</button></div>
+            <div class="tcp-coordinates"><span>X <output id="left-tcp-x">—</output></span><span>Y <output id="left-tcp-y">—</output></span><span>Z <output id="left-tcp-z">—</output></span></div>
+          </article>
+          <article class="tcp-card" data-tcp-side="right">
+            <div class="tcp-card-heading"><h2><span class="side-dot right-dot"></span>右臂 TCP <span>世界坐标 · m</span></h2><button id="right-tcp-drag" data-tcp-drag="right" aria-pressed="false" disabled>拖动右臂 TCP</button></div>
+            <div class="tcp-coordinates"><span>X <output id="right-tcp-x">—</output></span><span>Y <output id="right-tcp-y">—</output></span><span>Z <output id="right-tcp-z">—</output></span></div>
+          </article>
+          <div class="tcp-feedback"><span id="tcp-stage-hint">点击对应按钮，直接进入左臂或右臂拖动</span><p id="tcp-result" class="operation-status" role="status">末端位置就绪</p></div>
+        </section>
+        <section class="transport" aria-label="关键帧回放控制">
+          <div class="transport-heading"><span>关键帧回放</span><p id="motion-status" class="operation-status" role="status">先记录两个姿态，或导入姿态 / 轨迹 JSON</p></div>
+          <div class="transport-controls"><div class="playback-actions"><button id="motion-play" class="primary" disabled>播放</button><button id="motion-pause" disabled>暂停</button><button id="motion-stop" disabled>停止</button></div><label class="motion-timeline" for="motion-progress">进度<input id="motion-progress" type="range" min="0" max="1000" step="1" value="0" disabled></label><button id="open-waypoints" disabled>编辑关键帧 ↗</button></div>
+        </section>
+        <div class="statusbar"><span><span class="live-dot"></span><span id="status" role="status">正在加载</span></span><span>拖动旋转 · 滚轮缩放 · 右键平移</span></div>
+      </div>
+      <aside class="controls-panel" aria-label="关节和关键帧编辑">
         <div class="panel-heading"><div><p class="eyebrow">ROBOT CONTROLS</p><h2>工位控制</h2></div><span class="mode-badge">运动学预览</span></div>
         <div class="action-row"><button id="reset-pose" class="primary" disabled>恢复启动姿态</button><button id="export-pose" disabled>导出姿态</button></div>
         <div class="arm-tabs" role="tablist" aria-label="选择机械臂"><button id="left-tab" role="tab" aria-controls="left-controls" aria-selected="true" tabindex="0" data-side="left"><span class="side-dot left-dot"></span>左臂 <span>7 DOF</span></button><button id="right-tab" role="tab" aria-controls="right-controls" aria-selected="false" tabindex="-1" data-side="right"><span class="side-dot right-dot"></span>右臂 <span>7 DOF</span></button></div>
         <div id="joint-controls"></div>
         <details id="tcp-panel" class="extra-panel">
           <summary>末端 TCP 控制 <span id="tcp-side-label">左臂</span></summary>
-          <p class="section-hint">世界坐标 · 米</p>
+          <p class="section-hint">编辑所选臂目标 · 世界坐标 / 米 · 自研数值 IK</p>
           <div class="tcp-position-grid">
             <label>X<input id="tcp-x" type="number" step="0.001" aria-label="TCP X 坐标" disabled></label>
             <label>Y<input id="tcp-y" type="number" step="0.001" aria-label="TCP Y 坐标" disabled></label>
@@ -43,28 +72,16 @@
           <div class="action-row compact"><button id="tcp-apply" class="primary" disabled>应用目标</button><button id="tcp-read" disabled>读取当前位置</button></div>
           <div class="jog-heading"><span>末端点动</span><select id="tcp-step" aria-label="TCP 点动步长"><option value="0.005">5 mm</option><option value="0.01" selected>10 mm</option><option value="0.02">20 mm</option></select></div>
           <div class="tcp-jog-grid"><button data-jog-axis="0" data-jog-sign="-1" disabled>X−</button><button data-jog-axis="0" data-jog-sign="1" disabled>X+</button><button data-jog-axis="1" data-jog-sign="-1" disabled>Y−</button><button data-jog-axis="1" data-jog-sign="1" disabled>Y+</button><button data-jog-axis="2" data-jog-sign="-1" disabled>Z−</button><button data-jog-axis="2" data-jog-sign="1" disabled>Z+</button></div>
-          <p id="tcp-result" class="operation-status" role="status">末端位置就绪</p>
         </details>
         <details id="motion-panel" class="extra-panel">
-          <summary>双臂关键帧回放 <span id="waypoint-count">0 帧</span></summary>
+          <summary>双臂关键帧编辑 <span id="waypoint-count">0 帧</span></summary>
           <p class="section-hint">关节插值预览 · 按源速度限值自动延长时长</p>
           <label class="duration-control">新片段时长（秒）<input id="waypoint-duration" type="number" min="0.1" max="120" step="0.1" value="2" disabled></label>
           <button id="record-waypoint" class="wide" disabled>记录当前姿态</button>
           <ol id="waypoint-list" class="waypoint-list"></ol>
-          <div class="playback-actions"><button id="motion-play" class="primary" disabled>播放</button><button id="motion-pause" disabled>暂停</button><button id="motion-stop" disabled>停止</button></div>
-          <label class="motion-timeline" for="motion-progress">回放进度<input id="motion-progress" type="range" min="0" max="1000" step="1" value="0" disabled></label>
-          <p id="motion-status" class="operation-status" role="status">先记录两个姿态，或导入姿态 / 轨迹 JSON</p>
           <div class="file-actions"><button id="import-motion" disabled>导入 JSON</button><button id="export-motion" disabled>导出轨迹</button><button id="clear-waypoints" disabled>清空</button></div>
           <input id="motion-file" type="file" accept=".json,application/json" hidden>
         </details>
-        <div class="camera-heading"><div><p class="eyebrow">EYE-IN-HAND</p><h2>腕部相机</h2></div><label class="frusta-toggle"><input type="checkbox" id="show-frusta" disabled>视锥</label></div>
-        <p class="camera-note">640 × 480 · FOV 60° · 未标定预览</p>
-        <label class="reference-toggle"><input type="checkbox" id="show-reference" checked disabled>显示参考标靶（仅预览）</label>
-        <div class="camera-feeds">
-          <article class="camera-feed" data-side="left"><div class="feed-heading"><label><input type="checkbox" id="left-camera-enabled" checked disabled><span class="side-dot left-dot"></span>左腕相机</label><button data-capture="left" disabled aria-label="保存左腕相机 PNG">PNG ↓</button></div><canvas id="left-camera-canvas" aria-label="左腕相机画面"></canvas><p>LEFT WRIST <span id="left-camera-state">等待模型</span></p></article>
-          <article class="camera-feed" data-side="right"><div class="feed-heading"><label><input type="checkbox" id="right-camera-enabled" checked disabled><span class="side-dot right-dot"></span>右腕相机</label><button data-capture="right" disabled aria-label="保存右腕相机 PNG">PNG ↓</button></div><canvas id="right-camera-canvas" aria-label="右腕相机画面"></canvas><p>RIGHT WRIST <span id="right-camera-state">等待模型</span></p></article>
-        </div>
-        <button id="capture-main" class="wide" disabled>保存主视角 PNG ↓</button>
         <p id="download-status" class="download-status" role="status" aria-live="polite"></p>
         <details class="model-details"><summary>模型与成像信息</summary><p>Rizon4S × 2 / TacCap slave 2026.10.15<br>14 个机械臂关节 + 2 组夹爪联动。启动角度与关节限位来自导入资产。</p><p>相机使用源光学坐标节点，视场角为预览设置。各相机画面隐藏自身外壳，以避免未标定模型的自遮挡。标靶是可关闭的显示参考。该版本用于外观和运动学检查。</p><a href="https://github.com/FZAbiding/xense-description-sim" target="_blank" rel="noopener">查看项目源码 ↗</a></details>
       </aside>
