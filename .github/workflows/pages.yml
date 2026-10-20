@@ -33,6 +33,7 @@ jobs:
         working-directory: web_mujoco
         env:
           GITHUB_PAGES_BASE: /${{ github.event.repository.name }}/
+          CLOUDFLARE_WEB_ANALYTICS_TOKEN: ${{ vars.CLOUDFLARE_WEB_ANALYTICS_TOKEN }}
         run: npm run build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

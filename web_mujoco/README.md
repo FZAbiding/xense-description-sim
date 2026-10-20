@@ -78,6 +78,22 @@ npm run test:surfaces
 npm run test:explode
 ```
 
+## Cloudflare Web Analytics
+
+在 Cloudflare 的 Web Analytics 中添加站点，主机名填写 `seeed-projects.github.io`，
+复制安装脚本中 `data-cf-beacon` 的 `token` 值。
+
+在实际发布网站的 GitHub 仓库中打开 Settings → Secrets and variables → Actions →
+Variables，创建 `CLOUDFLARE_WEB_ANALYTICS_TOKEN`，值设为该站点 Token，
+然后重新运行 GitHub Pages 发布工作流。此 Token 是网页中公开的站点标识，
+不需要 Cloudflare API 密钥。
+
+生产构建在设置 Token 后会加入 Cloudflare 的延迟加载脚本。未设置时省略统计脚本，
+本地 `npm run dev` 也不会加载统计。要验证本地生产构建，可参考 `.env.example`
+将 Token 配置在 `.env.local` 中后执行 `npm run build`。
+访问线上网站后，在 Cloudflare 的该站点分析面板查看数据；首次数据可能需要几分钟。
+仅向自己的 fork 推送，不会更新 `seeed-projects.github.io`，配置需要部署到实际发布仓库。
+
 ## 交互功能
 
 - 产品配置：默认保持标准机械臂，可切换到包含四轮底盘、激光雷达、IMU 和实验室场景的 AGV 底盘款。

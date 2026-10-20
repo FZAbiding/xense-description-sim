@@ -53,6 +53,25 @@ function pagesBase() {
   return value.endsWith('/') ? value : `${value}/`;
 }
 
+function analyticsTags(command, mode) {
+  if (command !== 'build') return [];
+  const env = loadEnv(mode, root, 'CLOUDFLARE_');
+  const token = env.CLOUDFLARE_WEB_ANALYTICS_TOKEN?.trim();
+  if (!token) return [];
+  if (!/^[a-f0-9-]{32,36}$/i.test(token)) {
+    throw new Error('CLOUDFLARE_WEB_ANALYTICS_TOKEN must be the site token from data-cf-beacon, not an API key.');
+  }
+  return [{
+    tag: 'script',
+    attrs: {
+      type: 'module',
+      src: 'https://static.cloudflareinsights.com/beacon.min.js',
+      'data-cf-beacon': JSON.stringify({ token })
+    },
+    injectTo: 'body'
+  }];
+}
+
 export default defineConfig(({ command, mode }) => ({
   base: pagesBase(),
   define: {
@@ -68,6 +87,10 @@ export default defineConfig(({ command, mode }) => ({
     chunkSizeWarningLimit: 4000
   },
   plugins: [
+    {
+      name: 'cloudflare-web-analytics',
+      transformIndexHtml() { return analyticsTags(command, mode); }
+    },
     {
       name: 'copy-rs-models',
       transformIndexHtml() {
