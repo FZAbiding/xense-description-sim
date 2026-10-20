@@ -1,0 +1,5 @@
+# Source snapshots must retain their original bytes, including CRLF and notices.
+assets/xense/assets/** -text -whitespace
+# Review geometry through manifests and previews rather than huge text diffs.
+assets/xense/assets/**/meshes/** -diff
+rebotarm_mujoco_rs/models/meshes/flexiv/** -diff

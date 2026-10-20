@@ -1,0 +1,42 @@
+{
+  "unit": "degree",
+  "values": {
+    "left_arm": [
+      88.62,
+      74.83,
+      22.87,
+      112.79,
+      -0.55,
+      87.02,
+      0.72
+    ],
+    "right_arm": [
+      -24.33,
+      71.2,
+      -4.84,
+      118.72,
+      3.88,
+      95.72,
+      3.64
+    ],
+    "left_gripper": [
+      28.92
+    ],
+    "right_gripper": [
+      28.92
+    ]
+  },
+  "source": {
+    "repository": "XenseRobotics-AI/lerobot-xense",
+    "revision": "b3451528c6e0e912b9befb7fdb25429c927b9c4e",
+    "path": "recipes/teleop/bi_flexiv_rizon4_rt/forward-01-taccap.yaml",
+    "sha256": "c3144365bf5a2ee405debce5cf6d0b1c706b5d1ca4f305882b2e069edc03c8e0",
+    "fields": {
+      "left_arm": "robot.left_start_position_degree",
+      "right_arm": "robot.right_start_position_degree",
+      "left_gripper": "xense.taccap_slave_v2026_10_15:default / taccap_right_finger_joint / limit.upper",
+      "right_gripper": "xense.taccap_slave_v2026_10_15:default / taccap_right_finger_joint / limit.upper"
+    },
+    "note": "Arm values remain from this platform, not bench 04. User requested the same default opening as bench 04: source active maximum 28.92 degrees, -1 mimic followers. Gripper source URDF SHA-256: cbdfc4e045d473c52238ecf13e48518fe7c4a31c008cd5be51b81b6bda64a8fd"
+  }
+}

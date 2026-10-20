@@ -1,0 +1,497 @@
+{
+  "schema_version": 1,
+  "id": "flexiv.rizon4s",
+  "category": "robots",
+  "display_name": "flexiv.rizon4s",
+  "entrypoints": {
+    "default": "urdf/flexiv_Rizon4s_kinematics.urdf"
+  },
+  "units": {
+    "length": "m",
+    "angle": "rad",
+    "mass": "kg"
+  },
+  "authoring": {
+    "mode": "xacro_generated",
+    "authority": "xacro_yaml",
+    "generator": "scripts/generators/generate_flexiv.py",
+    "wrapper": "provenance/robot.urdf.xacro",
+    "xacro_version": "2.1.1",
+    "name_mapping": {},
+    "adaptations": [
+      "wrap upstream direct origin/mass/inertia children in inertial",
+      "remove nonstandard workspace extension",
+      "relative mesh paths",
+      "historical names; identity empty world is a child of base_link for Rizon4/Rizon4R"
+    ]
+  },
+  "source": {
+    "repository": "https://github.com/flexivrobotics/flexiv_description",
+    "revision": "8b8452105c5faf088f456db18b0e2581b16fc630",
+    "branch": "humble",
+    "snapshot": "pinned_official_git_blobs",
+    "license_status": "Apache-2.0",
+    "notes": [
+      "2026-10-12 verified branch HEAD and Git blob hashes.",
+      "All runtime geometry, mass, COM, inertia, joint kinematics and limits come from this official revision.",
+      "Official Xacro emits inertia children outside inertial; generated portable URDF wraps these without changing numbers.",
+      "User STEP is assembly placement reference only; legacy source URDF is retained solely for platform/connection provenance.",
+      "No payload, optional external FT03 sensor, damping or friction inferred.",
+      "Final default-branch check: humble HEAD 8b845210; three inertia YAMLs and all 78 mesh/material blobs identical to humble-v1 92ef7865. Generated runtime URDFs byte-identical after switching official macros."
+    ]
+  },
+  "review": {
+    "visual": "pending_human",
+    "joint_parameters": "unreviewed_source",
+    "inertial_parameters": "unreviewed_source",
+    "contacts": "not_validated",
+    "official_source": "pinned_official_inputs_verified; runtime_derivations_documented; hardware_accuracy_unconfirmed"
+  },
+  "files": {
+    "LICENSES/LICENSE": {
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "source": "local_generation_or_documentation",
+      "source_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "role": "license"
+    },
+    "NOTICE.md": {
+      "sha256": "ba2fce96433e13e892ebc2f7c66e276584176b5a9e5263ff044e8a3d4e2256f9",
+      "source": "local_documentation",
+      "source_sha256": "ba2fce96433e13e892ebc2f7c66e276584176b5a9e5263ff044e8a3d4e2256f9",
+      "role": "documentation"
+    },
+    "OFFICIAL_SOURCE_REVIEW_2026-10-12.md": {
+      "sha256": "4f5002a0aacdda6afea10c35960a35d50b7907831a2293bbefd70d7020bfe319",
+      "source": "local_documentation",
+      "source_sha256": "4f5002a0aacdda6afea10c35960a35d50b7907831a2293bbefd70d7020bfe319",
+      "role": "documentation"
+    },
+    "README.md": {
+      "sha256": "ab0e83d32d21b645f657f88474c21f9aa4bc43fd9d0dc9c34a9dd175ed5c0cd2",
+      "source": "local_documentation",
+      "source_sha256": "39d41eeecb7bc3442a9e78b87d6f95343c6b3284d41e1e46c4fcb17d173f24ae",
+      "role": "documentation",
+      "modification": "2026-10-15: normalize local directory names/relative resource paths; preserve source bytes, source hashes and mechanical parameters."
+    },
+    "meshes/Rizon4s/collision/link0.stl": {
+      "sha256": "9238a0f8f81c932d176817f8d82dd0826f7821a343a518c9d65bd5eb676329bb",
+      "source": "meshes/Rizon4s/collision/link0.stl",
+      "source_sha256": "9238a0f8f81c932d176817f8d82dd0826f7821a343a518c9d65bd5eb676329bb",
+      "role": "mesh",
+      "source_git_blob": "6da07158763b3458f84edc711f39c4dfa0f738e2"
+    },
+    "meshes/Rizon4s/collision/link1.stl": {
+      "sha256": "31975c916fbf47b222da29d47d5232d731c8a11cac4bf90dd7bc284d02029976",
+      "source": "meshes/Rizon4s/collision/link1.stl",
+      "source_sha256": "31975c916fbf47b222da29d47d5232d731c8a11cac4bf90dd7bc284d02029976",
+      "role": "mesh",
+      "source_git_blob": "8336ab0efcb106eb2063fd53edcde687219169d8"
+    },
+    "meshes/Rizon4s/collision/link2.stl": {
+      "sha256": "8e2d6386918c643435123eaf3bb5cfff6bcc0a6a9d13a274232194f671dac5b1",
+      "source": "meshes/Rizon4s/collision/link2.stl",
+      "source_sha256": "8e2d6386918c643435123eaf3bb5cfff6bcc0a6a9d13a274232194f671dac5b1",
+      "role": "mesh",
+      "source_git_blob": "d02e322b7867b466b6cb5d6ab58c1c480d31559d"
+    },
+    "meshes/Rizon4s/collision/link3.stl": {
+      "sha256": "7b8ccb311a38cad76874040b8d35169b475f33c3bc9117565094ebbccb5db8ae",
+      "source": "meshes/Rizon4s/collision/link3.stl",
+      "source_sha256": "7b8ccb311a38cad76874040b8d35169b475f33c3bc9117565094ebbccb5db8ae",
+      "role": "mesh",
+      "source_git_blob": "6873a492668d0714db6323549a2f784d4c6a8295"
+    },
+    "meshes/Rizon4s/collision/link4.stl": {
+      "sha256": "c400b13596476f3487548d5059c48538c1d3a391bdbae038f8acb6620b04fa48",
+      "source": "meshes/Rizon4s/collision/link4.stl",
+      "source_sha256": "c400b13596476f3487548d5059c48538c1d3a391bdbae038f8acb6620b04fa48",
+      "role": "mesh",
+      "source_git_blob": "95c9e0c449cef748814c8f77f462e1cabd86b88e"
+    },
+    "meshes/Rizon4s/collision/link5.stl": {
+      "sha256": "d2dcdaa26c69369f307315302b79bccf03f75dfed3dd7c0a0b2aa8f2274237ab",
+      "source": "meshes/Rizon4s/collision/link5.stl",
+      "source_sha256": "d2dcdaa26c69369f307315302b79bccf03f75dfed3dd7c0a0b2aa8f2274237ab",
+      "role": "mesh",
+      "source_git_blob": "ab3900b16351e11ad07d91111dca345b157d887f"
+    },
+    "meshes/Rizon4s/collision/link6.stl": {
+      "sha256": "7fce86febde979d5a609e07af303b3a6457c42fd28716e6e34d1e95f5e02b640",
+      "source": "meshes/Rizon4s/collision/link6.stl",
+      "source_sha256": "7fce86febde979d5a609e07af303b3a6457c42fd28716e6e34d1e95f5e02b640",
+      "role": "mesh",
+      "source_git_blob": "244437372d183abcc13481a55dc26abe01286f20"
+    },
+    "meshes/Rizon4s/collision/link7.stl": {
+      "sha256": "811d1ae6df026c4ccf35af36276a6add3ef9d2ae2ab5a5b5dcd2a3b55cc7ab13",
+      "source": "meshes/Rizon4s/collision/link7.stl",
+      "source_sha256": "811d1ae6df026c4ccf35af36276a6add3ef9d2ae2ab5a5b5dcd2a3b55cc7ab13",
+      "role": "mesh",
+      "source_git_blob": "2306b0062aebb35b05a06b812921560a23938e68"
+    },
+    "meshes/Rizon4s/visual/link0.mtl": {
+      "sha256": "bb7adc99ca67b22a162849d2e1a30bf430e1abfec925c0ef416ba601f159e1e5",
+      "source": "meshes/Rizon4s/visual/link0.mtl",
+      "source_sha256": "bb7adc99ca67b22a162849d2e1a30bf430e1abfec925c0ef416ba601f159e1e5",
+      "role": "mesh",
+      "source_git_blob": "f02dfcff35e1278e8f4625f9ef9103957bbf788b"
+    },
+    "meshes/Rizon4s/visual/link0.obj": {
+      "sha256": "65a08b0ecc5464555f54ff19e2f7664081c6d745769231f222944828ebf46197",
+      "source": "meshes/Rizon4s/visual/link0.obj",
+      "source_sha256": "65a08b0ecc5464555f54ff19e2f7664081c6d745769231f222944828ebf46197",
+      "role": "mesh",
+      "source_git_blob": "8dc8756b95cbec5bd25a38f5c792da23bacc4933"
+    },
+    "meshes/Rizon4s/visual/link1.mtl": {
+      "sha256": "25d7391fce563c5e74e7c54d5d51589b666fe9c701ff20f1d5f44b557f905a10",
+      "source": "meshes/Rizon4s/visual/link1.mtl",
+      "source_sha256": "25d7391fce563c5e74e7c54d5d51589b666fe9c701ff20f1d5f44b557f905a10",
+      "role": "mesh",
+      "source_git_blob": "6d95cf02aebcb1402b9fd11de6be73b8c598b80e"
+    },
+    "meshes/Rizon4s/visual/link1.obj": {
+      "sha256": "03eef41b87a7a0722a1c363cdf25442870dd7686a5d73bad0dbcf788f6afe48e",
+      "source": "meshes/Rizon4s/visual/link1.obj",
+      "source_sha256": "03eef41b87a7a0722a1c363cdf25442870dd7686a5d73bad0dbcf788f6afe48e",
+      "role": "mesh",
+      "source_git_blob": "40ee39476e9853754d891a12c4d750c582f5a03a"
+    },
+    "meshes/Rizon4s/visual/link2.mtl": {
+      "sha256": "25d7391fce563c5e74e7c54d5d51589b666fe9c701ff20f1d5f44b557f905a10",
+      "source": "meshes/Rizon4s/visual/link2.mtl",
+      "source_sha256": "25d7391fce563c5e74e7c54d5d51589b666fe9c701ff20f1d5f44b557f905a10",
+      "role": "mesh",
+      "source_git_blob": "6d95cf02aebcb1402b9fd11de6be73b8c598b80e"
+    },
+    "meshes/Rizon4s/visual/link2.obj": {
+      "sha256": "35bd34e9d0e4a193695c5e0def680c163a955534b55fd4da66eb6da1e1bdf1ca",
+      "source": "meshes/Rizon4s/visual/link2.obj",
+      "source_sha256": "35bd34e9d0e4a193695c5e0def680c163a955534b55fd4da66eb6da1e1bdf1ca",
+      "role": "mesh",
+      "source_git_blob": "8a37f3b552d5e054e5933ca0b1c7aac3353c9ac3"
+    },
+    "meshes/Rizon4s/visual/link3.mtl": {
+      "sha256": "25d7391fce563c5e74e7c54d5d51589b666fe9c701ff20f1d5f44b557f905a10",
+      "source": "meshes/Rizon4s/visual/link3.mtl",
+      "source_sha256": "25d7391fce563c5e74e7c54d5d51589b666fe9c701ff20f1d5f44b557f905a10",
+      "role": "mesh",
+      "source_git_blob": "6d95cf02aebcb1402b9fd11de6be73b8c598b80e"
+    },
+    "meshes/Rizon4s/visual/link3.obj": {
+      "sha256": "687413fe855a584589e115541697aa3bbe5121fda7f843924034d75206a9fa25",
+      "source": "meshes/Rizon4s/visual/link3.obj",
+      "source_sha256": "687413fe855a584589e115541697aa3bbe5121fda7f843924034d75206a9fa25",
+      "role": "mesh",
+      "source_git_blob": "bca6a81b346604c9508f1e5524f08d5be0b618aa"
+    },
+    "meshes/Rizon4s/visual/link4.mtl": {
+      "sha256": "25d7391fce563c5e74e7c54d5d51589b666fe9c701ff20f1d5f44b557f905a10",
+      "source": "meshes/Rizon4s/visual/link4.mtl",
+      "source_sha256": "25d7391fce563c5e74e7c54d5d51589b666fe9c701ff20f1d5f44b557f905a10",
+      "role": "mesh",
+      "source_git_blob": "6d95cf02aebcb1402b9fd11de6be73b8c598b80e"
+    },
+    "meshes/Rizon4s/visual/link4.obj": {
+      "sha256": "4747d92c9db9bbdb714af45dded6b62a81c317bd35814ebb29cac207690e21fa",
+      "source": "meshes/Rizon4s/visual/link4.obj",
+      "source_sha256": "4747d92c9db9bbdb714af45dded6b62a81c317bd35814ebb29cac207690e21fa",
+      "role": "mesh",
+      "source_git_blob": "fdd759564b951b4daa7cb8e05d57d8aa6951db00"
+    },
+    "meshes/Rizon4s/visual/link5.mtl": {
+      "sha256": "25d7391fce563c5e74e7c54d5d51589b666fe9c701ff20f1d5f44b557f905a10",
+      "source": "meshes/Rizon4s/visual/link5.mtl",
+      "source_sha256": "25d7391fce563c5e74e7c54d5d51589b666fe9c701ff20f1d5f44b557f905a10",
+      "role": "mesh",
+      "source_git_blob": "6d95cf02aebcb1402b9fd11de6be73b8c598b80e"
+    },
+    "meshes/Rizon4s/visual/link5.obj": {
+      "sha256": "79149ef6de6a71b951f1b424e97e193879366e3fafc85d6bffdb7bac02a91260",
+      "source": "meshes/Rizon4s/visual/link5.obj",
+      "source_sha256": "79149ef6de6a71b951f1b424e97e193879366e3fafc85d6bffdb7bac02a91260",
+      "role": "mesh",
+      "source_git_blob": "4ae9155f6458e1d9f3bd22e1d4d09d4641703b30"
+    },
+    "meshes/Rizon4s/visual/link6.mtl": {
+      "sha256": "25d7391fce563c5e74e7c54d5d51589b666fe9c701ff20f1d5f44b557f905a10",
+      "source": "meshes/Rizon4s/visual/link6.mtl",
+      "source_sha256": "25d7391fce563c5e74e7c54d5d51589b666fe9c701ff20f1d5f44b557f905a10",
+      "role": "mesh",
+      "source_git_blob": "6d95cf02aebcb1402b9fd11de6be73b8c598b80e"
+    },
+    "meshes/Rizon4s/visual/link6.obj": {
+      "sha256": "f707bde224404be992943623f5da6076aa4d75d56ddd2ee0d24bac9053b77405",
+      "source": "meshes/Rizon4s/visual/link6.obj",
+      "source_sha256": "f707bde224404be992943623f5da6076aa4d75d56ddd2ee0d24bac9053b77405",
+      "role": "mesh",
+      "source_git_blob": "38526668cc581cbf0a2b367c759e77e521d9dc36"
+    },
+    "meshes/Rizon4s/visual/link7.mtl": {
+      "sha256": "5b9167db4a82b4cc30eb3ea1d4d884c23e9acb90abb58e387725ac7920e9f7e5",
+      "source": "meshes/Rizon4s/visual/link7.mtl",
+      "source_sha256": "5b9167db4a82b4cc30eb3ea1d4d884c23e9acb90abb58e387725ac7920e9f7e5",
+      "role": "mesh",
+      "source_git_blob": "5334d83a557e024303e9c79edcfed55f3af6405b"
+    },
+    "meshes/Rizon4s/visual/link7.obj": {
+      "sha256": "b16e1d1f6f18adf0b57a5f777690115679725539cc9eaa852ee84c79c6ff4afa",
+      "source": "meshes/Rizon4s/visual/link7.obj",
+      "source_sha256": "b16e1d1f6f18adf0b57a5f777690115679725539cc9eaa852ee84c79c6ff4afa",
+      "role": "mesh",
+      "source_git_blob": "8409cb33767fb9d5a7488b8f245b72f413933514"
+    },
+    "meshes/Rizon4s/visual/ring.mtl": {
+      "sha256": "dc681ef2a8397b1a0f7eaa709a9dc1995269598894836e5da73e0a3490da7456",
+      "source": "meshes/Rizon4s/visual/ring.mtl",
+      "source_sha256": "dc681ef2a8397b1a0f7eaa709a9dc1995269598894836e5da73e0a3490da7456",
+      "role": "mesh",
+      "source_git_blob": "e6dd48b797cf9253ecf6d69f6be11459589af8eb"
+    },
+    "meshes/Rizon4s/visual/ring.obj": {
+      "sha256": "3ff40a6b54d467b9fb21c56da30cc241064b6c593f8023c879021f7df86bb688",
+      "source": "meshes/Rizon4s/visual/ring.obj",
+      "source_sha256": "3ff40a6b54d467b9fb21c56da30cc241064b6c593f8023c879021f7df86bb688",
+      "role": "mesh",
+      "source_git_blob": "3ab3f5c0bfb58210cf244adf9d05f7948eba25ed"
+    },
+    "provenance/robot.urdf.xacro": {
+      "sha256": "54fa0ee11ccaaa50ca82fe957377c1bf89844eb09a14000d3349e8b6c31c94a7",
+      "source": "local_generation_or_documentation",
+      "source_sha256": "54fa0ee11ccaaa50ca82fe957377c1bf89844eb09a14000d3349e8b6c31c94a7",
+      "role": "local_wrapper"
+    },
+    "provenance/urdf/flexiv_Rizon4s_kinematics.urdf": {
+      "sha256": "67872d97b79c4e1baa934b5d0c9d22a87010532cb30568849d163b5625e98593",
+      "source": "resources/flexiv_Rizon4s_kinematics.urdf",
+      "source_sha256": "67872d97b79c4e1baa934b5d0c9d22a87010532cb30568849d163b5625e98593",
+      "role": "historical_assembly_source",
+      "source_repository": "https://github.com/flexivrobotics/flexiv_rdk",
+      "source_revision": "a2dcedc637dc413b0e51c1b6442a614874d60f33"
+    },
+    "provenance/urdf/official.expanded.urdf": {
+      "sha256": "7d4099fed5445baf84dcc3f26afac54cfafdc708b075c932ee29f81b26f8db65",
+      "source": "local_generation_or_documentation",
+      "source_sha256": "7d4099fed5445baf84dcc3f26afac54cfafdc708b075c932ee29f81b26f8db65",
+      "role": "generated_urdf"
+    },
+    "urdf/flexiv_Rizon4s_kinematics.urdf": {
+      "sha256": "f6db0dd538720a987f3544062acfec041d6a0e0bd14a27ca814f1990c1eb633a",
+      "source": "local_generation_or_documentation",
+      "source_sha256": "f6db0dd538720a987f3544062acfec041d6a0e0bd14a27ca814f1990c1eb633a",
+      "role": "generated_urdf"
+    },
+    "provenance/cross-validation/README.md": {
+      "sha256": "0b40c51800d6852a571277e43eb6dfe53b4bac17fd1311eaa245b7606b555a19",
+      "source": "flexiv_rizon4s/README.md",
+      "source_sha256": "0b40c51800d6852a571277e43eb6dfe53b4bac17fd1311eaa245b7606b555a19",
+      "role": "cross_validation_only",
+      "source_repository": "https://github.com/google-deepmind/mujoco_menagerie",
+      "source_revision": "0059d4335f8156206f63a35662313385f7ad6d74"
+    },
+    "provenance/cross-validation/menagerie.xml": {
+      "sha256": "cca07cc4fc5590f340d837a69a49327861f696ba4264ed0f4d4e9b63dc107624",
+      "source": "flexiv_rizon4s/flexiv_rizon4s.xml",
+      "source_sha256": "cca07cc4fc5590f340d837a69a49327861f696ba4264ed0f4d4e9b63dc107624",
+      "role": "cross_validation_only",
+      "source_repository": "https://github.com/google-deepmind/mujoco_menagerie",
+      "source_revision": "0059d4335f8156206f63a35662313385f7ad6d74"
+    },
+    "provenance/cross-validation/LICENSE": {
+      "sha256": "325e7290bde78f680e8d0552a09aff96e5012e18758cd0de4f43ed196cd54de2",
+      "source": "flexiv_rizon4s/LICENSE",
+      "source_sha256": "325e7290bde78f680e8d0552a09aff96e5012e18758cd0de4f43ed196cd54de2",
+      "role": "cross_validation_only",
+      "source_repository": "https://github.com/google-deepmind/mujoco_menagerie",
+      "source_revision": "0059d4335f8156206f63a35662313385f7ad6d74"
+    },
+    "provenance/cross-validation/source.json": {
+      "sha256": "b085132b9c6a4bd741189b407cc363af31ca98b63da545b9081ca094d2bb9a27",
+      "source": "local_cross_validation_record",
+      "source_sha256": "b085132b9c6a4bd741189b407cc363af31ca98b63da545b9081ca094d2bb9a27",
+      "role": "cross_validation_only",
+      "source_repository": "https://github.com/google-deepmind/mujoco_menagerie",
+      "source_revision": "0059d4335f8156206f63a35662313385f7ad6d74"
+    },
+    "provenance/upstream/LICENSE": {
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "source": "LICENSE",
+      "source_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "source_git_blob": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64",
+      "role": "license"
+    },
+    "provenance/upstream/README.md": {
+      "sha256": "3e2505df59cf6adf44727ed72917f9adea0973c6bf375edc47299e34af5db6a1",
+      "source": "README.md",
+      "source_sha256": "3e2505df59cf6adf44727ed72917f9adea0973c6bf375edc47299e34af5db6a1",
+      "source_git_blob": "afc167f13404abc52b0dce30c1404842c42981b3",
+      "role": "upstream_source"
+    },
+    "provenance/upstream/package.xml.txt": {
+      "sha256": "a030d6fa85708a8174d1e9f5b280d61780ba08cd0bfdab812813fd830ab080a6",
+      "source": "package.xml",
+      "source_sha256": "a030d6fa85708a8174d1e9f5b280d61780ba08cd0bfdab812813fd830ab080a6",
+      "source_git_blob": "4c015d679cbcb26dd43af85b5a802d5193b3065b",
+      "role": "upstream_source"
+    },
+    "provenance/upstream/urdf/common/flexiv_arm.xacro": {
+      "sha256": "dac68d1b83305ceb29fb2746f29f1de8c9820e9dc266bfdb39be0f6904fcb0e2",
+      "source": "urdf/common/flexiv_arm.xacro",
+      "source_sha256": "dac68d1b83305ceb29fb2746f29f1de8c9820e9dc266bfdb39be0f6904fcb0e2",
+      "source_git_blob": "3ca85619389dffc55027f8a7a4e95781417cde5d",
+      "role": "upstream_source"
+    },
+    "provenance/upstream/urdf/common/flexiv_common.xacro": {
+      "sha256": "d61fb55c5bb18b2bcbb95eb91aefceae6f5981c01522955e7fd3eca2ed1e1ebd",
+      "source": "urdf/common/flexiv_common.xacro",
+      "source_sha256": "d61fb55c5bb18b2bcbb95eb91aefceae6f5981c01522955e7fd3eca2ed1e1ebd",
+      "source_git_blob": "91a3b7226aefb213bbc9a4cb870a1d2028e32694",
+      "role": "upstream_source"
+    },
+    "provenance/upstream/config/Rizon4s/inertia_parameters.yaml": {
+      "sha256": "bbc1628bf9e05b519e6e66698d552a91fd4a3da89e3c06f862e4f6c721fcd01b",
+      "source": "config/Rizon4s/inertia_parameters.yaml",
+      "source_sha256": "bbc1628bf9e05b519e6e66698d552a91fd4a3da89e3c06f862e4f6c721fcd01b",
+      "source_git_blob": "1c27a8ecdf0ec87d3c9febd539a6e906580bcb83",
+      "role": "upstream_source"
+    },
+    "provenance/upstream/config/Rizon4s/default_kinematics.yaml": {
+      "sha256": "d86a53e05c429541e61dc70aa900d68efb03b6081f2f977b8dc35ffd44ac1f01",
+      "source": "config/Rizon4s/default_kinematics.yaml",
+      "source_sha256": "d86a53e05c429541e61dc70aa900d68efb03b6081f2f977b8dc35ffd44ac1f01",
+      "source_git_blob": "224ebc4d88acbb69c9df228f513aacd4fa60095e",
+      "role": "upstream_source"
+    },
+    "provenance/upstream/config/Rizon4s/joint_limits.yaml": {
+      "sha256": "f149bf3ffd708e390ccfe27f69094d2f30730a34811094e2f557d5772187087f",
+      "source": "config/Rizon4s/joint_limits.yaml",
+      "source_sha256": "f149bf3ffd708e390ccfe27f69094d2f30730a34811094e2f557d5772187087f",
+      "source_git_blob": "5d5c9589c7648868a409776f10985f1fd1a6f2af",
+      "role": "upstream_source"
+    },
+    "provenance/upstream/config/Rizon4s/visual_parameters.yaml": {
+      "sha256": "9f47fb2fe8355d4e9fbe132cb06213d832b2ef0c6dac14f0f89d772c2b6f3ec5",
+      "source": "config/Rizon4s/visual_parameters.yaml",
+      "source_sha256": "9f47fb2fe8355d4e9fbe132cb06213d832b2ef0c6dac14f0f89d772c2b6f3ec5",
+      "source_git_blob": "77c1f6e882dcd018b75b17c6734e85792ad48f4b",
+      "role": "upstream_source"
+    },
+    "provenance/official_source_check.json": {
+      "sha256": "45216133ed7073d2fd71abfa0dadae04a5ed8e5edc769bbe090e949511a26a31",
+      "source": "xense-description:official_source_audit_2026-10-12",
+      "source_sha256": "45216133ed7073d2fd71abfa0dadae04a5ed8e5edc769bbe090e949511a26a31",
+      "role": "source_audit"
+    },
+    "usd/payloads/Physics/mujoco.usda": {
+      "sha256": "bde8422edebc7ba9b62b2fa63837d7430b2976d4e593314d4f9d2da39842c6d4",
+      "source": "assets/rizon_4s/payloads/Physics/mujoco.usda",
+      "source_sha256": "bde8422edebc7ba9b62b2fa63837d7430b2976d4e593314d4f9d2da39842c6d4",
+      "role": "usd_layer",
+      "source_repository": "https://github.com/flexivrobotics/isaac_sim_ws",
+      "source_revision": "b28e3bd08af852ed8eef1e1201cf2ff264245f66",
+      "source_git_blob_sha1": "5f7e9fc2431448efe11a5d32e7de5697715fbf1c"
+    },
+    "usd/payloads/Physics/physics.usda": {
+      "sha256": "c12d015a750378c3720a7882defd85bf98f8f99b275abccec58888151058e9db",
+      "source": "assets/rizon_4s/payloads/Physics/physics.usda",
+      "source_sha256": "c12d015a750378c3720a7882defd85bf98f8f99b275abccec58888151058e9db",
+      "role": "usd_layer",
+      "source_repository": "https://github.com/flexivrobotics/isaac_sim_ws",
+      "source_revision": "b28e3bd08af852ed8eef1e1201cf2ff264245f66",
+      "source_git_blob_sha1": "969d68f70fe0fdf416614c806f720abfa41bf05e"
+    },
+    "usd/payloads/Physics/physx.usda": {
+      "sha256": "1c9bc370093fb6fda3f4934de5ef09ea34d4e9dabcb82a903afeeb57df33964c",
+      "source": "assets/rizon_4s/payloads/Physics/physx.usda",
+      "source_sha256": "1c9bc370093fb6fda3f4934de5ef09ea34d4e9dabcb82a903afeeb57df33964c",
+      "role": "usd_layer",
+      "source_repository": "https://github.com/flexivrobotics/isaac_sim_ws",
+      "source_revision": "b28e3bd08af852ed8eef1e1201cf2ff264245f66",
+      "source_git_blob_sha1": "4dc4d57aa6a7cf52c42521a8c456b70007b66146"
+    },
+    "usd/payloads/base.usda": {
+      "sha256": "12222414a5b0a5aed57d783f3311faa33f32fdcde2c2c8fc9251d573a912f951",
+      "source": "assets/rizon_4s/payloads/base.usda",
+      "source_sha256": "12222414a5b0a5aed57d783f3311faa33f32fdcde2c2c8fc9251d573a912f951",
+      "role": "usd_layer",
+      "source_repository": "https://github.com/flexivrobotics/isaac_sim_ws",
+      "source_revision": "b28e3bd08af852ed8eef1e1201cf2ff264245f66",
+      "source_git_blob_sha1": "3379fc343012bac6317595e9a2d64c8038f6f0ab"
+    },
+    "usd/payloads/geometries.usd": {
+      "sha256": "8856d2eaf8de0e0d61e31999d1a75ef821b9ccfc24143d8956580ba7a359a5a8",
+      "source": "assets/rizon_4s/payloads/geometries.usd",
+      "source_sha256": "8856d2eaf8de0e0d61e31999d1a75ef821b9ccfc24143d8956580ba7a359a5a8",
+      "role": "usd_layer",
+      "source_repository": "https://github.com/flexivrobotics/isaac_sim_ws",
+      "source_revision": "b28e3bd08af852ed8eef1e1201cf2ff264245f66",
+      "source_git_blob_sha1": "4dc0a9178d0b5055513718f226f9b92857161aca"
+    },
+    "usd/payloads/instances.usda": {
+      "sha256": "7f70aeb8d00721b4970617047b9e4687a3444440f16e7fd87128d85b7a34775a",
+      "source": "assets/rizon_4s/payloads/instances.usda",
+      "source_sha256": "7f70aeb8d00721b4970617047b9e4687a3444440f16e7fd87128d85b7a34775a",
+      "role": "usd_layer",
+      "source_repository": "https://github.com/flexivrobotics/isaac_sim_ws",
+      "source_revision": "b28e3bd08af852ed8eef1e1201cf2ff264245f66",
+      "source_git_blob_sha1": "4a26dfe41bcffa4ae520d74bde35c60f6f1027ef"
+    },
+    "usd/payloads/materials.usda": {
+      "sha256": "494395e9c3b6282cabe59c737985ab88af309934a150a176d1660d707c93d7bb",
+      "source": "assets/rizon_4s/payloads/materials.usda",
+      "source_sha256": "494395e9c3b6282cabe59c737985ab88af309934a150a176d1660d707c93d7bb",
+      "role": "usd_layer",
+      "source_repository": "https://github.com/flexivrobotics/isaac_sim_ws",
+      "source_revision": "b28e3bd08af852ed8eef1e1201cf2ff264245f66",
+      "source_git_blob_sha1": "142e34a350f80046621f95cc42e12c0d584fc7e6"
+    },
+    "usd/payloads/robot.usda": {
+      "sha256": "9009c29091b5a685231b7b7ffe1b3327a744245a62be089f36d3574b250d29f5",
+      "source": "assets/rizon_4s/payloads/robot.usda",
+      "source_sha256": "9009c29091b5a685231b7b7ffe1b3327a744245a62be089f36d3574b250d29f5",
+      "role": "usd_layer",
+      "source_repository": "https://github.com/flexivrobotics/isaac_sim_ws",
+      "source_revision": "b28e3bd08af852ed8eef1e1201cf2ff264245f66",
+      "source_git_blob_sha1": "38c1ad306b1e0ae1d2ff4143370c464d114494aa"
+    },
+    "usd/rizon_4s.usda": {
+      "sha256": "aa275f9b82b6b710bd5e63ba1b1652d4ffe4b8c077dd7510203911c7e55114c9",
+      "source": "assets/rizon_4s/rizon_4s.usda",
+      "source_sha256": "aa275f9b82b6b710bd5e63ba1b1652d4ffe4b8c077dd7510203911c7e55114c9",
+      "role": "usd_layer",
+      "source_repository": "https://github.com/flexivrobotics/isaac_sim_ws",
+      "source_revision": "b28e3bd08af852ed8eef1e1201cf2ff264245f66",
+      "source_git_blob_sha1": "a08caa8b90b7728c4e5314c1ecc93cae70c0bd35"
+    },
+    "LICENSES/official_usd_isaac_sim_ws.txt": {
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "source": "LICENSE",
+      "source_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "role": "license",
+      "source_repository": "https://github.com/flexivrobotics/isaac_sim_ws",
+      "source_revision": "b28e3bd08af852ed8eef1e1201cf2ff264245f66",
+      "source_git_blob_sha1": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64"
+    },
+    "provenance/usd/upstream_README.md": {
+      "sha256": "846184a08021fdb025eba24fa2a2a22ad88669e51a36003c38bfa6bf8375e963",
+      "source": "README.md",
+      "source_sha256": "846184a08021fdb025eba24fa2a2a22ad88669e51a36003c38bfa6bf8375e963",
+      "role": "documentation",
+      "source_repository": "https://github.com/flexivrobotics/isaac_sim_ws",
+      "source_revision": "b28e3bd08af852ed8eef1e1201cf2ff264245f66",
+      "source_git_blob_sha1": "29a46cd8b67935bad3281eb224d7270c87ec2b67"
+    },
+    "usd/source.json": {
+      "sha256": "099546ed16ea4fac7b6b88efdaee4882060e5de4c565e73390ef6d552859aece",
+      "source": "xense-description:official_usd_snapshot_manifest",
+      "source_sha256": "099546ed16ea4fac7b6b88efdaee4882060e5de4c565e73390ef6d552859aece",
+      "role": "usd_manifest"
+    },
+    "usd/README.md": {
+      "sha256": "65dfa78a7b6cca7995c2966fae9c1e54a086d58a6b293b2222145c7c7e213ab1",
+      "source": "xense-description:local_documentation",
+      "source_sha256": "65dfa78a7b6cca7995c2966fae9c1e54a086d58a6b293b2222145c7c7e213ab1",
+      "role": "documentation"
+    }
+  }
+}

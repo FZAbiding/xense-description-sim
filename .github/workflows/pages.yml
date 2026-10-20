@@ -1,4 +1,4 @@
-name: Deploy B601-RS-Sim to GitHub Pages
+name: Deploy Xense Description Sim to GitHub Pages
 
 on:
   push:
@@ -29,6 +29,9 @@ jobs:
       - name: Install dependencies
         working-directory: web_mujoco
         run: npm ci
+      - name: Check Forward-01 model and controls
+        working-directory: web_mujoco
+        run: npm run test:flexiv
       - name: Build for GitHub Pages
         working-directory: web_mujoco
         env:

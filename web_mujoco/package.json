@@ -3,7 +3,10 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "Browser MuJoCo demo for B601-RS with an optional AGV base",
+  "description": "Browser MuJoCo visualization for Forward-01 Flexiv/TacCap and the original reBot demo",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "predev": "node scripts/build-campus-scene.mjs",
     "dev": "vite --host 127.0.0.1 --port 5173",
@@ -13,6 +16,8 @@
     "smoke": "node scripts/smoke-load.mjs",
     "test:loading": "node scripts/test-loading.mjs",
     "test:reset": "node scripts/test-reset.mjs",
+    "test:flexiv": "node scripts/test-flexiv.mjs",
+    "test:flexiv:browser": "playwright test",
     "test:variants": "node scripts/test-agv-path-planner.mjs && node scripts/smoke-variants.mjs",
     "test:campus": "node scripts/build-campus-scene.mjs && node scripts/test-campus.mjs",
     "test:timing": "node scripts/test-simulation-clock.mjs",
@@ -24,6 +29,7 @@
     "three": "^0.170.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "vite": "^6.3.5"
   }
 }

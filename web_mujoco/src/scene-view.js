@@ -238,6 +238,10 @@ function setPose(mesh, xpos, xmat, index) {
   mesh.matrixWorldNeedsUpdate = true;
 }
 
+// Shared by the Forward-01 preview so both products render compiled MuJoCo
+// geometry with the same mesh-frame and material conventions.
+export { createMeshGeometry, primitiveGeometry, geomTypes, geomMaterial, setPose };
+
 function createGridTexture() {
   const size = 1024;
   const canvas = document.createElement('canvas');

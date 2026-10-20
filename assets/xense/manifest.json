@@ -1,0 +1,315 @@
+{
+  "schema_version": 1,
+  "source_repository": "xense-description",
+  "source_revision": "e70159b820fed43ad4da60696a7aa3be59f9f798",
+  "snapshot": "working_tree; per-file SHA-256 identifies actual inputs, including uncommitted files",
+  "entrypoint": "assets/assemblies/forward-01-flexiv-rizon4s/urdf/forward-01-flexiv-rizon4s-taccap.urdf",
+  "scope": "Selected URDF dependencies, material dependencies, startup pose, camera review, and attribution. Registry JSON files are provenance snapshots, not complete asset installations.",
+  "files": [
+    {
+      "path": "LICENSE",
+      "sha256": "f78448d6e76643cd0b947a64fdaa066b4fe7b9718761815daf4209a0680f6ea9",
+      "bytes": 1574
+    },
+    {
+      "path": "NOTICE.md",
+      "sha256": "779f7863d54f78b23b3689cda6b885d65806311b1733356b544346c588ac6d13",
+      "bytes": 1465
+    },
+    {
+      "path": "assets/assemblies/forward-01-flexiv-rizon4s/COMPONENTS.taccap.md",
+      "sha256": "4de4b50b9f8777b409e0c88f6c4493f2c7b2e906202146212b25eb669ceb00fc",
+      "bytes": 1105
+    },
+    {
+      "path": "assets/assemblies/forward-01-flexiv-rizon4s/README.taccap.md",
+      "sha256": "3a02b49bb54ad7d48ce147015c7402676bd8f5c0abab898e711a6474f811a7ad",
+      "bytes": 2276
+    },
+    {
+      "path": "assets/assemblies/forward-01-flexiv-rizon4s/assembly.taccap.json",
+      "sha256": "49a251821fbef368bc93613d1ffeefda7026f07dfe1faaf8cb93c8b492dbb35f",
+      "bytes": 7729
+    },
+    {
+      "path": "assets/assemblies/forward-01-flexiv-rizon4s/config/start_pose.taccap.json",
+      "sha256": "5df3af7776f00eacab94d4cee7b72884dc2ba8ce8f72f9619d97b4ee2cb44816",
+      "bytes": 1255
+    },
+    {
+      "path": "assets/assemblies/forward-01-flexiv-rizon4s/urdf/forward-01-flexiv-rizon4s-taccap.urdf",
+      "sha256": "d5a85eb49d2696dd66b829a52b0303b48715705b3f7ba83dea42377471f7948d",
+      "bytes": 41660
+    },
+    {
+      "path": "assets/grippers/xense/taccap/slave-v2026.10.15/LICENSES/robosuite.txt",
+      "sha256": "177978cbece0a4c454c2aaec5b3f145b39270814874c43109da9e829c39d9cba",
+      "bytes": 1474
+    },
+    {
+      "path": "assets/grippers/xense/taccap/slave-v2026.10.15/LICENSES/xtac-umi-description.txt",
+      "sha256": "e377d313ab1da9536ccb3c97583680fbb8e818c3a89c9cd15724cc1f3fa92834",
+      "bytes": 1208
+    },
+    {
+      "path": "assets/grippers/xense/taccap/slave-v2026.10.15/NOTICE.md",
+      "sha256": "ac93c954e1d63088dd76050673a192deb98f61712775af24aabea6b025debbd0",
+      "bytes": 1128
+    },
+    {
+      "path": "assets/grippers/xense/taccap/slave-v2026.10.15/asset.json",
+      "sha256": "c9f0e8a186734befe661b1b0238bbfbc0c3e86bb29bddcb685c1254523bdd787",
+      "bytes": 16129
+    },
+    {
+      "path": "assets/grippers/xense/taccap/slave-v2026.10.15/config/model.json",
+      "sha256": "d6518091fe5a5f1f4c12e902daf371768cff7ceb32bce142b0539549dc2e70f4",
+      "bytes": 13129
+    },
+    {
+      "path": "assets/grippers/xense/taccap/slave-v2026.10.15/meshes/body_link.STL",
+      "sha256": "4f2545d5680998302febe1b1ee19e4e88a9596421e2a74711ab7ef098e8ce9c0",
+      "bytes": 2636884
+    },
+    {
+      "path": "assets/grippers/xense/taccap/slave-v2026.10.15/meshes/camera_link.STL",
+      "sha256": "71d4311039a39eb46ce2d8731e87eb028d25ea60455481180382705dc0407422",
+      "bytes": 133784
+    },
+    {
+      "path": "assets/grippers/xense/taccap/slave-v2026.10.15/meshes/collision/body_link.stl",
+      "sha256": "e40866ec9a44b9209881ae053882595c1c11abbdb623a1b25fc50b85933b1cdc",
+      "bytes": 145084
+    },
+    {
+      "path": "assets/grippers/xense/taccap/slave-v2026.10.15/meshes/collision/left_link.stl",
+      "sha256": "57709f0dd3e83ad2da5d2cd2cab29d86c4f9b2f3eb2eb66f044f310cd0d6becc",
+      "bytes": 145084
+    },
+    {
+      "path": "assets/grippers/xense/taccap/slave-v2026.10.15/meshes/collision/motor_link.stl",
+      "sha256": "904aba324248d8f12e38c41bd5227d20afb04c5e44941926a5d73a2ab904b40f",
+      "bytes": 129584
+    },
+    {
+      "path": "assets/grippers/xense/taccap/slave-v2026.10.15/meshes/collision/right_link.stl",
+      "sha256": "ec45904d48ec00f358cc7218ebee412f79b7926c6d9f0c469829f6620502e5d5",
+      "bytes": 145084
+    },
+    {
+      "path": "assets/grippers/xense/taccap/slave-v2026.10.15/meshes/left_link.STL",
+      "sha256": "fb69f4d4de9a0cb423ccd14e447335692245555cc02e6f544a420a5dcbeaee69",
+      "bytes": 4932384
+    },
+    {
+      "path": "assets/grippers/xense/taccap/slave-v2026.10.15/meshes/motor_link.STL",
+      "sha256": "75fd0e1efe9b64d89cf6c16c0d93811ed9dd5edf1b6506861573e0c95e688509",
+      "bytes": 6933284
+    },
+    {
+      "path": "assets/grippers/xense/taccap/slave-v2026.10.15/meshes/right_link.STL",
+      "sha256": "82d58ff80a8d84da06d3a4be75a00c10d13b66f55ec211d486b1e74e66210e53",
+      "bytes": 4593984
+    },
+    {
+      "path": "assets/mounts/gripper-adapters/flexiv-elite-franka-to-taccap-slave/LICENSES/robosuite.txt",
+      "sha256": "177978cbece0a4c454c2aaec5b3f145b39270814874c43109da9e829c39d9cba",
+      "bytes": 1474
+    },
+    {
+      "path": "assets/mounts/gripper-adapters/flexiv-elite-franka-to-taccap-slave/NOTICE.md",
+      "sha256": "c0ee19b9f2d719506accef796b72ed411764035325e1364e6b43c3f5f24adb2e",
+      "bytes": 995
+    },
+    {
+      "path": "assets/mounts/gripper-adapters/flexiv-elite-franka-to-taccap-slave/asset.json",
+      "sha256": "87800e92325ba3986db6f9768182cda624e6a94238ed9d80b91e2aad7269b1b5",
+      "bytes": 7677
+    },
+    {
+      "path": "assets/mounts/gripper-adapters/flexiv-elite-franka-to-taccap-slave/meshes/Asm_link.STL",
+      "sha256": "60b7f8c6c93211532d8fd419533dd904216314554bd5794c166b3dd8594f48bc",
+      "bytes": 77584
+    },
+    {
+      "path": "assets/mounts/gripper-adapters/flexiv-elite-franka-to-taccap-slave/meshes/collision-lite/Asm_link.stl",
+      "sha256": "cec3eff5be59fda01fef6e6fdb15f847a9415555b5534c25614966b52e999175",
+      "bytes": 46584
+    },
+    {
+      "path": "assets/mounts/robot-bases/forward-flexiv/NOTICE.md",
+      "sha256": "1fe245f4565b687a4768765f9ab95044cf02b400f51668677d0ab9a12f14adcb",
+      "bytes": 728
+    },
+    {
+      "path": "assets/mounts/robot-bases/forward-flexiv/asset.json",
+      "sha256": "1df16ca9d45c0ad95ebba077b0e2f379030434aafaee54427e2dbf36c1805ce8",
+      "bytes": 2663
+    },
+    {
+      "path": "assets/mounts/robot-bases/forward-flexiv/meshes/base_link.STL",
+      "sha256": "0a936b229acade95d8a6fe4d8e455f0cd641485efa33a0fcb671644bf42b8e94",
+      "bytes": 2682784
+    },
+    {
+      "path": "assets/mounts/robot-bases/forward-flexiv/meshes/visual_left.STL",
+      "sha256": "a304aadb5a72ee0ca276c48a1d204eded28b5e0aac7ea81dd0ecb0bee3e17289",
+      "bytes": 88584
+    },
+    {
+      "path": "assets/mounts/robot-bases/forward-flexiv/meshes/visual_right.STL",
+      "sha256": "8968d4a0bba1940e339064087c66397af6be4e941ea2b31c93d4e750316b4dd3",
+      "bytes": 88584
+    },
+    {
+      "path": "assets/robots/flexiv/rizon4s/LICENSES/LICENSE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "bytes": 11357
+    },
+    {
+      "path": "assets/robots/flexiv/rizon4s/LICENSES/official_usd_isaac_sim_ws.txt",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "bytes": 11357
+    },
+    {
+      "path": "assets/robots/flexiv/rizon4s/NOTICE.md",
+      "sha256": "ba2fce96433e13e892ebc2f7c66e276584176b5a9e5263ff044e8a3d4e2256f9",
+      "bytes": 1578
+    },
+    {
+      "path": "assets/robots/flexiv/rizon4s/asset.json",
+      "sha256": "a5626caf63b5125f1dc845c94070818edf9b2623b52f8dc4e767d8f49a1aa162",
+      "bytes": 26247
+    },
+    {
+      "path": "assets/robots/flexiv/rizon4s/meshes/Rizon4s/collision/link0.stl",
+      "sha256": "9238a0f8f81c932d176817f8d82dd0826f7821a343a518c9d65bd5eb676329bb",
+      "bytes": 2584
+    },
+    {
+      "path": "assets/robots/flexiv/rizon4s/meshes/Rizon4s/collision/link1.stl",
+      "sha256": "31975c916fbf47b222da29d47d5232d731c8a11cac4bf90dd7bc284d02029976",
+      "bytes": 2684
+    },
+    {
+      "path": "assets/robots/flexiv/rizon4s/meshes/Rizon4s/collision/link2.stl",
+      "sha256": "8e2d6386918c643435123eaf3bb5cfff6bcc0a6a9d13a274232194f671dac5b1",
+      "bytes": 3184
+    },
+    {
+      "path": "assets/robots/flexiv/rizon4s/meshes/Rizon4s/collision/link3.stl",
+      "sha256": "7b8ccb311a38cad76874040b8d35169b475f33c3bc9117565094ebbccb5db8ae",
+      "bytes": 2784
+    },
+    {
+      "path": "assets/robots/flexiv/rizon4s/meshes/Rizon4s/collision/link4.stl",
+      "sha256": "c400b13596476f3487548d5059c48538c1d3a391bdbae038f8acb6620b04fa48",
+      "bytes": 2984
+    },
+    {
+      "path": "assets/robots/flexiv/rizon4s/meshes/Rizon4s/collision/link5.stl",
+      "sha256": "d2dcdaa26c69369f307315302b79bccf03f75dfed3dd7c0a0b2aa8f2274237ab",
+      "bytes": 3084
+    },
+    {
+      "path": "assets/robots/flexiv/rizon4s/meshes/Rizon4s/collision/link6.stl",
+      "sha256": "7fce86febde979d5a609e07af303b3a6457c42fd28716e6e34d1e95f5e02b640",
+      "bytes": 3084
+    },
+    {
+      "path": "assets/robots/flexiv/rizon4s/meshes/Rizon4s/collision/link7.stl",
+      "sha256": "811d1ae6df026c4ccf35af36276a6add3ef9d2ae2ab5a5b5dcd2a3b55cc7ab13",
+      "bytes": 4484
+    },
+    {
+      "path": "assets/robots/flexiv/rizon4s/meshes/Rizon4s/visual/link0.mtl",
+      "sha256": "bb7adc99ca67b22a162849d2e1a30bf430e1abfec925c0ef416ba601f159e1e5",
+      "bytes": 173
+    },
+    {
+      "path": "assets/robots/flexiv/rizon4s/meshes/Rizon4s/visual/link0.obj",
+      "sha256": "65a08b0ecc5464555f54ff19e2f7664081c6d745769231f222944828ebf46197",
+      "bytes": 539234
+    },
+    {
+      "path": "assets/robots/flexiv/rizon4s/meshes/Rizon4s/visual/link1.mtl",
+      "sha256": "25d7391fce563c5e74e7c54d5d51589b666fe9c701ff20f1d5f44b557f905a10",
+      "bytes": 395
+    },
+    {
+      "path": "assets/robots/flexiv/rizon4s/meshes/Rizon4s/visual/link1.obj",
+      "sha256": "03eef41b87a7a0722a1c363cdf25442870dd7686a5d73bad0dbcf788f6afe48e",
+      "bytes": 404306
+    },
+    {
+      "path": "assets/robots/flexiv/rizon4s/meshes/Rizon4s/visual/link2.mtl",
+      "sha256": "25d7391fce563c5e74e7c54d5d51589b666fe9c701ff20f1d5f44b557f905a10",
+      "bytes": 395
+    },
+    {
+      "path": "assets/robots/flexiv/rizon4s/meshes/Rizon4s/visual/link2.obj",
+      "sha256": "35bd34e9d0e4a193695c5e0def680c163a955534b55fd4da66eb6da1e1bdf1ca",
+      "bytes": 426207
+    },
+    {
+      "path": "assets/robots/flexiv/rizon4s/meshes/Rizon4s/visual/link3.mtl",
+      "sha256": "25d7391fce563c5e74e7c54d5d51589b666fe9c701ff20f1d5f44b557f905a10",
+      "bytes": 395
+    },
+    {
+      "path": "assets/robots/flexiv/rizon4s/meshes/Rizon4s/visual/link3.obj",
+      "sha256": "687413fe855a584589e115541697aa3bbe5121fda7f843924034d75206a9fa25",
+      "bytes": 399052
+    },
+    {
+      "path": "assets/robots/flexiv/rizon4s/meshes/Rizon4s/visual/link4.mtl",
+      "sha256": "25d7391fce563c5e74e7c54d5d51589b666fe9c701ff20f1d5f44b557f905a10",
+      "bytes": 395
+    },
+    {
+      "path": "assets/robots/flexiv/rizon4s/meshes/Rizon4s/visual/link4.obj",
+      "sha256": "4747d92c9db9bbdb714af45dded6b62a81c317bd35814ebb29cac207690e21fa",
+      "bytes": 399054
+    },
+    {
+      "path": "assets/robots/flexiv/rizon4s/meshes/Rizon4s/visual/link5.mtl",
+      "sha256": "25d7391fce563c5e74e7c54d5d51589b666fe9c701ff20f1d5f44b557f905a10",
+      "bytes": 395
+    },
+    {
+      "path": "assets/robots/flexiv/rizon4s/meshes/Rizon4s/visual/link5.obj",
+      "sha256": "79149ef6de6a71b951f1b424e97e193879366e3fafc85d6bffdb7bac02a91260",
+      "bytes": 385252
+    },
+    {
+      "path": "assets/robots/flexiv/rizon4s/meshes/Rizon4s/visual/link6.mtl",
+      "sha256": "25d7391fce563c5e74e7c54d5d51589b666fe9c701ff20f1d5f44b557f905a10",
+      "bytes": 395
+    },
+    {
+      "path": "assets/robots/flexiv/rizon4s/meshes/Rizon4s/visual/link6.obj",
+      "sha256": "f707bde224404be992943623f5da6076aa4d75d56ddd2ee0d24bac9053b77405",
+      "bytes": 586510
+    },
+    {
+      "path": "assets/robots/flexiv/rizon4s/meshes/Rizon4s/visual/link7.mtl",
+      "sha256": "5b9167db4a82b4cc30eb3ea1d4d884c23e9acb90abb58e387725ac7920e9f7e5",
+      "bytes": 222
+    },
+    {
+      "path": "assets/robots/flexiv/rizon4s/meshes/Rizon4s/visual/link7.obj",
+      "sha256": "b16e1d1f6f18adf0b57a5f777690115679725539cc9eaa852ee84c79c6ff4afa",
+      "bytes": 468724
+    },
+    {
+      "path": "assets/robots/flexiv/rizon4s/meshes/Rizon4s/visual/ring.mtl",
+      "sha256": "dc681ef2a8397b1a0f7eaa709a9dc1995269598894836e5da73e0a3490da7456",
+      "bytes": 225
+    },
+    {
+      "path": "assets/robots/flexiv/rizon4s/meshes/Rizon4s/visual/ring.obj",
+      "sha256": "3ff40a6b54d467b9fb21c56da30cc241064b6c593f8023c879021f7df86bb688",
+      "bytes": 7659
+    }
+  ]
+}

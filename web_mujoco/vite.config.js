@@ -83,6 +83,12 @@ export default defineConfig(({ command, mode }) => ({
   },
   assetsInclude: ['**/*.wasm'],
   build: {
+    rollupOptions: {
+      input: {
+        main: path.resolve(root, 'index.html'),
+        rebot: path.resolve(root, 'rebot.html')
+      }
+    },
     assetsInlineLimit: 0,
     chunkSizeWarningLimit: 4000
   },

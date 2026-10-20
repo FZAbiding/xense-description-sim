@@ -1,0 +1,176 @@
+{
+  "schema_version": 1,
+  "id": "assembly.forward_01_flexiv_rizon4s_taccap",
+  "entrypoint": "urdf/forward-01-flexiv-rizon4s-taccap.urdf",
+  "world": "__workspace_scene_root__",
+  "instances": {
+    "left_arm": {
+      "asset_id": "flexiv.rizon4s",
+      "variant": "default",
+      "prefix": "left_"
+    },
+    "right_arm": {
+      "asset_id": "flexiv.rizon4s",
+      "variant": "default",
+      "prefix": "right_"
+    },
+    "stand": {
+      "asset_id": "forward44r.stand",
+      "variant": "default",
+      "prefix": ""
+    },
+    "left_adapter": {
+      "asset_id": "xense.flexiv_elite_franka_to_taccap_slave",
+      "variant": "collision",
+      "prefix": "left_adapter_"
+    },
+    "left_gripper": {
+      "asset_id": "xense.taccap_slave_v2026_10_15",
+      "variant": "default",
+      "prefix": "left_tool_"
+    },
+    "right_adapter": {
+      "asset_id": "xense.flexiv_elite_franka_to_taccap_slave",
+      "variant": "collision",
+      "prefix": "right_adapter_"
+    },
+    "right_gripper": {
+      "asset_id": "xense.taccap_slave_v2026_10_15",
+      "variant": "default",
+      "prefix": "right_tool_"
+    }
+  },
+  "connections": [
+    {
+      "name": "bridge_1786962468309",
+      "parent": "component_1_visual_left",
+      "child": "left_base_link",
+      "xyz": "0 0 0",
+      "rpy": "1.5707963 -1.5707963 1.5707963",
+      "origin_extra": {
+        "quat_xyzw": "0.70710678 0 0.70710678 0"
+      }
+    },
+    {
+      "name": "bridge_1786962614653",
+      "parent": "component_1_visual_right",
+      "child": "right_base_link",
+      "xyz": "0 0 0",
+      "rpy": "1.5707963267948966 0 1.5707963267948966",
+      "origin_extra": {
+        "quat_xyzw": "0.5 0.5 0.5 0.5"
+      }
+    },
+    {
+      "name": "__workspace_component_root_joint__component_1",
+      "parent": "__workspace_scene_root__",
+      "child": "component_1_base_link",
+      "xyz": "0 0 0",
+      "rpy": "0 0 0"
+    },
+    {
+      "name": "left_flange_to_taccap_adapter",
+      "parent": "left_flange",
+      "child": "left_adapter_taccap_mount_link",
+      "xyz": "0 0 0",
+      "rpy": "0 0 1.5707963267948966"
+    },
+    {
+      "name": "left_adapter_to_taccap_base",
+      "parent": "left_adapter_taccap_mount_link",
+      "child": "left_tool_flange_link",
+      "xyz": "0 0 0",
+      "rpy": "0 0 0"
+    },
+    {
+      "name": "right_flange_to_taccap_adapter",
+      "parent": "right_flange",
+      "child": "right_adapter_taccap_mount_link",
+      "xyz": "0 0 0",
+      "rpy": "0 0 -1.5707963267948966"
+    },
+    {
+      "name": "right_adapter_to_taccap_base",
+      "parent": "right_adapter_taccap_mount_link",
+      "child": "right_tool_flange_link",
+      "xyz": "0 0 0",
+      "rpy": "0 0 0"
+    }
+  ],
+  "inputs": {
+    "__world__": "edfcf221e89993b175b3c9ffa36b7aa2ab213414ef1052d160c1a76b200d4687",
+    "left_arm": "f6db0dd538720a987f3544062acfec041d6a0e0bd14a27ca814f1990c1eb633a",
+    "right_arm": "f6db0dd538720a987f3544062acfec041d6a0e0bd14a27ca814f1990c1eb633a",
+    "stand": "39f270f25daf51ff9e9199b2c71097017f70f4c2d438c4c1ca37580869b5572d",
+    "left_adapter": "cf6e182cc42d958ce4a610d127ed301b0e7155fb877c057864ec6e86c37998e0",
+    "left_gripper": "aa9e6d5dbbd61386e83cf9fd31268871b324c560e9eb30d66e69e06b9e94b8ca",
+    "right_adapter": "cf6e182cc42d958ce4a610d127ed301b0e7155fb877c057864ec6e86c37998e0",
+    "right_gripper": "aa9e6d5dbbd61386e83cf9fd31268871b324c560e9eb30d66e69e06b9e94b8ca"
+  },
+  "source": {
+    "repository": "robosuite-xense",
+    "revision": "c9456d0789981f40794358a86658d4d87bf736c1",
+    "path": "robosuite/models/assets/robots/forward_44r/source.urdf",
+    "sha256": "edfcf221e89993b175b3c9ffa36b7aa2ab213414ef1052d160c1a76b200d4687",
+    "notes": "Both arms use flexiv.rizon4s and the Forward44R stand. The left mount is inherited. The right Rizon4S mount is rotated -90 degrees about local Z relative to the source Rizon4R mount. This aligns its start-pose flange position and approach direction with the reviewed Forward-04 right arm. Physical bolt interface remains pending review.",
+    "configuration": "forward-01-flexiv-rizon4s-taccap; own arm/stand/table configuration plus independent adapter and bare slave per side",
+    "table_status": "worktable.120cm is pending Forward-04 table placement; copy the same table configuration to Forward-01 and forward4s when available",
+    "end_effector_status": "candidate mounted; human installation acceptance pending",
+    "base_assembly": {
+      "id": "assembly.forward_01_flexiv_rizon4s",
+      "snapshot": "provenance/taccap/base_assembly.json",
+      "sha256": "31fea9a6f5e51d74eee7a79a65e3a6757cc2ed99d1bc9e2b96ed0aacaa5d07a7"
+    },
+    "mounting": {
+      "repository": "XenseRobotics-AI/robosuite-xense",
+      "revision": "c9456d0789981f40794358a86658d4d87bf736c1",
+      "path": "robosuite/models/assets/robots/forward_44r/robot.xml",
+      "snapshot": "provenance/taccap/forward44r_mount_source.xml",
+      "sha256": "a49f45319d23edbcdfdb5e5943f16ea317f038144ff68b54c9a4b4d522c41bf4",
+      "original_quaternions_wxyz": {
+        "left": [
+          0.5,
+          0.5,
+          -0.5,
+          0.5
+        ],
+        "right": [
+          0.5,
+          -0.5,
+          -0.5,
+          -0.5
+        ]
+      },
+      "derivation": "Same native-mesh-to-+Z conversion as bench 04. Select robot-side quarter-turn index per platform: {'left': 90, 'right': -90} degrees about flange +Z; zero translation. Tool side retains source +Z 12 mm.",
+      "scope": "User-requested mounting candidate. Bench 01 uses matched +Z flange axes; bench 02 selects the zero-degree indices from the same 90-degree four-hole symmetry for the side-45-degree stand; bench 05 retains bench 04 indices and uses its own wrist-bent start angles. No arm angle or translation estimated.",
+      "clocking_degrees": {
+        "left": 90,
+        "right": -90
+      },
+      "hole_pattern_evidence": "Rizon4 visual link7.obj section at z=0.0809 m: four ~6 mm holes centred at (+/-0.01767,+/-0.01767) m; adapter section at local z=0.001 m: four ~6.5 mm holes at (+/-0.01768,+/-0.01768) m, giving valid 90-degree rotation indices. Source flange yaw pi preserves this four-hole set. Visual-mesh evidence does not replace hardware tolerance/bolt checks.",
+      "hole_pattern_meshes": {
+        "assets/robots/flexiv/rizon4/meshes/visual/link7.obj": "ca4dc2ef2d0e31b24b8ba678aabf0334e3a03432d2794a90516f513cd6067b74",
+        "assets/mounts/tool_adapters/flexiv_elite_franka_to_taccap_slave/meshes/Asm_link.STL": "60b7f8c6c93211532d8fd419533dd904216314554bd5794c166b3dd8594f48bc"
+      }
+    },
+    "start_pose": {
+      "path": "config/start_pose.taccap.json",
+      "sha256": "99d2d5bda6312486b18d0bb1d9ea24bf5e0c8eb6534e2fc75aa375b72f5e5daa",
+      "base_snapshot": "provenance/taccap/base_start_pose.json",
+      "base_sha256": "e3045851a6b5a3ab082669fede2d07ed65ff252fe32bf05188eb0482bf0b3396",
+      "policy": "Own 14 arm joint start angles unchanged; two source-maximum-opening drivers, source mimic; no baked initial_pose."
+    },
+    "user_reference": "2026-10-10: 01/02 resemble raised-arm 04; 05 wrists bend down, wrist cameras face down, finger offset towards robot body. Do not commit.",
+    "slave_update": {
+      "date": "2026-10-16",
+      "asset_id": "xense.taccap_slave_v2026_10_15",
+      "variant": "default",
+      "mounting": "Keep the dedicated platform adapter. Compose the previous adapter-to-base pose with inverse(flange-to-base +12 mm); base, EEF and camera frame poses preserved. Do not stack the C4 with_mount adapter.",
+      "camera_COM": "Temporary at camera body link origin per user request; original SW data retained."
+    }
+  },
+  "world_source": {
+    "asset_id": "forward44r.stand",
+    "snapshot": "provenance/urdf/source.urdf"
+  }
+}

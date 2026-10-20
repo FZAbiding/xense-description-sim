@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "id": "xense.flexiv_elite_franka_to_taccap_slave",
+  "category": "mounts",
+  "display_name": "Flexiv / Elite / Franka to TacCap Slave adapter",
+  "entrypoints": {
+    "default": "urdf/flexiv_elite_franka_to_taccap_slave.urdf",
+    "collision": "urdf/flexiv_elite_franka_to_taccap_slave_collision.urdf"
+  },
+  "units": {
+    "length": "m",
+    "angle": "rad",
+    "mass": "kg"
+  },
+  "authoring": {
+    "mode": "urdf_derived",
+    "authority": "provenance/urdf/taccap_g1_slave_with_mount.urdf + meshes/Asm_link.STL + provenance/derivation.json",
+    "generator": "scripts/generators/generate_taccap_flange_adapter.py",
+    "mass_properties": "config/mass.json",
+    "collision_lite": {
+      "authority": "provenance/collision_lite_recipe.json",
+      "generator": "scripts/generators/generate_diagonal07_lite.py",
+      "derivation": "provenance/collision_lite_derivation.json",
+      "scope": "Source-URDF collision-only derivative; original Xacro/config remain authoritative for joints and inertias."
+    }
+  },
+  "source": {
+    "repository": "XenseRobotics-AI/robosuite-xense",
+    "revision": "865e81be89706f8d1d25ba83119c1d0f3de8d4e9",
+    "snapshot": "local_working_tree_xense.taccap_slave_with_mount_2026-10-10",
+    "license_status": "unconfirmed_see_notice",
+    "sha256": "df2c7c5c0d6a0914fb09b25461ba5ec748706e123eb566cbbf2a3fab9de7ed5d",
+    "notes": [
+      "User identified taccap_mount_link as the requested adapter. Extracted from current URDF; original STL bytes and source URDFs retained.",
+      "Uniform 6061-T6 density and mass estimate explicitly requested; COM/inertia deferred, no URDF inertial authored.",
+      "Robot-side frame and +Z 12 mm tool transform retained; arm-specific compatibility and clocking pending."
+    ]
+  },
+  "review": {
+    "visual": "pending_human",
+    "joint_parameters": "fixed_tool_transform_preserved_from_source; arm_installation_unverified",
+    "inertial_parameters": "mesh_volume_times_user_specified_6061_T6_density; COM_and_inertia_deferred",
+    "contacts": "source_collision_mesh_preserved_not_validated",
+    "collision_lite": "unsigned_surface_bounds_passed; nonconvex_triangle_mesh; signed_occupancy_and_hardware_not_validated"
+  },
+  "files": {
+    "LICENSES/robosuite.txt": {
+      "sha256": "177978cbece0a4c454c2aaec5b3f145b39270814874c43109da9e829c39d9cba",
+      "source": "xense.taccap_slave:with_mount",
+      "source_sha256": "177978cbece0a4c454c2aaec5b3f145b39270814874c43109da9e829c39d9cba",
+      "role": "license"
+    },
+    "NOTICE.md": {
+      "sha256": "c0ee19b9f2d719506accef796b72ed411764035325e1364e6b43c3f5f24adb2e",
+      "source": "xense.taccap_slave:with_mount",
+      "source_sha256": "df2c7c5c0d6a0914fb09b25461ba5ec748706e123eb566cbbf2a3fab9de7ed5d",
+      "role": "documentation"
+    },
+    "README.md": {
+      "sha256": "4a22a8c5b8cc09b56584e654efba06a84f68abd97ebbe8341686410ea9a0bfc6",
+      "source": "xense.taccap_slave:with_mount",
+      "source_sha256": "df2c7c5c0d6a0914fb09b25461ba5ec748706e123eb566cbbf2a3fab9de7ed5d",
+      "role": "documentation",
+      "modification": "Document optional 07 collision-only derivative, componentwise surface bounds and nonconvex-engine limitations. 2026-10-15: normalize local directory names/relative resource paths; preserve source bytes, source hashes and mechanical parameters."
+    },
+    "config/mass.json": {
+      "sha256": "7b0e95f3afc83b99e6520b4ff025cc783d8beac82028530cb0183bfe8af395bf",
+      "source": "xense.taccap_slave:with_mount",
+      "source_sha256": "df2c7c5c0d6a0914fb09b25461ba5ec748706e123eb566cbbf2a3fab9de7ed5d",
+      "role": "estimated_mass"
+    },
+    "meshes/Asm_link.STL": {
+      "sha256": "60b7f8c6c93211532d8fd419533dd904216314554bd5794c166b3dd8594f48bc",
+      "source": "assets/grippers/xense/taccap/slave-v2026.08.03/meshes/Asm_link.STL",
+      "source_sha256": "60b7f8c6c93211532d8fd419533dd904216314554bd5794c166b3dd8594f48bc",
+      "role": "mesh"
+    },
+    "plan.json": {
+      "sha256": "8952b2b328c6a3e7cb35927102422435866f64a18de556a1ec2b18b2797e196f",
+      "source": "xense.taccap_slave:with_mount",
+      "source_sha256": "df2c7c5c0d6a0914fb09b25461ba5ec748706e123eb566cbbf2a3fab9de7ed5d",
+      "role": "documentation"
+    },
+    "provenance/derivation.json": {
+      "sha256": "f10f8c7440bfba3f2096a6ba05f11fe4810a4dfd723c031c44003ac23ce354b5",
+      "source": "xense.taccap_slave:with_mount",
+      "source_sha256": "df2c7c5c0d6a0914fb09b25461ba5ec748706e123eb566cbbf2a3fab9de7ed5d",
+      "role": "documentation",
+      "modification": "2026-10-15: archive-only path migration to slave-v2026.08.03; geometry and parameters unchanged"
+    },
+    "provenance/source_NOTICE.md": {
+      "sha256": "875138aee527ed060861dc17cc580934f2b916594db4355f3d8d4d046deca3a9",
+      "source": "xense.taccap_slave:with_mount",
+      "source_sha256": "df2c7c5c0d6a0914fb09b25461ba5ec748706e123eb566cbbf2a3fab9de7ed5d",
+      "role": "documentation"
+    },
+    "provenance/urdf/taccap_g1_slave.urdf": {
+      "sha256": "cbdfc4e045d473c52238ecf13e48518fe7c4a31c008cd5be51b81b6bda64a8fd",
+      "source": "xense.taccap_slave:with_mount",
+      "source_sha256": "cbdfc4e045d473c52238ecf13e48518fe7c4a31c008cd5be51b81b6bda64a8fd",
+      "role": "source_urdf"
+    },
+    "provenance/urdf/taccap_g1_slave_with_mount.urdf": {
+      "sha256": "df2c7c5c0d6a0914fb09b25461ba5ec748706e123eb566cbbf2a3fab9de7ed5d",
+      "source": "xense.taccap_slave:with_mount",
+      "source_sha256": "df2c7c5c0d6a0914fb09b25461ba5ec748706e123eb566cbbf2a3fab9de7ed5d",
+      "role": "source_urdf"
+    },
+    "urdf/flexiv_elite_franka_to_taccap_slave.urdf": {
+      "sha256": "b77d13827a6c05438d9c612e4975c68d3cdc8dc97d5380de2265eea063105f92",
+      "source": "xense.taccap_slave:with_mount",
+      "source_sha256": "df2c7c5c0d6a0914fb09b25461ba5ec748706e123eb566cbbf2a3fab9de7ed5d",
+      "role": "urdf"
+    },
+    "provenance/collision_lite_recipe.json": {
+      "sha256": "25e9f0c05c654019e7716f6af4e6a95f66cbb3fb952ec840cf7bce36dc207831",
+      "source": "provenance/collision_lite_recipe.json",
+      "source_sha256": "048130f3714f1a7fdfb72ce7dbd91def4a8345ba81d599909534813989cac73b",
+      "role": "collision_derivation",
+      "modification": "2026-10-15: normalize local directory names/relative resource paths; preserve source bytes, source hashes and mechanical parameters."
+    },
+    "provenance/collision_lite_derivation.json": {
+      "sha256": "82f98e2799a9e1fe4b6b2bdc77c768035092758f2695f577f16eecbf92eab09c",
+      "source": "provenance/collision_lite_recipe.json",
+      "source_sha256": "048130f3714f1a7fdfb72ce7dbd91def4a8345ba81d599909534813989cac73b",
+      "role": "collision_derivation",
+      "modification": "2026-10-15: normalize local directory names/relative resource paths; preserve source bytes, source hashes and mechanical parameters."
+    },
+    "meshes/collision-lite/Asm_link.stl": {
+      "sha256": "cec3eff5be59fda01fef6e6fdb15f847a9415555b5534c25614966b52e999175",
+      "source": "provenance/collision_lite_recipe.json",
+      "source_sha256": "048130f3714f1a7fdfb72ce7dbd91def4a8345ba81d599909534813989cac73b",
+      "role": "derived_collision_mesh"
+    },
+    "urdf/flexiv_elite_franka_to_taccap_slave_collision.urdf": {
+      "sha256": "cf6e182cc42d958ce4a610d127ed301b0e7155fb877c057864ec6e86c37998e0",
+      "source": "provenance/collision_lite_recipe.json",
+      "source_sha256": "048130f3714f1a7fdfb72ce7dbd91def4a8345ba81d599909534813989cac73b",
+      "role": "collision_derivation",
+      "modification": "2026-10-15: normalize local directory names/relative resource paths; preserve source bytes, source hashes and mechanical parameters."
+    }
+  }
+}

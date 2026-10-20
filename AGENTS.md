@@ -1,8 +1,11 @@
 # Repository Guidelines
 
+Use `/home/xense/src/xense-description-sim` as the working directory and Git repository. The original `/home/xense/src/reBot_RS_Sim` is an initial-version reference only. Keep agent guidance and implementation records in this repository.
+
 ## Project Structure & Module Organization
 
 - `web_mujoco/src/`: browser UI, Three.js rendering, MuJoCo WASM integration, and navigation; `scripts/` contains generators and checks, and `public/` holds web assets.
+- `assets/xense/`: immutable Forward-01 source snapshot and provenance manifests; `web_mujoco/src/flexiv-*` implements its default preview. The initial reBot UI remains in `web_mujoco/rebot.html`.
 - `rebotarm_mujoco_rs/`: ROS 2 Python nodes, launch files, shared runtime models in `models/`, and pytest checks in `test/`.
 - `rebotarm_gazebo/`: Gazebo scenes, maps, and SLAM/Nav2 configuration for both simulation backends.
 - `rebotarm_msgs/`: ROS messages, services, and actions.
@@ -16,6 +19,7 @@ Use Node.js 22 to match CI. In `web_mujoco/`:
 - `npm run dev`: generate the campus scene and start Vite at `127.0.0.1:5173`.
 - `npm run build` / `npm run preview`: build production assets / preview the build.
 - `npm run smoke`: check model loading and physics without a browser.
+- `npm run test:flexiv`: validate the real Forward-01 WASM model and controls; `npm run test:flexiv:browser` checks Chromium interaction and downloads after `npx playwright install chromium`.
 
 For ROS 2 Jazzy, source `/opt/ros/jazzy/setup.bash`, then run from the repository root:
 
@@ -44,3 +48,5 @@ Use the history's prefixes: `feat:`, `fix:`, and `docs:`, followed by a concise 
 ## Model Maintenance
 
 Regenerate AGV scenes with `python3 tools/build_rs_agv_model.py`; edit generator inputs for persistent changes. Preserve mesh filename case and paths. Arm assets use meters; chassis CAD uses millimeters with MJCF scaling. Retain third-party attribution.
+
+For Forward-01, verify the imported snapshot with `python3 tools/import_flexiv_assets.py --check`. Regenerate with `.venv/bin/python tools/build_flexiv_model.py` after installing `tools/requirements-flexiv.txt`; use `--check` to detect drift. Keep original joint frames and units, document derived geometry, and distinguish kinematic preview settings from calibrated cameras or validated dynamics. See `docs/flexiv-visualization.md`.

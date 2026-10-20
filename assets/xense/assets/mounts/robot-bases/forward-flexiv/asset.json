@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "id": "forward44r.stand",
+  "category": "mounts",
+  "display_name": "forward-flexiv",
+  "entrypoints": {
+    "default": "urdf/stand.urdf"
+  },
+  "units": {
+    "length": "m",
+    "angle": "rad",
+    "mass": "kg"
+  },
+  "authoring": {
+    "mode": "subtree_snapshot",
+    "authority": "urdf",
+    "subtree_root": "component_1_base_link",
+    "excluded_subtrees": [
+      "comp_Rizon4_Rizon4-062123_base_link",
+      "comp_Rizon4R_Rizon4r-062124_base_link"
+    ]
+  },
+  "source": {
+    "repository": "https://github.com/XenseRobotics-AI/robosuite-xense",
+    "revision": "c9456d0789981f40794358a86658d4d87bf736c1",
+    "snapshot": "local_working_tree",
+    "license_status": "unconfirmed",
+    "notes": [
+      "仅保留支架自身三个 link，机械臂由装配配置引用；原始支架到两臂的桥接关系由 Forward44R 装配清单保存。"
+    ]
+  },
+  "review": {
+    "visual": "pending_human",
+    "joint_parameters": "unreviewed_source",
+    "inertial_parameters": "unreviewed_source",
+    "contacts": "not_validated"
+  },
+  "files": {
+    "meshes/base_link.STL": {
+      "sha256": "0a936b229acade95d8a6fe4d8e455f0cd641485efa33a0fcb671644bf42b8e94",
+      "source": "robosuite/models/assets/robots/forward_44r/meshes/base_link.STL",
+      "source_sha256": "0a936b229acade95d8a6fe4d8e455f0cd641485efa33a0fcb671644bf42b8e94",
+      "role": "mesh"
+    },
+    "meshes/visual_left.STL": {
+      "sha256": "a304aadb5a72ee0ca276c48a1d204eded28b5e0aac7ea81dd0ecb0bee3e17289",
+      "source": "robosuite/models/assets/robots/forward_44r/meshes/visual_left.STL",
+      "source_sha256": "a304aadb5a72ee0ca276c48a1d204eded28b5e0aac7ea81dd0ecb0bee3e17289",
+      "role": "mesh"
+    },
+    "meshes/visual_right.STL": {
+      "sha256": "8968d4a0bba1940e339064087c66397af6be4e941ea2b31c93d4e750316b4dd3",
+      "source": "robosuite/models/assets/robots/forward_44r/meshes/visual_right.STL",
+      "source_sha256": "8968d4a0bba1940e339064087c66397af6be4e941ea2b31c93d4e750316b4dd3",
+      "role": "mesh"
+    },
+    "provenance/urdf/source.urdf": {
+      "sha256": "edfcf221e89993b175b3c9ffa36b7aa2ab213414ef1052d160c1a76b200d4687",
+      "source": "robosuite/models/assets/robots/forward_44r/source.urdf",
+      "source_sha256": "edfcf221e89993b175b3c9ffa36b7aa2ab213414ef1052d160c1a76b200d4687",
+      "role": "source_urdf"
+    },
+    "urdf/stand.urdf": {
+      "sha256": "39f270f25daf51ff9e9199b2c71097017f70f4c2d438c4c1ca37580869b5572d",
+      "source": "robosuite/models/assets/robots/forward_44r/source.urdf",
+      "source_sha256": "edfcf221e89993b175b3c9ffa36b7aa2ab213414ef1052d160c1a76b200d4687",
+      "role": "urdf"
+    }
+  }
+}

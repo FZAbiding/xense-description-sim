@@ -1,0 +1,987 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot name="assembly_forward_01_flexiv_rizon4s_taccap">
+  <link name="__workspace_scene_root__">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0" />
+      <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+    </inertial>
+  </link>
+  <joint name="left_joint1" type="revolute">
+    <parent link="left_base_link" />
+    <child link="left_link1" />
+    <origin rpy="0.0 0.0 3.141592653589793" xyz="0.0 0.0 0.155" />
+    <axis xyz="0 0 1" />
+    <limit effort="123" lower="-2.8798" upper="2.8798" velocity="2.0944" />
+    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.7925" soft_upper_limit="2.7925" />
+  </joint>
+  <joint name="left_joint2" type="revolute">
+    <parent link="left_link1" />
+    <child link="left_link2" />
+    <origin rpy="0.0 0.0 0.0" xyz="0.0 0.03 0.21" />
+    <axis xyz="0 1 0" />
+    <limit effort="123" lower="-2.3562" upper="2.3562" velocity="2.0944" />
+    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.2689" soft_upper_limit="2.2689" />
+  </joint>
+  <joint name="left_joint3" type="revolute">
+    <parent link="left_link2" />
+    <child link="left_link3" />
+    <origin rpy="0.0 0.0 0.0" xyz="0.0 0.035 0.205" />
+    <axis xyz="0 0 1" />
+    <limit effort="64" lower="-3.0543" upper="3.0543" velocity="2.4435" />
+    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.9671" soft_upper_limit="2.9671" />
+  </joint>
+  <joint name="left_joint4" type="revolute">
+    <parent link="left_link3" />
+    <child link="left_link4" />
+    <origin rpy="0.0 0.0 3.141592653589793" xyz="-0.02 -0.03 0.19" />
+    <axis xyz="0 1 0" />
+    <limit effort="64" lower="-1.9548" upper="2.7751" velocity="2.4435" />
+    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-1.8675" soft_upper_limit="2.6878" />
+  </joint>
+  <joint name="left_joint5" type="revolute">
+    <parent link="left_link4" />
+    <child link="left_link5" />
+    <origin rpy="0.0 0.0 3.141592653589793" xyz="-0.02 0.025 0.195" />
+    <axis xyz="0 0 1" />
+    <limit effort="39" lower="-3.0543" upper="3.0543" velocity="4.8869" />
+    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.9671" soft_upper_limit="2.9671" />
+  </joint>
+  <joint name="left_joint6" type="revolute">
+    <parent link="left_link5" />
+    <child link="left_link6" />
+    <origin rpy="0.0 0.0 0.0" xyz="0.0 0.03 0.19" />
+    <axis xyz="0 1 0" />
+    <limit effort="39" lower="-1.4835" upper="4.6251" velocity="4.8869" />
+    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-1.3963" soft_upper_limit="4.5379" />
+  </joint>
+  <joint name="left_joint7" type="revolute">
+    <parent link="left_link6" />
+    <child link="left_link7" />
+    <origin rpy="0.0 -1.5707963267948966 0.0" xyz="-0.015 0.073 0.11" />
+    <axis xyz="0 0 1" />
+    <limit effort="39" lower="-3.0543" upper="3.0543" velocity="4.8869" />
+    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.9671" soft_upper_limit="2.9671" />
+  </joint>
+  <joint name="left_link7_to_flange" type="fixed">
+    <parent link="left_link7" />
+    <child link="left_flange" />
+    <origin rpy="0.0 0.0 3.141592653589793" xyz="0.0 0.0 0.124" />
+  </joint>
+  <link name="left_base_link">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.0002 -0.0007 0.0871" />
+      <mass value="3.788" />
+      <inertia ixx="0.0182" ixy="0.0" ixz="0.0" iyy="0.0184" iyz="0.0001" izz="0.01" />
+    </inertial>
+    <visual name="shell">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/visual/link0.obj" />
+      </geometry>
+    </visual>
+    <collision name="convex_mesh">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/collision/link0.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="left_link1">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.0001 0.0035 0.15" />
+      <mass value="3.596" />
+      <inertia ixx="0.0274" ixy="0.0" ixz="0.0" iyy="0.0273" iyz="0.0011" izz="0.0071" />
+    </inertial>
+    <visual name="shell">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/visual/link1.obj" />
+      </geometry>
+    </visual>
+    <visual name="ring">
+      <origin rpy="0 0 0" xyz="0 0 -0.0025" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/visual/ring.obj" scale="0.062 0.062 0.002" />
+      </geometry>
+    </visual>
+    <collision name="convex_mesh">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/collision/link1.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="left_link2">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.0003 0.0361 0.0998" />
+      <mass value="2.69" />
+      <inertia ixx="0.023" ixy="0.0" ixz="0.0" iyy="0.0239" iyz="-0.0001" izz="0.0036" />
+    </inertial>
+    <visual name="shell">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/visual/link2.obj" />
+      </geometry>
+    </visual>
+    <visual name="ring">
+      <origin rpy="1.5707963 0 0" xyz="0 -0.0025 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/visual/ring.obj" scale="0.062 0.062 0.002" />
+      </geometry>
+    </visual>
+    <collision name="convex_mesh">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/collision/link2.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="left_link3">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.0123 -0.0012 0.1366" />
+      <mass value="2.354" />
+      <inertia ixx="0.0143" ixy="0.0001" ixz="-0.0015" iyy="0.0137" iyz="-0.0005" izz="0.004" />
+    </inertial>
+    <visual name="shell">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/visual/link3.obj" />
+      </geometry>
+    </visual>
+    <visual name="ring">
+      <origin rpy="0 0 0" xyz="0 0 -0.0025" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/visual/ring.obj" scale="0.051 0.051 0.002" />
+      </geometry>
+    </visual>
+    <collision name="convex_mesh">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/collision/link3.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="left_link4">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.0129 0.0313 0.1034" />
+      <mass value="2.354" />
+      <inertia ixx="0.018" ixy="0.0001" ixz="-0.0016" iyy="0.0184" iyz="-0.0012" izz="0.003" />
+    </inertial>
+    <visual name="shell">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/visual/link4.obj" />
+      </geometry>
+    </visual>
+    <visual name="ring">
+      <origin rpy="1.5707963 0 0" xyz="0 -0.0025 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/visual/ring.obj" scale="0.051 0.051 0.002" />
+      </geometry>
+    </visual>
+    <collision name="convex_mesh">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/collision/link4.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="left_link5">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.0003 0.0014 0.1363" />
+      <mass value="2.31" />
+      <inertia ixx="0.0142" ixy="0.0" ixz="0.0" iyy="0.0135" iyz="0.0005" izz="0.0037" />
+    </inertial>
+    <visual name="shell">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/visual/link5.obj" />
+      </geometry>
+    </visual>
+    <visual name="ring">
+      <origin rpy="0 0 0" xyz="0 0 -0.0025" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/visual/ring.obj" scale="0.051 0.051 0.002" />
+      </geometry>
+    </visual>
+    <collision name="convex_mesh">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/collision/link5.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="left_link6">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.0202 0.0596 0.0724" />
+      <mass value="2.223" />
+      <inertia ixx="0.0085" ixy="0.0004" ixz="0.0012" iyy="0.009" iyz="0.0018" izz="0.0042" />
+    </inertial>
+    <visual name="shell">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/visual/link6.obj" />
+      </geometry>
+    </visual>
+    <visual name="ring">
+      <origin rpy="1.5707963 0 0" xyz="0 -0.0025 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/visual/ring.obj" scale="0.051 0.051 0.002" />
+      </geometry>
+    </visual>
+    <collision name="convex_mesh">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/collision/link6.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="left_link7">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.0 0.0001 0.0544" />
+      <mass value="1.403" />
+      <inertia ixx="0.0032" ixy="0.0" ixz="0.0" iyy="0.0032" iyz="0.0" izz="0.0018" />
+    </inertial>
+    <visual name="shell">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/visual/link7.obj" />
+      </geometry>
+    </visual>
+    <visual name="ring">
+      <origin rpy="0 0 0" xyz="0 0 -0.0025" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/visual/ring.obj" scale="0.051 0.051 0.002" />
+      </geometry>
+    </visual>
+    <collision name="convex_mesh">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/collision/link7.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="left_flange">
+    </link>
+  <joint name="right_joint1" type="revolute">
+    <parent link="right_base_link" />
+    <child link="right_link1" />
+    <origin rpy="0.0 0.0 3.141592653589793" xyz="0.0 0.0 0.155" />
+    <axis xyz="0 0 1" />
+    <limit effort="123" lower="-2.8798" upper="2.8798" velocity="2.0944" />
+    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.7925" soft_upper_limit="2.7925" />
+  </joint>
+  <joint name="right_joint2" type="revolute">
+    <parent link="right_link1" />
+    <child link="right_link2" />
+    <origin rpy="0.0 0.0 0.0" xyz="0.0 0.03 0.21" />
+    <axis xyz="0 1 0" />
+    <limit effort="123" lower="-2.3562" upper="2.3562" velocity="2.0944" />
+    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.2689" soft_upper_limit="2.2689" />
+  </joint>
+  <joint name="right_joint3" type="revolute">
+    <parent link="right_link2" />
+    <child link="right_link3" />
+    <origin rpy="0.0 0.0 0.0" xyz="0.0 0.035 0.205" />
+    <axis xyz="0 0 1" />
+    <limit effort="64" lower="-3.0543" upper="3.0543" velocity="2.4435" />
+    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.9671" soft_upper_limit="2.9671" />
+  </joint>
+  <joint name="right_joint4" type="revolute">
+    <parent link="right_link3" />
+    <child link="right_link4" />
+    <origin rpy="0.0 0.0 3.141592653589793" xyz="-0.02 -0.03 0.19" />
+    <axis xyz="0 1 0" />
+    <limit effort="64" lower="-1.9548" upper="2.7751" velocity="2.4435" />
+    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-1.8675" soft_upper_limit="2.6878" />
+  </joint>
+  <joint name="right_joint5" type="revolute">
+    <parent link="right_link4" />
+    <child link="right_link5" />
+    <origin rpy="0.0 0.0 3.141592653589793" xyz="-0.02 0.025 0.195" />
+    <axis xyz="0 0 1" />
+    <limit effort="39" lower="-3.0543" upper="3.0543" velocity="4.8869" />
+    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.9671" soft_upper_limit="2.9671" />
+  </joint>
+  <joint name="right_joint6" type="revolute">
+    <parent link="right_link5" />
+    <child link="right_link6" />
+    <origin rpy="0.0 0.0 0.0" xyz="0.0 0.03 0.19" />
+    <axis xyz="0 1 0" />
+    <limit effort="39" lower="-1.4835" upper="4.6251" velocity="4.8869" />
+    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-1.3963" soft_upper_limit="4.5379" />
+  </joint>
+  <joint name="right_joint7" type="revolute">
+    <parent link="right_link6" />
+    <child link="right_link7" />
+    <origin rpy="0.0 -1.5707963267948966 0.0" xyz="-0.015 0.073 0.11" />
+    <axis xyz="0 0 1" />
+    <limit effort="39" lower="-3.0543" upper="3.0543" velocity="4.8869" />
+    <safety_controller k_position="100.0" k_velocity="40.0" soft_lower_limit="-2.9671" soft_upper_limit="2.9671" />
+  </joint>
+  <joint name="right_link7_to_flange" type="fixed">
+    <parent link="right_link7" />
+    <child link="right_flange" />
+    <origin rpy="0.0 0.0 3.141592653589793" xyz="0.0 0.0 0.124" />
+  </joint>
+  <link name="right_base_link">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.0002 -0.0007 0.0871" />
+      <mass value="3.788" />
+      <inertia ixx="0.0182" ixy="0.0" ixz="0.0" iyy="0.0184" iyz="0.0001" izz="0.01" />
+    </inertial>
+    <visual name="shell">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/visual/link0.obj" />
+      </geometry>
+    </visual>
+    <collision name="convex_mesh">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/collision/link0.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="right_link1">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.0001 0.0035 0.15" />
+      <mass value="3.596" />
+      <inertia ixx="0.0274" ixy="0.0" ixz="0.0" iyy="0.0273" iyz="0.0011" izz="0.0071" />
+    </inertial>
+    <visual name="shell">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/visual/link1.obj" />
+      </geometry>
+    </visual>
+    <visual name="ring">
+      <origin rpy="0 0 0" xyz="0 0 -0.0025" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/visual/ring.obj" scale="0.062 0.062 0.002" />
+      </geometry>
+    </visual>
+    <collision name="convex_mesh">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/collision/link1.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="right_link2">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.0003 0.0361 0.0998" />
+      <mass value="2.69" />
+      <inertia ixx="0.023" ixy="0.0" ixz="0.0" iyy="0.0239" iyz="-0.0001" izz="0.0036" />
+    </inertial>
+    <visual name="shell">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/visual/link2.obj" />
+      </geometry>
+    </visual>
+    <visual name="ring">
+      <origin rpy="1.5707963 0 0" xyz="0 -0.0025 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/visual/ring.obj" scale="0.062 0.062 0.002" />
+      </geometry>
+    </visual>
+    <collision name="convex_mesh">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/collision/link2.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="right_link3">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.0123 -0.0012 0.1366" />
+      <mass value="2.354" />
+      <inertia ixx="0.0143" ixy="0.0001" ixz="-0.0015" iyy="0.0137" iyz="-0.0005" izz="0.004" />
+    </inertial>
+    <visual name="shell">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/visual/link3.obj" />
+      </geometry>
+    </visual>
+    <visual name="ring">
+      <origin rpy="0 0 0" xyz="0 0 -0.0025" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/visual/ring.obj" scale="0.051 0.051 0.002" />
+      </geometry>
+    </visual>
+    <collision name="convex_mesh">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/collision/link3.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="right_link4">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.0129 0.0313 0.1034" />
+      <mass value="2.354" />
+      <inertia ixx="0.018" ixy="0.0001" ixz="-0.0016" iyy="0.0184" iyz="-0.0012" izz="0.003" />
+    </inertial>
+    <visual name="shell">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/visual/link4.obj" />
+      </geometry>
+    </visual>
+    <visual name="ring">
+      <origin rpy="1.5707963 0 0" xyz="0 -0.0025 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/visual/ring.obj" scale="0.051 0.051 0.002" />
+      </geometry>
+    </visual>
+    <collision name="convex_mesh">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/collision/link4.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="right_link5">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.0003 0.0014 0.1363" />
+      <mass value="2.31" />
+      <inertia ixx="0.0142" ixy="0.0" ixz="0.0" iyy="0.0135" iyz="0.0005" izz="0.0037" />
+    </inertial>
+    <visual name="shell">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/visual/link5.obj" />
+      </geometry>
+    </visual>
+    <visual name="ring">
+      <origin rpy="0 0 0" xyz="0 0 -0.0025" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/visual/ring.obj" scale="0.051 0.051 0.002" />
+      </geometry>
+    </visual>
+    <collision name="convex_mesh">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/collision/link5.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="right_link6">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.0202 0.0596 0.0724" />
+      <mass value="2.223" />
+      <inertia ixx="0.0085" ixy="0.0004" ixz="0.0012" iyy="0.009" iyz="0.0018" izz="0.0042" />
+    </inertial>
+    <visual name="shell">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/visual/link6.obj" />
+      </geometry>
+    </visual>
+    <visual name="ring">
+      <origin rpy="1.5707963 0 0" xyz="0 -0.0025 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/visual/ring.obj" scale="0.051 0.051 0.002" />
+      </geometry>
+    </visual>
+    <collision name="convex_mesh">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/collision/link6.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="right_link7">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.0 0.0001 0.0544" />
+      <mass value="1.403" />
+      <inertia ixx="0.0032" ixy="0.0" ixz="0.0" iyy="0.0032" iyz="0.0" izz="0.0018" />
+    </inertial>
+    <visual name="shell">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/visual/link7.obj" />
+      </geometry>
+    </visual>
+    <visual name="ring">
+      <origin rpy="0 0 0" xyz="0 0 -0.0025" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/visual/ring.obj" scale="0.051 0.051 0.002" />
+      </geometry>
+    </visual>
+    <collision name="convex_mesh">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../robots/flexiv/rizon4s/meshes/Rizon4s/collision/link7.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="right_flange">
+    </link>
+  <link name="component_1_base_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../../../mounts/robot-bases/forward-flexiv/meshes/base_link.STL" />
+      </geometry>
+      <material>
+        <color rgba="0.65098000 0.61961000 0.58824000 1.00000000" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../../../mounts/robot-bases/forward-flexiv/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+    <inertial>
+      <origin xyz="0.065109 -0.0000085 0.12485" rpy="0 0 0" />
+      <mass value="151.14" />
+      <inertia ixx="10.252" ixy="0.017567" ixz="-0.2137" iyy="10.485" iyz="0.0000221" izz="9.7493" />
+    </inertial>
+  </link>
+  <link name="component_1_visual_left">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../../../mounts/robot-bases/forward-flexiv/meshes/visual_left.STL" />
+      </geometry>
+      <material>
+        <color rgba="0.65098000 0.61961000 0.58824000 1.00000000" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../../../mounts/robot-bases/forward-flexiv/meshes/visual_left.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="component_1_visual_right">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../../../mounts/robot-bases/forward-flexiv/meshes/visual_right.STL" />
+      </geometry>
+      <material>
+        <color rgba="0.65098000 0.61961000 0.58824000 1.00000000" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../../../mounts/robot-bases/forward-flexiv/meshes/visual_right.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="component_1_visual_left__joint" type="fixed">
+    <parent link="component_1_base_link" />
+    <child link="component_1_visual_left" />
+    <origin xyz="0.11 0.2 1.102" rpy="0 0 0" />
+  </joint>
+  <joint name="component_1_visual_right__joint" type="fixed">
+    <parent link="component_1_base_link" />
+    <child link="component_1_visual_right" />
+    <origin xyz="0.11 -0.2 1.102" rpy="0 0 0" />
+  </joint>
+  <material name="left_adapter_taccap_cover_mat">
+    <color rgba="0.89804 0.91765 0.92941 1" />
+  </material>
+  <link name="left_adapter_taccap_mount_link">
+    <visual name="asm_visual">
+      <origin rpy="0 -1.5707963267948966 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../mounts/gripper-adapters/flexiv-elite-franka-to-taccap-slave/meshes/Asm_link.STL" />
+      </geometry>
+      <material name="left_adapter_taccap_cover_mat" />
+    </visual>
+    <collision name="asm_collision">
+      <origin rpy="0 -1.5707963267948966 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../mounts/gripper-adapters/flexiv-elite-franka-to-taccap-slave/meshes/collision-lite/Asm_link.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <material name="left_tool_taccap_base_mat">
+    <color rgba="0.75294 0.75294 0.75294 1" />
+  </material>
+  <material name="left_tool_taccap_left_mat">
+    <color rgba="1 1 1 1" />
+  </material>
+  <material name="left_tool_taccap_right_mat">
+    <color rgba="0.60392 0.60392 0.60392 1" />
+  </material>
+  <material name="left_tool_taccap_cover_mat">
+    <color rgba="0.89804 0.91765 0.92941 1" />
+  </material>
+  <link name="left_tool_taccap_base_link">
+    <inertial>
+      <origin xyz="0.00055404 -0.0011065 0.03389788000000001" rpy="0 0 0" />
+      <mass value="0.153" />
+      <inertia ixx="0.0001662522337781271" ixy="5.051220230199417e-07" ixz="1.023875307549503e-05" iyy="0.000126891433023779" iyz="-1.820980122271716e-06" izz="0.0001290344694980937" />
+    </inertial>
+    <visual name="body_link_visual">
+      <origin xyz="0.01975 -0.0060769 0.034023" rpy="-0 -1.570796326794897 0" />
+      <geometry>
+        <mesh filename="../../../grippers/xense/taccap/slave-v2026.10.15/meshes/body_link.STL" />
+      </geometry>
+      <material name="left_tool_taccap_base_mat" />
+    </visual>
+    <collision name="body_link_collision">
+      <origin xyz="0.01975 -0.0060769 0.034023" rpy="-0 -1.570796326794897 0" />
+      <geometry>
+        <mesh filename="../../../grippers/xense/taccap/slave-v2026.10.15/meshes/collision/body_link.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="left_tool_taccap_motor_link">
+    <inertial>
+      <origin xyz="0.03743085 -0.00109355 0.02554797" rpy="0 0 0" />
+      <mass value="0.299" />
+      <inertia ixx="2.530466922324684e-05" ixy="-2.027952739115101e-06" ixz="-1.239938363961379e-07" iyy="4.01613260249333e-05" iyz="-7.393526076882528e-07" izz="4.954026835181985e-05" />
+    </inertial>
+    <visual name="motor_link_visual">
+      <origin xyz="0.01975 -0.0060769 0.034023" rpy="-0 -1.570796326794897 0" />
+      <geometry>
+        <mesh filename="../../../grippers/xense/taccap/slave-v2026.10.15/meshes/motor_link.STL" />
+      </geometry>
+      <material name="left_tool_taccap_base_mat" />
+    </visual>
+    <collision name="motor_link_collision">
+      <origin xyz="0.01975 -0.0060769 0.034023" rpy="-0 -1.570796326794897 0" />
+      <geometry>
+        <mesh filename="../../../grippers/xense/taccap/slave-v2026.10.15/meshes/collision/motor_link.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="left_tool_taccap_left_finger_link">
+    <inertial>
+      <origin xyz="0.0140949482 -0.00330133312635219 0.04838757908594267" rpy="0 0 0" />
+      <mass value="0.14" />
+      <inertia ixx="0.0003065325738824327" ixy="1.304843016703693e-06" ixz="-6.577075277330767e-05" iyy="0.0003222085257195986" iyz="7.713878953415112e-06" izz="3.792830299796826e-05" />
+    </inertial>
+    <visual name="left_link_visual">
+      <origin xyz="1.776356839400251e-18 0 0" rpy="1.570796326794894 -1.513048197635941 -1.570796326794894" />
+      <geometry>
+        <mesh filename="../../../grippers/xense/taccap/slave-v2026.10.15/meshes/left_link.STL" />
+      </geometry>
+      <material name="left_tool_taccap_left_mat" />
+    </visual>
+    <collision name="left_link_collision">
+      <origin xyz="1.776356839400251e-18 0 0" rpy="1.570796326794894 -1.513048197635941 -1.570796326794894" />
+      <geometry>
+        <mesh filename="../../../grippers/xense/taccap/slave-v2026.10.15/meshes/collision/left_link.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="left_tool_taccap_right_finger_link">
+    <inertial>
+      <origin xyz="0.0140399882 0.003278948264701973 0.04829841241419621" rpy="0 0 0" />
+      <mass value="0.14" />
+      <inertia ixx="0.0003063018651248454" ixy="-1.332880396949135e-06" ixz="-6.566639014047093e-05" iyy="0.0003219105627972025" iyz="-7.90572760751648e-06" izz="3.79806639779513e-05" />
+    </inertial>
+    <visual name="right_link_visual">
+      <origin xyz="1.776356839400251e-18 0 0" rpy="-1.570796326794894 -1.513048197635941 1.570796326794894" />
+      <geometry>
+        <mesh filename="../../../grippers/xense/taccap/slave-v2026.10.15/meshes/right_link.STL" />
+      </geometry>
+      <material name="left_tool_taccap_right_mat" />
+    </visual>
+    <collision name="right_link_collision">
+      <origin xyz="1.776356839400251e-18 0 0" rpy="-1.570796326794894 -1.513048197635941 1.570796326794894" />
+      <geometry>
+        <mesh filename="../../../grippers/xense/taccap/slave-v2026.10.15/meshes/collision/right_link.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="left_tool_taccap_camera_body_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.018" />
+      <inertia ixx="2.08279730304444e-06" ixy="2.468185608919793e-08" ixz="-6.715076777008704e-08" iyy="2.153388567352938e-06" iyz="1.990738215085462e-08" izz="1.83083202960262e-06" />
+    </inertial>
+    <visual name="camera_link_visual">
+      <origin xyz="0.01975 -0.0060769 0.034023" rpy="-0 -1.570796326794897 0" />
+      <geometry>
+        <mesh filename="../../../grippers/xense/taccap/slave-v2026.10.15/meshes/camera_link.STL" />
+      </geometry>
+      <material name="left_tool_taccap_base_mat" />
+    </visual>
+    <collision name="camera_link_collision">
+      <origin xyz="0.01975 -0.0060769 0.034023" rpy="-0 -1.570796326794897 0" />
+      <geometry>
+        <mesh filename="../../../grippers/xense/taccap/slave-v2026.10.15/meshes/camera_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="left_tool_flange_link" />
+  <link name="left_tool_taccap_eef_link" />
+  <link name="left_tool_taccap_camera_link" />
+  <link name="left_tool_taccap_camera_optical_link" />
+  <joint name="left_tool_flange_to_base_joint" type="fixed">
+    <parent link="left_tool_flange_link" />
+    <child link="left_tool_taccap_base_link" />
+    <origin rpy="0 0 0" xyz="0 0 0.012" />
+  </joint>
+  <joint name="left_tool_taccap_left_finger_joint" type="revolute">
+    <parent link="left_tool_taccap_base_link" />
+    <child link="left_tool_taccap_left_finger_link" />
+    <origin rpy="0 0 0" xyz="0.0120336718 0.0199500106 0.0484999712" />
+    <axis xyz="1 0 0" />
+    <limit effort="4" lower="-0.5047492196767601" upper="0" velocity="1" />
+    <dynamics damping="0.08" friction="0.01" />
+    <mimic joint="left_tool_taccap_right_finger_joint" multiplier="-1" offset="0" />
+  </joint>
+  <joint name="left_tool_taccap_right_finger_joint" type="revolute">
+    <parent link="left_tool_taccap_base_link" />
+    <child link="left_tool_taccap_right_finger_link" />
+    <origin rpy="0 0 0" xyz="0.0120336718 -0.0199499894 0.0484999712" />
+    <axis xyz="1 0 0" />
+    <limit effort="4" lower="0" upper="0.5047492196767601" velocity="1" />
+    <dynamics damping="0.08" friction="0.01" />
+  </joint>
+  <joint name="left_tool_taccap_eef_joint" type="fixed">
+    <parent link="left_tool_taccap_base_link" />
+    <child link="left_tool_taccap_eef_link" />
+    <origin rpy="0 0 0" xyz="0.036575 0 0.2009217" />
+  </joint>
+  <joint name="left_tool_taccap_camera_joint" type="fixed">
+    <parent link="left_tool_taccap_base_link" />
+    <child link="left_tool_taccap_camera_link" />
+    <origin rpy="0 0 0" xyz="-0.02275 0 0.06125" />
+  </joint>
+  <joint name="left_tool_taccap_camera_optical_joint" type="fixed">
+    <parent link="left_tool_taccap_camera_link" />
+    <child link="left_tool_taccap_camera_optical_link" />
+    <origin rpy="0 0 -1.5707963267948966" xyz="0 0 0" />
+  </joint>
+  <joint name="left_tool_taccap_motor_joint" type="fixed">
+    <parent link="left_tool_taccap_base_link" />
+    <child link="left_tool_taccap_motor_link" />
+    <origin xyz="0 0 0" rpy="0 0 0" />
+  </joint>
+  <joint name="left_tool_taccap_camera_body_joint" type="fixed">
+    <parent link="left_tool_taccap_base_link" />
+    <child link="left_tool_taccap_camera_body_link" />
+    <origin xyz="0 0 0" rpy="0 0 0" />
+  </joint>
+  <material name="right_adapter_taccap_cover_mat">
+    <color rgba="0.89804 0.91765 0.92941 1" />
+  </material>
+  <link name="right_adapter_taccap_mount_link">
+    <visual name="asm_visual">
+      <origin rpy="0 -1.5707963267948966 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../mounts/gripper-adapters/flexiv-elite-franka-to-taccap-slave/meshes/Asm_link.STL" />
+      </geometry>
+      <material name="right_adapter_taccap_cover_mat" />
+    </visual>
+    <collision name="asm_collision">
+      <origin rpy="0 -1.5707963267948966 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="../../../mounts/gripper-adapters/flexiv-elite-franka-to-taccap-slave/meshes/collision-lite/Asm_link.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <material name="right_tool_taccap_base_mat">
+    <color rgba="0.75294 0.75294 0.75294 1" />
+  </material>
+  <material name="right_tool_taccap_left_mat">
+    <color rgba="1 1 1 1" />
+  </material>
+  <material name="right_tool_taccap_right_mat">
+    <color rgba="0.60392 0.60392 0.60392 1" />
+  </material>
+  <material name="right_tool_taccap_cover_mat">
+    <color rgba="0.89804 0.91765 0.92941 1" />
+  </material>
+  <link name="right_tool_taccap_base_link">
+    <inertial>
+      <origin xyz="0.00055404 -0.0011065 0.03389788000000001" rpy="0 0 0" />
+      <mass value="0.153" />
+      <inertia ixx="0.0001662522337781271" ixy="5.051220230199417e-07" ixz="1.023875307549503e-05" iyy="0.000126891433023779" iyz="-1.820980122271716e-06" izz="0.0001290344694980937" />
+    </inertial>
+    <visual name="body_link_visual">
+      <origin xyz="0.01975 -0.0060769 0.034023" rpy="-0 -1.570796326794897 0" />
+      <geometry>
+        <mesh filename="../../../grippers/xense/taccap/slave-v2026.10.15/meshes/body_link.STL" />
+      </geometry>
+      <material name="right_tool_taccap_base_mat" />
+    </visual>
+    <collision name="body_link_collision">
+      <origin xyz="0.01975 -0.0060769 0.034023" rpy="-0 -1.570796326794897 0" />
+      <geometry>
+        <mesh filename="../../../grippers/xense/taccap/slave-v2026.10.15/meshes/collision/body_link.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="right_tool_taccap_motor_link">
+    <inertial>
+      <origin xyz="0.03743085 -0.00109355 0.02554797" rpy="0 0 0" />
+      <mass value="0.299" />
+      <inertia ixx="2.530466922324684e-05" ixy="-2.027952739115101e-06" ixz="-1.239938363961379e-07" iyy="4.01613260249333e-05" iyz="-7.393526076882528e-07" izz="4.954026835181985e-05" />
+    </inertial>
+    <visual name="motor_link_visual">
+      <origin xyz="0.01975 -0.0060769 0.034023" rpy="-0 -1.570796326794897 0" />
+      <geometry>
+        <mesh filename="../../../grippers/xense/taccap/slave-v2026.10.15/meshes/motor_link.STL" />
+      </geometry>
+      <material name="right_tool_taccap_base_mat" />
+    </visual>
+    <collision name="motor_link_collision">
+      <origin xyz="0.01975 -0.0060769 0.034023" rpy="-0 -1.570796326794897 0" />
+      <geometry>
+        <mesh filename="../../../grippers/xense/taccap/slave-v2026.10.15/meshes/collision/motor_link.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="right_tool_taccap_left_finger_link">
+    <inertial>
+      <origin xyz="0.0140949482 -0.00330133312635219 0.04838757908594267" rpy="0 0 0" />
+      <mass value="0.14" />
+      <inertia ixx="0.0003065325738824327" ixy="1.304843016703693e-06" ixz="-6.577075277330767e-05" iyy="0.0003222085257195986" iyz="7.713878953415112e-06" izz="3.792830299796826e-05" />
+    </inertial>
+    <visual name="left_link_visual">
+      <origin xyz="1.776356839400251e-18 0 0" rpy="1.570796326794894 -1.513048197635941 -1.570796326794894" />
+      <geometry>
+        <mesh filename="../../../grippers/xense/taccap/slave-v2026.10.15/meshes/left_link.STL" />
+      </geometry>
+      <material name="right_tool_taccap_left_mat" />
+    </visual>
+    <collision name="left_link_collision">
+      <origin xyz="1.776356839400251e-18 0 0" rpy="1.570796326794894 -1.513048197635941 -1.570796326794894" />
+      <geometry>
+        <mesh filename="../../../grippers/xense/taccap/slave-v2026.10.15/meshes/collision/left_link.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="right_tool_taccap_right_finger_link">
+    <inertial>
+      <origin xyz="0.0140399882 0.003278948264701973 0.04829841241419621" rpy="0 0 0" />
+      <mass value="0.14" />
+      <inertia ixx="0.0003063018651248454" ixy="-1.332880396949135e-06" ixz="-6.566639014047093e-05" iyy="0.0003219105627972025" iyz="-7.90572760751648e-06" izz="3.79806639779513e-05" />
+    </inertial>
+    <visual name="right_link_visual">
+      <origin xyz="1.776356839400251e-18 0 0" rpy="-1.570796326794894 -1.513048197635941 1.570796326794894" />
+      <geometry>
+        <mesh filename="../../../grippers/xense/taccap/slave-v2026.10.15/meshes/right_link.STL" />
+      </geometry>
+      <material name="right_tool_taccap_right_mat" />
+    </visual>
+    <collision name="right_link_collision">
+      <origin xyz="1.776356839400251e-18 0 0" rpy="-1.570796326794894 -1.513048197635941 1.570796326794894" />
+      <geometry>
+        <mesh filename="../../../grippers/xense/taccap/slave-v2026.10.15/meshes/collision/right_link.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="right_tool_taccap_camera_body_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.018" />
+      <inertia ixx="2.08279730304444e-06" ixy="2.468185608919793e-08" ixz="-6.715076777008704e-08" iyy="2.153388567352938e-06" iyz="1.990738215085462e-08" izz="1.83083202960262e-06" />
+    </inertial>
+    <visual name="camera_link_visual">
+      <origin xyz="0.01975 -0.0060769 0.034023" rpy="-0 -1.570796326794897 0" />
+      <geometry>
+        <mesh filename="../../../grippers/xense/taccap/slave-v2026.10.15/meshes/camera_link.STL" />
+      </geometry>
+      <material name="right_tool_taccap_base_mat" />
+    </visual>
+    <collision name="camera_link_collision">
+      <origin xyz="0.01975 -0.0060769 0.034023" rpy="-0 -1.570796326794897 0" />
+      <geometry>
+        <mesh filename="../../../grippers/xense/taccap/slave-v2026.10.15/meshes/camera_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="right_tool_flange_link" />
+  <link name="right_tool_taccap_eef_link" />
+  <link name="right_tool_taccap_camera_link" />
+  <link name="right_tool_taccap_camera_optical_link" />
+  <joint name="right_tool_flange_to_base_joint" type="fixed">
+    <parent link="right_tool_flange_link" />
+    <child link="right_tool_taccap_base_link" />
+    <origin rpy="0 0 0" xyz="0 0 0.012" />
+  </joint>
+  <joint name="right_tool_taccap_left_finger_joint" type="revolute">
+    <parent link="right_tool_taccap_base_link" />
+    <child link="right_tool_taccap_left_finger_link" />
+    <origin rpy="0 0 0" xyz="0.0120336718 0.0199500106 0.0484999712" />
+    <axis xyz="1 0 0" />
+    <limit effort="4" lower="-0.5047492196767601" upper="0" velocity="1" />
+    <dynamics damping="0.08" friction="0.01" />
+    <mimic joint="right_tool_taccap_right_finger_joint" multiplier="-1" offset="0" />
+  </joint>
+  <joint name="right_tool_taccap_right_finger_joint" type="revolute">
+    <parent link="right_tool_taccap_base_link" />
+    <child link="right_tool_taccap_right_finger_link" />
+    <origin rpy="0 0 0" xyz="0.0120336718 -0.0199499894 0.0484999712" />
+    <axis xyz="1 0 0" />
+    <limit effort="4" lower="0" upper="0.5047492196767601" velocity="1" />
+    <dynamics damping="0.08" friction="0.01" />
+  </joint>
+  <joint name="right_tool_taccap_eef_joint" type="fixed">
+    <parent link="right_tool_taccap_base_link" />
+    <child link="right_tool_taccap_eef_link" />
+    <origin rpy="0 0 0" xyz="0.036575 0 0.2009217" />
+  </joint>
+  <joint name="right_tool_taccap_camera_joint" type="fixed">
+    <parent link="right_tool_taccap_base_link" />
+    <child link="right_tool_taccap_camera_link" />
+    <origin rpy="0 0 0" xyz="-0.02275 0 0.06125" />
+  </joint>
+  <joint name="right_tool_taccap_camera_optical_joint" type="fixed">
+    <parent link="right_tool_taccap_camera_link" />
+    <child link="right_tool_taccap_camera_optical_link" />
+    <origin rpy="0 0 -1.5707963267948966" xyz="0 0 0" />
+  </joint>
+  <joint name="right_tool_taccap_motor_joint" type="fixed">
+    <parent link="right_tool_taccap_base_link" />
+    <child link="right_tool_taccap_motor_link" />
+    <origin xyz="0 0 0" rpy="0 0 0" />
+  </joint>
+  <joint name="right_tool_taccap_camera_body_joint" type="fixed">
+    <parent link="right_tool_taccap_base_link" />
+    <child link="right_tool_taccap_camera_body_link" />
+    <origin xyz="0 0 0" rpy="0 0 0" />
+  </joint>
+  <joint name="bridge_1786962468309" type="fixed">
+    <origin xyz="0 0 0" rpy="1.5707963 -1.5707963 1.5707963" quat_xyzw="0.70710678 0 0.70710678 0" />
+    <parent link="component_1_visual_left" />
+    <child link="left_base_link" />
+  </joint>
+  <joint name="bridge_1786962614653" type="fixed">
+    <origin xyz="0 0 0" rpy="1.5707963267948966 0 1.5707963267948966" quat_xyzw="0.5 0.5 0.5 0.5" />
+    <parent link="component_1_visual_right" />
+    <child link="right_base_link" />
+  </joint>
+  <joint name="__workspace_component_root_joint__component_1" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="__workspace_scene_root__" />
+    <child link="component_1_base_link" />
+  </joint>
+  <joint name="left_flange_to_taccap_adapter" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 1.5707963267948966" />
+    <parent link="left_flange" />
+    <child link="left_adapter_taccap_mount_link" />
+  </joint>
+  <joint name="left_adapter_to_taccap_base" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="left_adapter_taccap_mount_link" />
+    <child link="left_tool_flange_link" />
+  </joint>
+  <joint name="right_flange_to_taccap_adapter" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 -1.5707963267948966" />
+    <parent link="right_flange" />
+    <child link="right_adapter_taccap_mount_link" />
+  </joint>
+  <joint name="right_adapter_to_taccap_base" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="right_adapter_taccap_mount_link" />
+    <child link="right_tool_flange_link" />
+  </joint>
+</robot>

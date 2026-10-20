@@ -1,0 +1,3 @@
+# Only needed for regenerating and validating the committed preview model.
+numpy>=1.26,<3
+mujoco==3.12.0

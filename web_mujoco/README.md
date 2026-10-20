@@ -1,5 +1,12 @@
 # Web MuJoCo
 
+当前仓库默认入口为 Forward-01 双 Flexiv/TacCap 预览。使用 Node.js 22，执行
+`npm ci && npm run dev` 后打开 `/`；原 reBot 演示位于 `/rebot.html`，
+AGV 变体使用 `/rebot.html?variant=agv`。双臂的资产、功能和检查见
+[项目说明](../README.md) 与 [实现记录](../docs/flexiv-visualization.md)。
+运行 `npm run test:flexiv` 检查真实 WASM 状态，运行 `npm run test:flexiv:browser`
+检查页面交互与截图。下文保留初始 reBot 功能说明。
+
 纯网页 MuJoCo WASM 演示：用官方 `@mujoco/mujoco` 在浏览器里提供三种产品配置：
 
 - 标准机械臂（默认）：`rs_grasp_scene.xml`
