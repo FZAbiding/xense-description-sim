@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
+import { createLabProp, disposeLabProp } from './lab-props-view.js';
+import { createCampusGroundGeometry } from './campus-ground.js';
 import { resolveExplosionLayout } from './explosion-layout.js';
 import {
   EXPLOSION_TIMELINE_DURATION_MS,
@@ -384,11 +386,19 @@ function createEnvironmentTexture() {
 
 export function createSceneView(host, options = {}) {
   const scene = new THREE.Scene();
+  const campus = options.environment === 'campus';
+  let campusEnvironment = null;
   const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
   const backdropTexture = createBackdropTexture();
   scene.background = backdropTexture;
+  if (campus) {
+    scene.background = new THREE.Color(0xc6d9dc);
+    scene.fog = new THREE.Fog(0xc6d9dc, 45, 100);
+  }
 
-  const camera = new THREE.PerspectiveCamera(45, 1, 0.02, options.far || 20);
+  // AGV scenes span tens of metres: an arm-scale 2 cm near plane wastes
+  // depth precision on distant pavement, markings and building trim.
+  const camera = new THREE.PerspectiveCamera(45, 1, options.near || 0.02, options.far || 20);
   camera.up.set(0, 0, 1);
   camera.position.set(...(options.position || [0.85, -0.95, 0.62]));
   camera.layers.enable(MAIN_VIEW_HELPER_LAYER);
@@ -435,6 +445,32 @@ export function createSceneView(host, options = {}) {
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.target.set(...(options.target || [0.28, 0, 0.16]));
   controls.enableDamping = true;
+  let cameraMode = 'overview';
+  let followBodyId = -1;
+  const followPosition = new THREE.Vector3();
+  const cameraShift = new THREE.Vector3();
+  function setCameraMode(mode) {
+    if (!campus) return;
+    cameraMode = mode === 'follow' ? 'follow' : 'overview';
+    controls.enablePan = cameraMode !== 'follow';
+    // Clear residual damping before changing the camera's reference point.
+    controls.enableDamping = false;
+    controls.update();
+    if (cameraMode === 'follow') {
+      controls.target.copy(followPosition);
+      camera.position.copy(followPosition).add(new THREE.Vector3(2.6, -3.6, 2.6));
+    } else {
+      controls.target.set(...options.target);
+      camera.position.set(...options.position);
+    }
+    controls.update();
+    controls.enableDamping = true;
+  }
+  if (campus) {
+    controls.maxPolarAngle = Math.PI * 0.49;
+    controls.minDistance = 1.2;
+    controls.maxDistance = 55;
+  }
 
   const pmrem = new THREE.PMREMGenerator(renderer);
   const environmentSource = createEnvironmentTexture();
@@ -444,8 +480,11 @@ export function createSceneView(host, options = {}) {
   pmrem.dispose();
 
   RectAreaLightUniformsLib.init();
-  scene.add(new THREE.AmbientLight(0x6f9bd4, 0.26));
-  scene.add(new THREE.HemisphereLight(0xd9f6ff, 0x021026, 0.48));
+  scene.add(new THREE.AmbientLight(campus ? 0xf7f0dc : 0x6f9bd4, campus ? 0.6 : 0.26));
+  const hemisphere = new THREE.HemisphereLight(campus ? 0xe5f2ff : 0xd9f6ff, campus ? 0x787965 : 0x021026, campus ? 1.5 : 0.48);
+  hemisphere.up.set(0, 0, 1);
+  if (campus) hemisphere.position.set(0, 0, 20);
+  scene.add(hemisphere);
 
   const softbox = new THREE.RectAreaLight(0xeaf8ff, 2.0, 1.6, 1.15);
   softbox.position.set(0.28, -0.58, 1.28);
@@ -483,6 +522,14 @@ export function createSceneView(host, options = {}) {
   const rim = new THREE.DirectionalLight(0x286fff, 0.62);
   rim.position.set(-0.5, -1, 1.5);
   scene.add(rim);
+  if (campus) {
+    for (const light of [softbox, cyanRim, blueRim, side, rim]) light.intensity = 0;
+    key.color.set(0xffefd5);
+    key.intensity = 2.6;
+    key.position.set(9, -12, 20);
+    Object.assign(key.shadow.camera, { far: 70, left: -20, right: 20, top: 18, bottom: -18 });
+    key.shadow.camera.updateProjectionMatrix();
+  }
 
   const tcpMarker = new THREE.Mesh(
     new THREE.SphereGeometry(0.024, 16, 12),
@@ -655,6 +702,7 @@ export function createSceneView(host, options = {}) {
   const parts = [];
   const explosionGroups = new Map();
   const groundMeshes = [];
+  const labProps = [];
   const meshGeometries = new Map();
   const explosionCenter = new THREE.Vector3();
   const groupCenter = new THREE.Vector3();
@@ -715,11 +763,25 @@ export function createSceneView(host, options = {}) {
 
   function build(mujoco, model, materialProps) {
     clear();
+    if (campus) followBodyId = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY.value, 'base_link');
     types = geomTypes(mujoco);
     for (let i = 0; i < model.ngeom; i += 1) {
       if (!shouldDrawGeom(model, i)) continue;
+      // Opaque group-0 proxies remain visible to MuJoCo laser rays and native
+      // viewers; the browser draws the corresponding detailed GLB instead.
+      if (campus && namedObject(mujoco, model, mujoco.mjtObj.mjOBJ_GEOM.value, i).startsWith('campus-building-')) continue;
       const type = model.geom_type[i];
       const size = model.geom_size.subarray(i * 3, i * 3 + 3);
+      const labProp = createLabProp(
+        namedObject(mujoco, model, mujoco.mjtObj.mjOBJ_GEOM.value, i),
+        size
+      );
+      if (labProp) {
+        labProp.userData.geomIndex = i;
+        scene.add(labProp);
+        labProps.push(labProp);
+        continue;
+      }
       let geometry = null;
       let meshId = -1;
       if (type === types.mesh) {
@@ -729,15 +791,18 @@ export function createSceneView(host, options = {}) {
         }
         geometry = meshGeometries.get(meshId);
       } else {
-        geometry = primitiveGeometry(type, size, types);
+        geometry = campus && type === types.plane
+          ? createCampusGroundGeometry()
+          : primitiveGeometry(type, size, types);
       }
       if (!geometry) continue;
       let material;
       if (type === types.plane) {
-        if (!gridTexture) gridTexture = createGridTexture();
+        if (!campus && !gridTexture) gridTexture = createGridTexture();
         material = new THREE.MeshStandardMaterial({
-          map: gridTexture,
-          color: 0x41658f,
+          map: campus ? null : gridTexture,
+          color: campus ? 0xffffff : 0x41658f,
+          vertexColors: campus,
           metalness: 0.1,
           roughness: 0.82,
           envMapIntensity: 0.4
@@ -838,9 +903,19 @@ export function createSceneView(host, options = {}) {
   }
 
   function sync(data) {
+    if (followBodyId >= 0) {
+      followPosition.fromArray(data.xpos, followBodyId * 3);
+      followPosition.z += 0.25;
+      if (cameraMode === 'follow') {
+        cameraShift.subVectors(followPosition, controls.target);
+        camera.position.add(cameraShift);
+        controls.target.copy(followPosition);
+      }
+    }
     const xpos = data.geom_xpos;
     const xmat = data.geom_xmat;
     meshes.forEach((mesh) => setPose(mesh, xpos, xmat, mesh.userData.geomIndex));
+    labProps.forEach((prop) => setPose(prop, xpos, xmat, prop.userData.geomIndex));
 
     const now = performance.now();
     const dt = lastSyncAt ? Math.min(0.05, (now - lastSyncAt) / 1000) : 1 / 60;
@@ -1386,6 +1461,11 @@ export function createSceneView(host, options = {}) {
   }
 
   function clear() {
+    labProps.forEach((prop) => {
+      scene.remove(prop);
+      disposeLabProp(prop);
+    });
+    labProps.length = 0;
     restoreSelectionMaterial(selectedMesh);
     selectedMesh = null;
     partIsolated = false;
@@ -1572,6 +1652,11 @@ export function createSceneView(host, options = {}) {
 
   return {
     build,
+    async loadEnvironment() {
+      if (!campus || campusEnvironment) return;
+      const { loadCampusEnvironment } = await import('./campus-view.js');
+      campusEnvironment = await loadCampusEnvironment(scene);
+    },
     sync,
     render,
     resize,
@@ -1581,6 +1666,7 @@ export function createSceneView(host, options = {}) {
     setObjectInteraction,
     setNavigationGoalMarker,
     setNavigationPath,
+    setCameraMode,
     setOrbitEnabled,
     setOverheadCameraEnabled,
     isOverheadCameraEnabled() {
@@ -1628,6 +1714,7 @@ export function createSceneView(host, options = {}) {
     setContactVisuals,
     camera,
     dispose() {
+      campusEnvironment?.dispose();
       observer.disconnect();
       renderer.domElement.removeEventListener('pointerdown', onPickPointerDown);
       renderer.domElement.removeEventListener('pointermove', moveObjectGesture);

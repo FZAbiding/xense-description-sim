@@ -1,6 +1,7 @@
 import { loadMujocoModule, loadRsScene } from './load-model.js';
 import { bindJoints, homePose, readAngles } from './kinematics.js';
 import { STEPS_PER_FRAME, createPhysicsController } from './pd-control.js';
+import { advanceSimulation, createSimulationClock } from './simulation-clock.js';
 import { createSceneView } from './scene-view.js';
 import { createJointCallouts } from './ui.js';
 import { createTcpIk } from './tcp-ik.js';
@@ -14,7 +15,6 @@ import { t, bindLangSwitch, applyStaticI18n, onLangChange } from './i18n.js';
 import { persistAppShell } from './register-service-worker.js';
 import {
   AGV_FORWARD_SPEED,
-  AGV_STEPS_PER_FRAME,
   AGV_TURN_SPEED,
   createAgvController
 } from './agv-control.js';
@@ -24,7 +24,7 @@ import {
   GRASP_WORKSPACE_OFFSET,
   createAgvNavigation
 } from './agv-navigation.js';
-import { LAB_NAV_OBSTACLES, planAgvPath } from './agv-path-planner.js';
+import { AGV_NAV_BOUNDS, LAB_NAV_OBSTACLES, planAgvPath } from './agv-path-planner.js';
 
 const statusEl = document.getElementById('status');
 const calloutsEl = document.getElementById('callouts');
@@ -68,8 +68,14 @@ const agvTurnSpeedValueEl = document.getElementById('agv-turn-speed-value');
 const setNavGoalEl = document.getElementById('set-nav-goal');
 const goNavGoalEl = document.getElementById('go-nav-goal');
 const goGraspZoneEl = document.getElementById('go-grasp-zone');
+const goChargingZoneEl = document.getElementById('go-charging-zone');
+const goDeliveryZoneEl = document.getElementById('go-delivery-zone');
+const campusCameraControlsEl = document.getElementById('campus-camera-controls');
+const campusOverviewEl = document.getElementById('campus-overview');
+const campusFollowEl = document.getElementById('campus-follow');
 const cancelNavigationEl = document.getElementById('cancel-navigation');
 const agvNavigationStateEl = document.getElementById('agv-navigation-state');
+const agvSimulationTimingEl = document.getElementById('agv-simulation-timing');
 const explosionControlsEl = document.getElementById('explosion-controls');
 const telemetryControlsEl = document.getElementById('telemetry-controls');
 const toggleContactVisualsEl = document.getElementById('toggle-contact-visuals');
@@ -97,6 +103,7 @@ const LOAD_STAGE_PROGRESS = {
 };
 
 const modelVariant = selectedModelVariant();
+const navigationLayout = modelVariant.navigation || { bounds: AGV_NAV_BOUNDS, obstacles: LAB_NAV_OBSTACLES };
 document.documentElement.dataset.modelVariant = modelVariant.id;
 if (modelVariantEl) {
   modelVariantEl.value = modelVariant.id;
@@ -106,6 +113,9 @@ if (agvControlsEl) agvControlsEl.hidden = !modelVariant.hasAgv;
 if (objectEditHudEl) objectEditHudEl.hidden = modelVariant.hasAgv;
 if (explosionControlsEl) explosionControlsEl.hidden = modelVariant.hasAgv;
 if (toggleDragEl) toggleDragEl.hidden = modelVariant.hasAgv;
+if (goChargingZoneEl) goChargingZoneEl.hidden = !modelVariant.navigation?.charging;
+if (goDeliveryZoneEl) goDeliveryZoneEl.hidden = !modelVariant.navigation?.delivery;
+if (campusCameraControlsEl) campusCameraControlsEl.hidden = modelVariant.navigation?.id !== 'campus';
 
 function renderVariantUi() {
   if (panelHintEl) panelHintEl.textContent = t(modelVariant.hasAgv ? 'panel.hintAgv' : 'panel.hint');
@@ -319,6 +329,8 @@ function renderAgvNavigationControls() {
   }
   if (goNavGoalEl) goNavGoalEl.disabled = busy || !agvNavigationState.goal;
   if (goGraspZoneEl) goGraspZoneEl.disabled = busy;
+  if (goChargingZoneEl) goChargingZoneEl.disabled = busy;
+  if (goDeliveryZoneEl) goDeliveryZoneEl.disabled = busy;
   if (cancelNavigationEl) cancelNavigationEl.disabled = !agvNavigationState.active;
   if (agvNavigationStateEl) {
     agvNavigationStateEl.textContent = t(agvNavigationMessage.key, agvNavigationMessage.vars);
@@ -422,8 +434,15 @@ async function main() {
   // Renderer, PMREM and lighting initialization are deliberately deferred so
   // they do not block the WASM and model requests on the first load.
   const view = createSceneView(viewportEl, modelVariant.view);
+  for (const [button, mode] of [[campusOverviewEl, 'overview'], [campusFollowEl, 'follow']]) {
+    button?.addEventListener('click', () => {
+      view.setCameraMode(mode);
+      campusOverviewEl?.setAttribute('aria-pressed', String(mode === 'overview'));
+      campusFollowEl?.setAttribute('aria-pressed', String(mode === 'follow'));
+    });
+  }
   const joints = bindJoints(mujoco, model);
-  const agvController = modelVariant.hasAgv ? createAgvController(mujoco, model, data) : null;
+  const agvController = modelVariant.hasAgv ? createAgvController(mujoco, model, data, navigationLayout) : null;
   if (agvController) {
     const dynamicPalletBodyId = mujoco.mj_name2id(
       model,
@@ -431,7 +450,7 @@ async function main() {
       'dynamic_pallet'
     );
     const planWebPath = (start, goal) => {
-      const obstacles = LAB_NAV_OBSTACLES.map((obstacle) => {
+      const obstacles = navigationLayout.obstacles.map((obstacle) => {
         if (obstacle.id !== 'dynamic-pallet' || dynamicPalletBodyId < 0) return obstacle;
         return {
           ...obstacle,
@@ -439,7 +458,7 @@ async function main() {
           y: data.xpos[dynamicPalletBodyId * 3 + 1]
         };
       });
-      return planAgvPath(start, goal, { obstacles });
+      return planAgvPath(start, goal, { bounds: navigationLayout.bounds, obstacles });
     };
     agvNavigation = createAgvNavigation({
       drive: agvController,
@@ -490,6 +509,7 @@ async function main() {
     },
     afterStep: () => agvController?.enforceHeldPose()
   });
+  const simulationClock = createSimulationClock(model.opt.timestep);
   const ik = createTcpIk(mujoco, model, data, joints);
   const contactTelemetry = createContactTelemetry(mujoco, model, data);
 
@@ -537,6 +557,10 @@ async function main() {
   setLoadProgress({ key: 'status.compiled', vars: { ngeom: model.ngeom } });
   view.build(mujoco, model, materialProps);
   view.sync(data);
+  if (modelVariant.navigation?.id === 'campus') {
+    setLoadProgress('status.loadingEnvironment');
+    await view.loadEnvironment();
+  }
   cameraViewsAvailable = view.hasOverheadCamera() || view.hasWristCamera();
   overheadCameraVisible = view.setOverheadCameraEnabled(true);
   wristCameraVisible = view.setWristCameraEnabled(true);
@@ -705,8 +729,8 @@ async function main() {
     viewportEl.classList.toggle('nav-goal-mode', navGoalPickMode);
     view.setGroundPickHandler(navGoalPickMode ? (point) => {
       const goal = {
-        x: Math.max(-3.65, Math.min(3.65, point.x)),
-        y: Math.max(-2.65, Math.min(2.65, point.y))
+        x: Math.max(navigationLayout.bounds.minX, Math.min(navigationLayout.bounds.maxX, point.x)),
+        y: Math.max(navigationLayout.bounds.minY, Math.min(navigationLayout.bounds.maxY, point.y))
       };
       const planned = agvNavigation.setGoal(goal, 'point');
       view.setNavigationGoalMarker(goal, 'selected');
@@ -778,6 +802,20 @@ async function main() {
     renderGraspControls();
   });
   cancelNavigationEl?.addEventListener('click', () => cancelAgvNavigation());
+  for (const [button, zone] of [
+    [goChargingZoneEl, navigationLayout.charging],
+    [goDeliveryZoneEl, navigationLayout.delivery]
+  ]) {
+    button?.addEventListener('click', () => {
+      if (!zone || graspState.running || agvNavigationState.active) return;
+      setGoalPickMode(false);
+      stopAgv();
+      agvDocked = false;
+      agvController?.releasePlanarPose();
+      if (!agvNavigation?.start(zone, 'point')) setAgvNavigationMessage('agv.routeBlocked');
+      renderGraspControls();
+    });
+  }
 
   const agvKeyCommands = {
     ArrowUp: 'forward', KeyW: 'forward',
@@ -787,13 +825,20 @@ async function main() {
     Space: 'stop'
   };
   window.addEventListener('keydown', (event) => {
-    if (!agvController || event.target.closest?.('input, select, textarea, button, [contenteditable="true"]')) return;
+    if (!agvController || event.target.closest?.('input, select, textarea, [contenteditable="true"]')) return;
     const command = agvKeyCommands[event.code];
     if (!command) return;
+    // While driving, Space must stop even when the last clicked navigation
+    // button still owns focus. Idle buttons retain native keyboard activation.
+    if (event.target.closest?.('button') &&
+        (command !== 'stop' || (!agvNavigationState.active && agvKeys.size === 0))) return;
     event.preventDefault();
     if (graspState.running) return;
     setGoalPickMode(false);
-    if (command === 'stop') stopAgv();
+    if (command === 'stop') {
+      cancelAgvNavigation();
+      stopAgv();
+    }
     else {
       cancelAgvNavigation(false, true);
       agvDocked = false;
@@ -912,6 +957,7 @@ async function main() {
   panel.layout(view.projectWorld, data);
 
   resetEl.addEventListener('click', () => {
+    simulationClock.reset();
     stopAgv();
     setGoalPickMode(false);
     cancelAgvNavigation(false, true);
@@ -952,18 +998,38 @@ async function main() {
 
   let lastTelemetryAt = -Infinity;
   let animationFrameId = 0;
+  let timingStartedAt = null;
+  let timingStartedSimulationTime = data.time;
+  let timingFrames = 0;
   const loop = () => {
     animationFrameId = 0;
     if (document.hidden) return;
     const now = performance.now();
-    graspDemo.update();
-    physics.step(
-      graspDemo.isRunning()
-        ? 12
-        : modelVariant.hasAgv
-          ? AGV_STEPS_PER_FRAME
-          : STEPS_PER_FRAME
-    );
+    if (modelVariant.hasAgv) {
+      advanceSimulation(physics, simulationClock.steps(now), () => graspDemo.update());
+    } else {
+      graspDemo.update();
+      physics.step(graspDemo.isRunning() ? 12 : STEPS_PER_FRAME);
+    }
+    if (modelVariant.hasAgv && agvSimulationTimingEl) {
+      if (timingStartedAt === null || data.time < timingStartedSimulationTime) {
+        timingStartedAt = now;
+        timingStartedSimulationTime = data.time;
+        timingFrames = 0;
+      }
+      timingFrames += 1;
+      const elapsed = (now - timingStartedAt) / 1000;
+      if (elapsed >= 1) {
+        const rate = (data.time - timingStartedSimulationTime) / elapsed;
+        const fps = Math.round(timingFrames / elapsed);
+        agvSimulationTimingEl.textContent = t('agv.simulationTiming', { rate: rate.toFixed(2), fps });
+        agvSimulationTimingEl.dataset.rate = rate.toFixed(3);
+        agvSimulationTimingEl.dataset.fps = String(fps);
+        timingStartedAt = now;
+        timingStartedSimulationTime = data.time;
+        timingFrames = 0;
+      }
+    }
     const angles = readAngles(data, joints);
     Object.entries(angles).forEach(([name, amount]) => panel.setActual(name, amount));
     if (graspDemo.isRunning()) {
@@ -987,6 +1053,8 @@ async function main() {
     if (!document.hidden && !animationFrameId) animationFrameId = requestAnimationFrame(loop);
   };
   document.addEventListener('visibilitychange', () => {
+    simulationClock.reset();
+    timingStartedAt = null;
     if (document.hidden) {
       cancelAnimationFrame(animationFrameId);
       animationFrameId = 0;

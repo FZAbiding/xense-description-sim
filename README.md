@@ -1,84 +1,199 @@
-# Rebot Arm AGV
+# reBot RS Sim
 
-这个仓库归档 B601 机械臂的两套结构、第一版 AGV 底盘结构和轮式方案调研，并提供一个本地复制后的 RS MuJoCo/ROS 2 仿真包。参考仓库 `/home/robot/reBot_Arm_Mujoco-RS` 不被修改。
+**English** | [简体中文](README_ZH.md)
 
-## 目录
+A simulation project for the reBot Arm B601-RS and an optional four-wheel AGV base. It includes a browser-based MuJoCo demo, ROS 2 MuJoCo simulation, a Gazebo laboratory, and SLAM / Nav2 navigation, together with standalone RS robot descriptions and AGV v1 chassis CAD resources.
 
-```text
-Rebot_Arm_AGV/
-├── RS/                      # B601-RS URDF、视觉/碰撞/MuJoCo 网格
-├── DM/                      # B601-DM URDF、视觉/碰撞/MuJoCo 网格
-├── rebotarm_msgs/           # 本地 ROS 2 消息/服务/action 定义
-├── rebotarm_mujoco_rs/      # 本地 RS + AGV MuJoCo/ROS 2 仿真包
-├── rebotarm_gazebo/         # Gazebo/MuJoCo 共用的实验室、SLAM 与 Nav2 启动包
-├── web_mujoco/              # 浏览器 MuJoCo：标准机械臂 / AGV 选配款
-├── mobile_base/
-│   ├── cad/agv_v1/          # 第一版 AGV 底盘 STEP/STL、生成脚本和校验图
-│   └── docs/                # 底盘概念图和轮子方案调研
-├── tools/                   # RS + AGV 组合模型生成脚本
-└── docs/
-    └── arm_description.md   # RS/DM 复用说明、网格分类和同步规则
-```
+Start with the web demo to explore manipulation and mobile-base control. Use the ROS 2 workspace for ROS topics, mapping, and navigation.
 
-## 快速查看
+## 🚀 Try the Online Simulation
 
-- RS 主模型：`RS/urdf/ReBot_Arm_RS.urdf`
-- DM 主模型：`DM/urdf/ReBot_Arm_DM.urdf`
-- AGV v1 装配参考：`mobile_base/cad/agv_v1/stl/agv_chassis_with_repository_base_v1.stl`
-- RS + AGV MuJoCo 组合模型：`rebotarm_mujoco_rs/models/rs_agv_scene.xml`
-- Web MuJoCo 入口：`web_mujoco/`（页面顶部切换标准款与 AGV 选配款）
-- 组合模型预览：`rebotarm_mujoco_rs/models/rs_agv_scene_preview.png`
-- AGV 可编辑装配：`mobile_base/cad/agv_v1/step/agv_chassis_assembly_v1.step`
-- 轮子方案：`mobile_base/docs/wheel_options.md`
+Experience the reBot Arm B601-RS MuJoCo digital twin directly in your browser — no installation required. Switch between the standard arm and AGV configurations, control joints and TCP, view the overhead and D405 wrist cameras, and run the automated put-away and stacking demos. The initial model download may take a moment; Chrome or Edge is recommended.
 
-两个机械臂 URDF 都使用 `../meshes/...` 相对路径。复制或加载时必须保留 `urdf/` 和 `meshes/` 的相对层级，Linux 下也不要改动 `.STL` 与 `.stl` 的大小写。
+[**▶ Launch the reBot Arm Interactive Demo**](https://seeed-projects.github.io/reBot_RS_Sim/)
 
-## 当前状态
+## Features
 
-- RS/DM 来自 `/home/robot/桌面/Rebot_Arm_description`，保留全部 URDF 和 STL。
-- `mobile_base/cad/agv_v1/` 来自新生成的 AGV v1 底盘模型，含参数化生成脚本。
-- 轮子文件目前是 `Ø100 × 40 mm` 干涉检查占位件，不是可直接生产的轮胎。
-- `rebotarm_mujoco_rs/` 从 `/home/robot/reBot_Arm_Mujoco-RS` 复制后修改，默认加载 `rs_agv_scene.xml`，支持 `cmd_vel` 驱动 AGV，并发布 `/clock`、`/odom`、`/scan`、`/imu` 和导航 TF。
-- MuJoCo 与 Gazebo 使用同一套 8 x 6 m 实验室坐标、静态地图、SLAM Toolbox 和 Nav2 参数，可切换仿真后端而无需改导航接口。
+- **Robot arm**: six-axis joint and gripper control, TCP dragging, object grasping, color sorting, and stacking demos.
+- **Mobile base**: four-wheel chassis, keyboard driving, point-and-click obstacle-avoiding navigation, and docking at the grasping station.
+- **Visualization**: overhead and D405 wrist cameras, part selection and isolation, staged exploded views, and a multilingual interface.
+- **ROS 2**: MuJoCo joint synchronization, simulation driver, IK / trajectory interfaces, and camera and object-state publishing.
+- **Laboratory navigation**: MuJoCo and Gazebo backends sharing the laboratory map and SLAM Toolbox / Nav2 configuration.
 
-## 本地仿真
+Web navigation uses its own grid-based A* planner; ROS navigation uses Nav2. The web demo runs independently without ROS or a physical robot. The ROS object-detection node generates detections from simulated object states.
 
-```bash
-python3 tools/build_rs_agv_model.py
-colcon build --symlink-install --packages-select \
-  rebotarm_msgs rebotarm_mujoco_rs rebotarm_gazebo
-source install/setup.bash
-ros2 launch rebotarm_gazebo mujoco_slam_nav.launch.py
-```
+## Web Quick Start
 
-MuJoCo 已支持三种完整导航流程：
-
-```bash
-ros2 launch rebotarm_gazebo mujoco_slam.launch.py        # 在线建图
-ros2 launch rebotarm_gazebo mujoco_slam_nav.launch.py    # 边建图边导航
-ros2 launch rebotarm_gazebo mujoco_navigation.launch.py  # 已有地图 + AMCL + Nav2
-```
-
-组合场景带前置 2D 激光雷达、IMU 和完整实验室障碍物。仿真桥发布
-`/clock`、`/odom`、`/scan`、`/imu` 及
-`odom -> base_footprint -> base_link -> laser/imu_link` TF，接口约定参考
-[linorobot2](https://github.com/linorobot/linorobot2)。linorobot2 仅作为只读参考，源码没有复制进本仓库。
-
-默认速度入口采用 linorobot2/Nav2 约定的 `/cmd_vel`。无界面运行时给启动命令
-增加 `use_viewer:=false use_rviz:=false`；需要保留旧命名空间话题时，可在核心
-MuJoCo 启动命令中增加 `cmd_vel_topic:=/rebotarm_rs/cmd_vel`。
-
-## Web MuJoCo
+Node.js 22 (matching CI) and Chrome or Edge are recommended. From the repository root:
 
 ```bash
 cd web_mujoco
-npm install
+npm ci
 npm run dev
 ```
 
-默认打开标准机械臂；切换器选择“AGV 选配款”后会加载完整实验室与移动底盘。
-也可以直接访问 `http://127.0.0.1:5173/?variant=agv`。
+Open the URL printed in the terminal, usually [http://127.0.0.1:5173](http://127.0.0.1:5173).
 
-AGV 款在观察画面左下角支持调速、键盘驾驶、点击设置导航点和自动避障；路径代价会
-优先选择障碍物通道中间。点击“前往抓取区”并完成停靠后，可继续使用“放入收纳区”
-和“叠叠乐”。网页规划器独立于 ROS/Nav2，不会改动导航膨胀系数。
+| Configuration | Entry point | Scene |
+| --- | --- | --- |
+| Standard arm (default) | `/?variant=arm` | `rs_grasp_scene.xml`, including the workbench and graspable objects |
+| AGV base | `/?variant=agv` | `rs_agv_scene.xml`, including the mobile base and laboratory |
+| AGV campus streets | `/?variant=agv-campus` | `rs_agv_campus_scene.xml`, with three apartment buildings, a junction and service bays |
+
+Switch configurations at the top of the page. In AGV mode, drive with WASD / arrow keys, stop with Space, select a floor navigation target, or use “Go to grasp area.” Run grasping tasks after docking. The first load downloads the scene meshes.
+
+Campus mode adds charging / delivery navigation shortcuts and a follow camera. These bays demonstrate navigation and docking; charging state and delivery jobs are not simulated. The detailed campus is rendered in the browser; native MuJoCo uses simplified building proxies, and ROS / Nav2 campus maps are not configured.
+
+Build and preview locally:
+
+```bash
+npm run build
+npm run preview
+```
+
+The [GitHub Pages workflow](.github/workflows/pages.yml) handles deployment. In the repository's Settings → Pages, select GitHub Actions, then push to `main` or run the workflow manually. The build sets the deployment base path from the current repository name.
+
+See the [web documentation](web_mujoco/README.md) for interaction and loading details.
+
+## Repository Layout and Dependencies
+
+```text
+reBot_RS_Sim/
+├── web_mujoco/              # Browser UI, MuJoCo WASM, web navigation and grasping
+├── rebotarm_mujoco_rs/      # ROS 2 MuJoCo nodes and runtime models (XML / STL)
+├── rebotarm_gazebo/         # Gazebo scenes and SLAM / Nav2 launch files for both backends
+├── rebotarm_msgs/           # ROS 2 messages, services, and actions
+├── RS/                     # Standalone RS URDF / STL; input for Gazebo model generation
+├── mobile_base/
+│   ├── cad/agv_v1/          # Parametric chassis scripts, STEP / STL, and validation resources
+│   └── docs/               # Wheel-option research
+├── tools/                  # RS + AGV MuJoCo scene generation
+└── docs/                   # Robot-description documentation
+```
+
+Main resource dependencies:
+
+```text
+Web ────────────────────────────┐
+ROS 2 MuJoCo ──────────────────┼─> rebotarm_mujoco_rs/models/
+Generated Gazebo robot SDF ──────┘   (Gazebo reads meshes from this directory)
+
+RS/urdf/ReBot_Arm_RS.urdf ─────────> Gazebo SDF generation script
+mobile_base/cad/agv_v1/stl/ ───────> MuJoCo AGV scene generation script
+```
+
+**The 10 detailed gripper collision STL files shared by RS and DM are kept in `rebotarm_mujoco_rs/models/meshes/`.** The root DM description package and duplicate detailed collision files in the RS description have been removed. The RS URDF retains its own visual and whole-part collision meshes; MuJoCo uses the detailed collision meshes in the runtime directory.
+
+## ROS 2 Simulation
+
+### Environment and Build
+
+For ROS 2 Jazzy, prepare `colcon` and `rosdep`; the Gazebo backend uses Harmonic. Dependencies include Nav2, SLAM Toolbox, RViz, and `ros_gz`, as declared in each package's `package.xml`.
+
+The MuJoCo backend also requires Python `mujoco`, which is currently not declared in `package.xml` and must be installed separately. The Python environment running ROS nodes must be able to import `mujoco`, `numpy`, and `scipy`. The joint-slider window also requires `tkinter`.
+
+Build from the repository root after initializing `rosdep`:
+
+```bash
+source /opt/ros/jazzy/setup.bash
+rosdep install --from-paths rebotarm_msgs rebotarm_mujoco_rs rebotarm_gazebo --ignore-src -r -y
+colcon build --symlink-install --packages-select \
+  rebotarm_msgs rebotarm_mujoco_rs rebotarm_gazebo
+source install/setup.bash
+```
+
+The required runtime XML / STL files are committed, so model regeneration is unnecessary for the first launch. Source the ROS and workspace environments in each new terminal.
+
+### Choose a Workflow
+
+Run one simulation backend and one workflow at a time:
+
+| Workflow | MuJoCo | Gazebo |
+| --- | --- | --- |
+| Laboratory and robot | `mujoco_lab.launch.py` | `lab_world.launch.py` |
+| Online mapping | `mujoco_slam.launch.py` | `lab_slam.launch.py` |
+| Mapping and navigation | `mujoco_slam_nav.launch.py` | `lab_slam_nav.launch.py` |
+| Localization and navigation with an existing map | `mujoco_navigation.launch.py` | `lab_navigation.launch.py` |
+
+All launch files above belong to `rebotarm_gazebo`. For example:
+
+```bash
+ros2 launch rebotarm_gazebo mujoco_slam_nav.launch.py
+```
+
+For headless navigation, add `use_viewer:=false use_rviz:=false` to the MuJoCo command or `gui:=false use_rviz:=false` to the Gazebo command. The default navigation map is `rebotarm_gazebo/maps/rebotarm_lab.yaml`.
+
+For the arm driver, cameras, and task interfaces, use the core launch entry point:
+
+```bash
+ros2 launch rebotarm_mujoco_rs mujoco_rs.launch.py \
+  simulation_mode:=physics use_viewer:=true
+```
+
+The core entry point enables the simulation driver and task tools by default. `mujoco_lab.launch.py` disables these tools by default to focus on base navigation. Start the joint sliders in another terminal:
+
+```bash
+ros2 launch rebotarm_mujoco_rs joint_slider_gui.launch.py
+```
+
+The main navigation topics are `/cmd_vel`, `/clock`, `/odom`, `/scan`, and `/imu`. MuJoCo publishes the navigation TF chain `odom → base_footprint → base_link → laser / imu_link`; SLAM Toolbox or AMCL publishes `map → odom`. Arm and task topics use the `/rebotarm_rs/` namespace by default.
+
+See the [MuJoCo package documentation](rebotarm_mujoco_rs/README.md) and [laboratory / navigation documentation](rebotarm_gazebo/README.md) for interfaces and parameters.
+
+## Model and CAD Maintenance
+
+| Resource | Purpose |
+| --- | --- |
+| [`rs_arm.xml`](rebotarm_mujoco_rs/models/rs_arm.xml) | RS arm, gripper, wrist camera, and collision model |
+| [`rs_grasp_scene.xml`](rebotarm_mujoco_rs/models/rs_grasp_scene.xml) | Includes `rs_arm.xml` and adds the grasping station |
+| [`rs_agv_scene.xml`](rebotarm_mujoco_rs/models/rs_agv_scene.xml) | Generated complete RS + AGV laboratory scene |
+| [`RS/urdf/ReBot_Arm_RS.urdf`](RS/urdf/ReBot_Arm_RS.urdf) | Standalone robot description and input for Gazebo SDF generation |
+| [`mobile_base/cad/agv_v1/`](mobile_base/cad/agv_v1/README_ZH.md) | Chassis STEP / STL files, assembly references, and dimensions |
+
+After changing the base MuJoCo scenes or chassis STL files, regenerate the AGV scene from the repository root:
+
+```bash
+python3 tools/build_rs_agv_model.py
+```
+
+The script reads `rs_arm.xml` and `rs_grasp_scene.xml`, copies six chassis STL types into the runtime directory, and generates `rs_agv_scene.xml`. Put persistent scene changes in the inputs or generation script.
+
+After changing the RS URDF or static laboratory layout, update Gazebo models and maps as needed:
+
+```bash
+python3 rebotarm_gazebo/scripts/generate_rs_agv_sdf.py
+python3 rebotarm_gazebo/scripts/generate_lab_map.py
+```
+
+CAD regeneration requires CadQuery. The CAD script's default base-mesh path still points to the old project, so specify the file in this repository explicitly:
+
+```bash
+python3 mobile_base/cad/agv_v1/generate_agv_v1.py \
+  --repository-base rebotarm_mujoco_rs/models/meshes/base_link.STL
+```
+
+URDF / arm meshes use meters; chassis CAD and wrist-bracket meshes use millimeters, with the corresponding scale set in MJCF. Preserve the relative directory structure between URDF and `meshes/`, including filename case. Wheel and fastener models marked `placeholder` are for assembly checks.
+
+## Checks
+
+Run web checks in `web_mujoco/`; ROS is not required:
+
+```bash
+npm run smoke
+npm run test:loading
+npm run test:reset
+npm run test:variants
+npm run test:campus
+npm run test:explode
+```
+
+Run ROS 2 model and bridge tests after sourcing the workspace environment:
+
+```bash
+colcon test --packages-select rebotarm_mujoco_rs
+colcon test-result --verbose
+```
+
+## Model Sources
+
+See the [MuJoCo package documentation](rebotarm_mujoco_rs/README.md) for RS MuJoCo model sources and usage boundaries, and the [third-party model notes](rebotarm_mujoco_rs/models/THIRD_PARTY_MODELS.md) for the D405 wrist bracket's source, version, and license. See the [robot-description notes](docs/arm_description.md) for classification and maintenance conventions.

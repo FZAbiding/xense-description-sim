@@ -1,3 +1,5 @@
+import { CAMPUS_LAYOUT } from './campus-layout.js';
+
 export const MODEL_VARIANTS = Object.freeze({
   arm: Object.freeze({
     id: 'arm',
@@ -18,8 +20,17 @@ export const MODEL_VARIANTS = Object.freeze({
     view: Object.freeze({
       position: [5.8, -6.8, 4.8],
       target: [0, 0, 0.35],
+      near: 0.08,
       far: 30
     })
+  }),
+  'agv-campus': Object.freeze({
+    id: 'agv-campus',
+    sceneXml: 'rs_agv_campus_scene.xml',
+    labelKey: 'variant.agvCampus',
+    hasAgv: true,
+    navigation: CAMPUS_LAYOUT,
+    view: CAMPUS_LAYOUT.view
   })
 });
 

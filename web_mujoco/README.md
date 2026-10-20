@@ -1,18 +1,57 @@
 # Web MuJoCo
 
-纯网页 MuJoCo WASM 演示：用官方 `@mujoco/mujoco` 在浏览器里提供两种产品配置：
+纯网页 MuJoCo WASM 演示：用官方 `@mujoco/mujoco` 在浏览器里提供三种产品配置：
 
 - 标准机械臂（默认）：`rs_grasp_scene.xml`
 - AGV 底盘款：`rs_agv_scene.xml`
+- AGV 园区街区：`rs_agv_campus_scene.xml`，三栋居民楼、十字路口和充电 / 配送区域。
 
 页面顶部可直接切换配置，也可用 `?variant=arm` 或 `?variant=agv` 指定。不启动 ROS、不连真机。
+
+实验室网页将原有的蓝色储物架占位块替换为金属层架、收纳箱和设备盒，
+棕色动态障碍块替换为木托盘、双层周转箱和绑带。细节几何按材质合并，
+两件道具合计 4 次绘制，无额外纹理下载。外观完全位于原有碰撞包围盒内，
+托盘外观每帧跟随 MuJoCo 几何位姿；导航仍使用完整占用轮廓，货架层间不可穿行。
+这些细节仅用于网页渲染，原生 MuJoCo / Gazebo 的模型外观保持简化。
+箱盖单独占据顶部厚度，避免与箱体顶面共面闪烁；AGV 主视角采用适合米制场景的
+近裁剪距离。园区道路、人行道和底色由同一张地面的互不重叠分区绘制；
+停靠区、标线和文字在其上分层显示，避免地面深度冲突。
+
+园区模式使用 `?variant=agv-campus`，例如
+[本地园区预览](http://127.0.0.1:5173/?variant=agv-campus)。在“产品配置”中选择
+“AGV · 园区街区”，可用 WASD 手动驾驶、点击地面导航，或点击“前往充电区”、
+“前往配送区”、“前往抓取区”。充电区和配送区目前用于导航停靠演示，不模拟充电电量或物流任务。
+
+园区按米制搭建，占地 30 × 24 m；小车、机械臂和抓取工位保持原有尺寸。
+`src/campus-layout.js` 统一定义建筑 / 花箱 / 设施的轮廓、导航边界和停靠位；
+`scripts/build-campus-scene.mjs` 据此生成 MuJoCo 碰撞几何，`npm run dev` 和
+`npm run build` 会自动更新 XML。建筑碰撞采用覆盖外观的保守包围盒，室内暂不可进入。
+原有实验室和标准机械臂配置继续保留。
+
+详细建筑只在网页中加载；原生 MuJoCo 打开园区 XML 时显示简化建筑轮廓。
+该模式没有接入 Gazebo / Nav2 的启动配置或重新生成 ROS 占据地图。
+
+建筑来自 MIT 许可的
+[ProceduralBuildingsThreeJS](https://github.com/achrefelouafi/ProceduralBuildingsThreeJS)，
+采用其中国居民楼 LOD1 几何，提前生成一份 GLB 并由三个楼栋共享。
+纹理内嵌、材质转换为标准 glTF PBR，效果与上游完整 Blender 着色器有所不同。
+视窗左上角可在“街区视角”和“跟随小车”之间切换，跟随模式仍可拖动旋转、滚轮缩放。
+来源、固定提交与许可见 `public/environments/campus/README.md`。
+
+重新生成建筑素材（需要上游源码；日常启动无需 Blender 或上游仓库）：
+
+```bash
+node scripts/import-campus-building.mjs /path/to/ProceduralBuildingsThreeJS
+node scripts/build-campus-scene.mjs
+npm run test:campus
+```
 
 网页源码来自 `/home/robot/reBot_Arm_Mujoco-RS/web_mujoco`，模型统一读取当前仓库的
 `rebotarm_mujoco_rs/models/`；源项目保持不变。
 
 ## 环境
 
-- Linux 或 macOS，Node.js 18+
+- Linux 或 macOS，Node.js 20.19+
 - Chrome 或 Edge
 
 ## 启动
@@ -33,6 +72,9 @@ npm run dev
 npm run smoke
 npm run test:loading
 npm run test:variants
+npm run test:campus
+npm run test:timing
+npm run test:surfaces
 npm run test:explode
 ```
 
@@ -40,6 +82,7 @@ npm run test:explode
 
 - 产品配置：默认保持标准机械臂，可切换到包含四轮底盘、激光雷达、IMU 和实验室场景的 AGV 底盘款。
 - AGV 驾驶：观察画面左下角可调整行驶速度和转向速度；默认 0.65 m/s、1.40 rad/s，限幅与 ROS 2 MuJoCo 桥保持一致。
+- AGV 仿真按真实经过时间累计 1 ms 物理步，避免街景渲染掉帧时连带降低车速；左下角显示实测仿真倍率与 FPS，正常实时运行约为 `1.00×`。每帧最多补算 250 ms，长时间卡顿会丢弃额外积压时间；切到后台和复位会重置计时，回到页面不会补跑后台时间。抓取控制仍按不超过 12 ms 的仿真间隔更新。
 - 网页导航：10 cm 网格 A* 会避开实验室隔墙、货架和实时位置的动态托盘，并以障碍物净空代价让路线趋向通道中间；这套网页规划不会修改 ROS/Nav2 的膨胀系数。
 - 移动抓取：点击“前往抓取区”后 AGV 自动规划、行驶并物理锁定停靠位；随后可像标准机械臂款一样选择物体放入收纳区或启动叠叠乐。AGV 工位整体抬高 136 mm，以保持机械臂与桌面的标准相对几何并避免底盘穿桌。
 - 爆炸时间线：先播放整机展示动作，再按夹爪、J6 → J1、基座分阶段拆解；支持拖动进度、暂停和反向还原。
@@ -106,7 +149,7 @@ M0（空场景验证 WASM）已跳过，直接加载 RS 抓取场景。
 
 接上与 `mujoco_sync.py` 对齐的 PD：滑块只改目标，`mj_step` 驱动 `<motor>`。物体可被推倒、掉落。提供 Reset。
 
-显示约 60 Hz，每帧 4 步（`timestep=0.001`，等效约 240 Hz）。
+标准机械臂模式沿用每帧 4 步（`timestep=0.001`）；AGV 模式按真实经过时间计算步数，以 1 倍速推进仿真。
 
 验收：
 

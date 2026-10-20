@@ -125,4 +125,23 @@ await Promise.all(waits);
 assert(entries.has(meshA) && entries.has(meshB), 'XML updates must preserve every unchanged mesh');
 assert(!entries.has(`${base}models/scene.xml?v=old`));
 assert(entries.has(`${base}models/scene.xml?v=new`));
+const buildingUrl = `${base}environments/campus/chinese-building.glb`;
+entries.set(`${buildingUrl}?v=old`, new Response('old building'));
+waits.length = 0;
+listeners.fetch({
+  request: new Request(`${buildingUrl}?v=new`),
+  waitUntil(promise) { waits.push(promise); },
+  respondWith(promise) { result = promise; }
+});
+assert.equal(await (await result).text(), 'fresh');
+await Promise.all(waits);
+assert(!entries.has(`${buildingUrl}?v=old`), 'Old campus assets must be pruned');
+context.fetch = async () => { throw new Error('offline'); };
+listeners.fetch({
+  request: new Request(`${buildingUrl}?v=new`),
+  waitUntil() {},
+  respondWith(promise) { result = promise; }
+});
+assert.equal(await (await result).text(), 'fresh', 'Embedded campus GLB must remain usable offline');
+assert(entries.has(meshA) && entries.has(meshB), 'Campus asset updates must preserve robot meshes');
 console.log('Loading regression checks passed: independent downloads, bounded buffer, WASM streaming/MIME fallback/timeout, real arm/AGV scenes, per-file cache pruning.');
