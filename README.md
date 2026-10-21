@@ -4,7 +4,40 @@
 `forward-01-flexiv-rizon4s-taccap.urdf` 的资产快照：双 Flexiv Rizon4S、双 TacCap
 从夹爪、支架和腕部相机。
 
-当前版本提供：
+## 本地运行
+
+**代码、Git 仓库和日常工作目录均为 `/home/xense/src/xense-description-sim`。**
+`git status` 显示 `main` 与 `origin/main` 一致、工作区干净，表示没有未提交改动，且与最近获取的远端分支记录一致。
+原 `/home/xense/src/reBot_RS_Sim` 仅作初始版本参考。
+
+从仓库根目录启动，使用 **Node.js 22.20+**：
+
+```bash
+cd /home/xense/src/xense-description-sim
+node --version
+npm --prefix web_mujoco ci  # 首次启动或依赖锁文件更新后执行
+CHOKIDAR_USEPOLLING=1 npm --prefix web_mujoco run dev -- --port 5174 --strictPort
+```
+
+如果系统仍是 Node 18，使用以下命令临时通过 Node 22 启动，无需修改系统默认 Node：
+
+```bash
+cd /home/xense/src/xense-description-sim
+npm exec --yes --package=node@22 -- npm --prefix web_mujoco ci
+CHOKIDAR_USEPOLLING=1 npm exec --yes --package=node@22 -- npm --prefix web_mujoco run dev -- --port 5174 --strictPort
+```
+
+依赖安装完成后，日常只需进入仓库根目录并执行对应的最后一条启动命令。
+浏览器打开 **http://127.0.0.1:5174/**，终端保持运行，按 `Ctrl+C` 停止。
+`--strictPort` 固定端口；若提示 5174 已占用，可先访问已有服务，或停止原启动终端中的服务后重启；
+也可将 `--port 5174` 改为其他空闲端口。
+
+`CHOKIDAR_USEPOLLING=1` 使用轮询文件监听，避免本机已遇到的 `EMFILE` 监听额度错误；该设置只对本次启动生效。
+`--prefix web_mujoco` 让 npm 使用网页子目录的脚本，终端仍停留在仓库根目录。
+模型和资产均在本仓库内，日常启动无需 Python、ROS、原始资产仓库或实体机器人；
+终端前面的 Conda `(base)` 不影响上述目录选择。更多说明见[使用指南](docs/usage.md#获取与启动)。
+
+## 当前功能
 
 - 左右七轴关节滑块与角度输入，遵循源 URDF 限位。
 - 两组夹爪开合及 −1 mimic 联动。
@@ -27,27 +60,13 @@
 - [贡献与 Agent 约定](AGENTS.md)：目录、风格、检查和提交要求。
 - [原 reBot 参考](README_REBOT.md) / [中文参考](README_REBOT_ZH.md)：初始工程的 ROS、Gazebo 和 AGV 文档。
 
-## 本地运行
+## 构建与预览
 
-后续开发与 Git 操作统一在 `/home/xense/src/xense-description-sim` 中进行。
-`/home/xense/src/reBot_RS_Sim` 仅作为初始版本参考。
-
-使用 **Node.js 22.20+**，推荐 Node 22 的最新补丁版本：
+在仓库根目录执行：
 
 ```bash
-cd /home/xense/src/xense-description-sim/web_mujoco
-npm ci
-npm run dev
-```
-
-打开终端打印的地址，通常为 `http://127.0.0.1:5173/`。模型和运行所需资产均在仓库内，
-日常启动无需 Python、ROS、原始资产仓库或实体机器人。
-
-首次克隆、系统仍使用 Node 18 时的启动方式，以及指定端口的方法见[使用指南](docs/usage.md#获取与启动)。
-
-```bash
-npm run build
-npm run preview
+npm --prefix web_mujoco run build
+npm --prefix web_mujoco run preview
 ```
 
 构建同时生成默认双臂页面及 `rebot.html`。子目录部署可设置
