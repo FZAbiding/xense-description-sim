@@ -13,10 +13,13 @@
 
 ```bash
 npm ci
-npm run dev
+CHOKIDAR_USEPOLLING=1 npm run dev -- --port 5174 --strictPort
 ```
 
-以终端打印的地址为准，默认 `http://127.0.0.1:5173/`。路径映射：
+打开 `http://127.0.0.1:5174/`；端口被占用时使用已有服务、停止原服务后重启，或修改 `--port`。
+`CHOKIDAR_USEPOLLING=1` 规避本机已遇到的 `EMFILE` 文件监听额度错误。
+根目录启动及 Node 18 临时使用 Node 22 的命令见[项目总览](../README.md#本地运行)。
+原始 `npm run dev` 脚本仍默认尝试 5173，示例使用参数覆盖端口。路径映射：
 
 | 路径 | 页面 |
 | --- | --- |
@@ -57,6 +60,7 @@ npm run dev
 | `CLOUDFLARE_WEB_ANALYTICS_TOKEN` | 可选公开站点标识；未配置时不插入统计脚本，见 `.env.example` |
 | `CHROMIUM_PATH` | 浏览器测试使用的可执行文件绝对路径 |
 | `FLEXIV_BASE_URL` | 浏览器测试访问的已有站点地址，须包含实际子目录前缀；设置后不自动启动服务器 |
+| `CHOKIDAR_USEPOLLING=1` | 开发服务器改用轮询监听，规避本机文件监听额度错误；也适用于自动启动开发服务器的浏览器测试 |
 
 子目录构建和预览：
 
@@ -74,6 +78,7 @@ GitHub Pages 的启用和发布确认见[使用指南](../docs/usage.md#构建�
 | --- | --- |
 | `index.html` / `src/flexiv.css` | 页面结构与布局 |
 | `src/flexiv-main.js` | 启动、界面事件和导出 |
+| `src/flexiv-layout.js` | 相机浮窗、控制区显示、专注视图与原布局恢复 |
 | `src/flexiv-control.js` | `qpos`、源限位、mimic 和复位 |
 | `src/flexiv-ik.js` | 独立状态中的七轴位置 / 朝向逆运动学 |
 | `src/flexiv-motion.js` / `src/flexiv-motion-ui.js` | 关键帧文件校验、五次插值和控制界面 |

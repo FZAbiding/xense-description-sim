@@ -6,29 +6,35 @@
 
 ```bash
 git clone https://github.com/FZAbiding/xense-description-sim.git
-cd xense-description-sim/web_mujoco
+cd xense-description-sim
 ```
 
-本机已有工作区时，直接进入 `/home/xense/src/xense-description-sim/web_mujoco`。
+本机已有工作区时，直接进入 `/home/xense/src/xense-description-sim`。
 开发和 Git 操作均在新工程中进行；旧 `reBot_RS_Sim` 目录只作初始版本参考。
 
-使用 Node.js 22.20+（与 CI 的 Node 22 系列一致），在 `web_mujoco/` 安装并启动：
+使用 Node.js 22.20+（与 CI 的 Node 22 系列一致），从仓库根目录安装并启动：
 
 ```bash
 node --version
-npm ci
-npm run dev
+npm --prefix web_mujoco ci
+CHOKIDAR_USEPOLLING=1 npm --prefix web_mujoco run dev -- --port 5174 --strictPort
 ```
 
-打开终端打印的地址。默认端口为 5173；端口被占用时 Vite 会选择其他可用端口。
-可以用 `npm run dev -- --port 5174` 指定首选端口。
+打开 `http://127.0.0.1:5174/`，终端保持运行，按 `Ctrl+C` 停止。
+以上命令固定端口；如果 5174 已占用，可访问已有服务、停止原服务后重启，或修改 `--port`。
+`web_mujoco/package.json` 中的开发脚本默认尝试 5173；未指定固定端口时，允许自动选择其他可用端口。
 
 如果系统仍使用 Node 18，可通过 npm 临时运行 Node 22，不更改系统默认版本：
 
 ```bash
-npm exec --yes --package=node@22 -- npm ci
-npm exec --yes --package=node@22 -- npm run dev
+npm exec --yes --package=node@22 -- npm --prefix web_mujoco ci
+CHOKIDAR_USEPOLLING=1 npm exec --yes --package=node@22 -- npm --prefix web_mujoco run dev -- --port 5174 --strictPort
 ```
+
+首次运行或依赖锁文件更新后安装依赖；日常只需执行对应的启动命令。
+`--prefix web_mujoco` 使用网页子目录的脚本，终端仍停留在 Git 仓库根目录。
+轮询监听用于规避本机已遇到的 `EMFILE` 文件监听额度错误，只对本次命令生效。
+从绝对路径启动的可复制命令见[根目录 README](../README.md#本地运行)。
 
 日常运行只使用已提交的模型与网页资源，不需要启动 ROS、安装 Python 包或读取
 `xense-description` 源工程。首次打开需要下载模型并初始化浏览器中的 MuJoCo。
@@ -245,12 +251,15 @@ npm run build
 浏览器测试默认启动 `127.0.0.1:4175`。可用 `CHROMIUM_PATH=/path/to/chrome` 指定已有浏览器；
 用 `FLEXIV_BASE_URL=http://127.0.0.1:4173/xense-description-sim/ npm run test:flexiv:browser`
 检查已运行的生产预览。该地址模式不会自动启动服务器。
+自动启动服务器时若遇到监听额度错误，可执行 `CHOKIDAR_USEPOLLING=1 npm run test:flexiv:browser`。
 
 ## 常见问题
 
 | 现象 | 处理 |
 | --- | --- |
 | Node 版本或 WASM 命令报错 | 检查 `node --version`，使用 Node 22.20+；可使用上面的临时 Node 22 命令 |
+| 启动时报 `EMFILE: too many open files, watch` | 使用上面的 `CHOKIDAR_USEPOLLING=1` 启动命令，改用轮询文件监听；无需修改系统设置 |
+| 启动时报 5174 已占用 | 先访问 `http://127.0.0.1:5174/`；如需重启，在原服务终端按 Ctrl+C，或换用空闲端口 |
 | 打开了旧页面或连接到其他工程 | 检查终端所在目录和实际端口，从新目录重新启动；Forward-01 使用根入口，reBot 使用 `rebot.html` |
 | 子目录预览出现模型或脚本 404 | 确认构建与 preview 设置了相同的 `GITHUB_PAGES_BASE`，并从带前缀的地址访问 |
 | 画面不随关节更新 | 检查相机更新勾选框；只旋转主视角不会改变腕部视角 |
